@@ -1,0 +1,2119 @@
+
+\documentclass[a4paper,UKenglish,cleveref, autoref]{lipics-v2019}
+%This is a template for producing LIPIcs articles. 
+%See lipics-manual.pdf for further information.
+%for A4 paper format use option "a4paper", for US-letter use option "letterpaper"
+%for british hyphenation rules use option "UKenglish", for american hyphenation rules use option "USenglish"
+%for section-numbered lemmas etc., use "numberwithinsect"
+%for enabling cleveref support, use "cleveref"
+%for enabling cleveref support, use "autoref"
+
+\usepackage{opendeduction}
+\usepackage{tikz}
+\usetikzlibrary{decorations.pathmorphing}
+\usepackage{amsmath, amssymb}
+\usepackage{stmaryrd}
+\usepackage{mathtools}
+\usepackage{MnSymbol}
+
+\newtheorem{notation}[definition]{Notation}
+
+%\newcommand{\lambdabar}{\mbox{\textipa{\textcrlambda}}}
+
+\newcommand{\FALC}{\Lambda^{S}_{a}}
+\newcommand{\WEAK}{\Lambda_{\weaksymbol}}
+\newcommand{\fv}[1]{(#1)_{fv}}
+\newcommand{\bv}[1]{(#1)_{bv}}
+\newcommand{\fp}[1]{(#1)_{fp}}
+\newcommand{\bp}[1]{(#1)_{bp}}
+\newcommand{\fc}[1]{(#1)_{fc}}
+\newcommand{\bc}[1]{(#1)_{bc}}
+\newcommand{\set}[1]{ \{ #1 \} }
+\newcommand{\abs}[2]{\lambda #1 . #2}
+\newcommand{\app}[2]{#1 \, #2}
+\newcommand{\fake}[3]{#1 \langle \, #2 \, \rangle . #3}
+\newcommand{\share}[3]{#1 [#2 \leftarrow #3]}
+\newcommand{\dist}[5]{#1 [ #2 \, \vert \, \fakedist{#4}{#5} \, #3 ]}
+\newcommand{\olddist}[5]{#1 [ #2 \twoheadleftarrow \lambda #3 \langle #4 \rangle #5]}
+\newcommand{\fakedist}[2]{#1 \langle \, #2 \, \rangle}
+\newcommand{\barr}[2]{#1 \, \vert \, #2}
+\newcommand{\size}[1]{\vert \, #1 \, \vert}
+\newcommand{\vecdist}[2]{\overrightarrow{\fakedist{#1}{#2} \,}}
+\newcommand{\sub}[3]{#1 \{ #2 / #3 \}}
+\newcommand{\lamsub}[2]{\{ \lambda #1 / \lambda #2 \}}
+\newcommand{\psub}[3]{#1 \{ #2 / #3 \}_{b}}
+\newcommand{\exor}[3]{#1 \{ \fakedist{#2}{#3} \}_{e}}
+\newcommand{\readback}[2]{\llbracket \, #1 \, \rrbracket}
+\newcommand{\compile}[1]{\llparenthesis \, #1 \, \rrparenthesis}
+\newcommand{\weaksymbol}{\mbox{\tiny $\mathcal{W}$}}
+\newcommand{\trans}[1]{\llbracket \, #1 \, \rrbracket}
+\newcommand{\tranclos}[1]{\| #1 \|}
+\newcommand{\readbackclose}[1]{\llbracket \, #1 \, \rrbracket }
+\newcommand{\readbackwmap}[3]{\llbracket \, #1 \, \vert \, #2 \, \vert \, #3  \, \rrbracket }
+\newcommand{\readweakwmap}[3]{\llbracket \, #1 \, \vert \, #2 \, \vert \, #3  \, \rrbracket_{\weaksymbol} }
+\newcommand{\bindvars}[1]{\parallel#1\parallel}
+\newcommand{\compweak}[1]{\llparenthesis \, #1 \, \rrparenthesis^{\weaksymbol}}
+\newcommand{\readbackweak}[1]{\lfloor \, #1 \, \rfloor}
+\newcommand{\composeweak}[1]{\llbracket \, #1 \, \rrbracket^{\weaksymbol}}
+\newcommand{\height}[2]{\mathcal{H}^{#1}(#2)}
+\newcommand{\weight}[2]{\mathcal{W}^{#1}(#2)}
+\newcommand{\weightvar}[2]{\mathcal{V}^{#1}(#2)}
+\newcommand{\weightvarshare}[2]{\mathcal{F}^{#1}(#2)}
+
+\newcommand{\distrule}{d}
+\newcommand{\switchrule}{s}
+\newcommand{\sharerule}{\triangle}
+\newcommand{\weakrule}{\triangle_{0}}
+\newcommand{\apprule}{@}
+\newcommand{\lamrule}{\lambda}
+
+\newcommand{\byprop}[1]{\stackrel{\hbox{\tiny #1}}{\hbox{=}}}
+
+\newcommand{\IH}{\stackrel{\hbox{\tiny I.H.}}{\hbox{=}}}
+
+\colorlet{myGreen}{green!40!gray}
+
+
+%\graphicspath{{./graphics/}}%helpful if your graphic files are in another directory
+
+\bibliographystyle{plainurl}% the mandatory bibstyle
+
+\title{Spinal Atomic Lambda-Calculus} %TODO Please add
+
+\titlerunning{Spinal Atomic Lambda-Calculus}%optional, please use if title is longer than one line
+
+\author{Tom Gundersen}{Red Hat, Inc.}{teg@jklm.no}{}{}
+
+\author{Willem Heijltjes}{University of Bath, England, UK \and \url{http://www.cs.bath.ac.uk/~wbh22/} }{w.b.heijltjes@bath.ac.uk}{}{}%TODO mandatory, please use full name; only 1 author per \author macro; first two parameters are mandatory, other parameters can be empty. Please provide at least the name of the affiliation and the country. The full address is optional
+
+\author{Michel Parigot}{Laboratoire PPS, UMR 7126, CNRS \& Universit\'{e} Paris 7 (France)}{michel.parigot@gmail.com}{}{}
+
+\author{David R. Sherratt}{Friedrich-Schiller University Jena, Germany}{david.rhys.sherratt@uni-jena.de
+}{}{}
+
+\authorrunning{Gundersen at al}%TODO mandatory. First: Use abbreviated first/middle names. Second (only in severe cases): Use first author plus 'et al.'
+
+\Copyright{Gundersen, Heijltjes, Parigot, and Sherratt}%TODO mandatory, please use full first names. LIPIcs license is "CC-BY";  http://creativecommons.org/licenses/by/3.0/
+
+\ccsdesc[100]{General and reference~General literature}
+\ccsdesc[100]{General and reference}%TODO mandatory: Please choose ACM 2012 classifications from https://dl.acm.org/ccs/ccs_flat.cfm 
+
+\keywords{Dummy keyword}%TODO mandatory; please add comma-separated list of keywords
+
+\category{}%optional, e.g. invited paper
+
+\relatedversion{}%optional, e.g. full version hosted on arXiv, HAL, or other respository/website
+%\relatedversion{A full version of the paper is available at \url{...}.}
+
+\supplement{}%optional, e.g. related research data, source code, ... hosted on a repository like zenodo, figshare, GitHub, ...
+
+%\funding{(Optional) general funding statement \dots}%optional, to capture a funding statement, which applies to all authors. Please enter author specific funding statements as fifth argument of the \author macro.
+
+%\acknowledgements{I want to thank \dots}%optional
+
+%\nolinenumbers %uncomment to disable line numbering
+
+%\hideLIPIcs  %uncomment to remove references to LIPIcs series (logo, DOI, ...), e.g. when preparing a pre-final version to be uploaded to arXiv or another public repository
+
+%Editor-only macros:: begin (do not touch as author)%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\EventEditors{John Q. Open and Joan R. Access}
+\EventNoEds{2}
+\EventLongTitle{42nd Conference on Very Important Topics (CVIT 2016)}
+\EventShortTitle{CVIT 2016}
+\EventAcronym{CVIT}
+\EventYear{2016}
+\EventDate{December 24--27, 2016}
+\EventLocation{Little Whinging, United Kingdom}
+\EventLogo{}
+\SeriesVolume{42}
+\ArticleNo{23}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\newcommand{\lambdabar}{\mbox{\textipa{\textcrlambda}}}
+
+\def\infinity{\rotatebox{90}{8}}
+
+\newdimen\arrowsize
+\pgfarrowsdeclare{delta}{delta}{
+        \arrowsize=0.8pt 
+        \advance\arrowsize by .5\pgflinewidth
+        \pgfarrowsleftextend{-.5\pgflinewidth}
+        \pgfarrowsrightextend{2\arrowsize-.5\pgflinewidth}
+}{
+        \arrowsize=.8pt
+        \advance\arrowsize by .5\pgflinewidth
+        \pgfsetdash{}{0pt} % do not dash 
+        \pgfsetmiterjoin        % fix join 
+        \pgfsetbuttcap  % fix cap 
+        \pgfpathmoveto{\pgfpoint{2\arrowsize}{0pt}}
+        \pgfpathlineto{\pgfpoint{0pt}{\arrowsize}}
+        \pgfpathlineto{\pgfpoint{0pt}{-\arrowsize}}
+        \pgfpathclose
+        \pgfusepathqstroke
+}
+
+\pgfarrowsdeclare{triangle}{triangle}{
+        \arrowsize=1pt 
+        \advance\arrowsize by .5\pgflinewidth
+        \pgfarrowsleftextend{-\arrowsize-.5\pgflinewidth}
+        \pgfarrowsrightextend{-.5\pgflinewidth}
+}{
+        \arrowsize=1pt
+        \advance\arrowsize by .5\pgflinewidth
+        \pgfsetdash{}{0pt} % do not dash 
+        \pgfsetmiterjoin        % fix join 
+        \pgfsetrectcap  % fix cap 
+        \pgfpathmoveto{\pgfpointorigin}
+        \pgfpathlineto{\pgfpointpolar{150}{\arrowsize}}
+        \pgfpathlineto{\pgfpointpolar{210}{\arrowsize}}
+        \pgfpathclose
+        \pgfusepathqfillstroke
+}
+
+
+% PICTURE PRESETS
+
+\tikzstyle{AL}=[>=triangle,x=5mm,y=5mm]
+\tikzstyle{dot}=[circle,fill,inner sep=0pt,minimum size=1pt]
+
+
+% PICTURE COMPONENTS
+
+% triple dots
+\newcommand\ALdots[1]{
+        \path (#1) node[dot]{} -- +(-3pt,0) node[dot] {} -- +(3pt,0) node[dot]{};
+}
+
+        % diagonal bar (for bundles)
+\newcommand\ALbar[1]{
+        \draw #1 +(2pt,1pt) -- +(-2pt,-1pt);
+}
+        % general term box
+\newcommand\ALnodeT[4][.4]{
+        \node [inner sep=4pt, minimum height=.6cm, minimum width=#1cm, shape=rectangle, style=draw, rounded corners] (#4) at (#3) {$#2$};
+        \coordinate (#4_top) at ([above=1pt] #4.north);
+        \coordinate (#4_bot) at (#4.south);
+        \coordinate (#4_lbot) at ([left=3pt] #4.south);
+        \coordinate (#4_rbot) at ([right=3pt] #4.south);
+}
+        % lambda node
+\newcommand\ALnodeL[2]{
+        \node [inner sep=2pt] (#2) at (#1) {$\lambda$};
+        \coordinate (#2_1) at (#2.north);
+        \coordinate (#2_2) at (#2.south);
+        \coordinate (#2_3) at (#2.east)
+}
+        % fake lambda node
+\newcommand\ALnodeP[2]{
+        \node [inner sep=2pt] (#2) at (#1) {$\lambda$};
+        \coordinate (#2_1) at (#2.north);
+        \coordinate (#2_2) at (#2.south);
+        \coordinate (#2_3) at (#2.east)
+}
+        % application node
+\newcommand\ALnodeA[2]{
+        \node [inner sep=2pt] (#2) at (#1) {$@$};
+        \coordinate (#2_1) at (#2.north);
+        \coordinate (#2_2) at (#2.south);
+        \coordinate (#2_3) at (#2.east)
+}
+        % sharing node
+\newcommand\ALnodeS[3][.5]{
+        \path (#2) -- +(-#1,0.3) coordinate (#3_left) -- +(0,0.3) coordinate (#3_mid) -- +(#1,0.3) coordinate (#3_right) -- +(0,-0.3) coordinate (#3_tip);
+        \draw ([above=1pt] #3_tip) -- ([below=1pt] #3_left) -- ([below=1pt] #3_right) -- cycle
+}
+        % co-sharing node
+\newcommand\ALnodeC[3][.5]{
+        \path (#2) -- +(-#1,0.3) coordinate (#3_left) -- +(0,0.3) coordinate (#3_mid) -- +(#1,0.3) coordinate (#3_right) -- +(0,-0.3) coordinate (#3_tip);
+        \draw [fill=gray] ([above=1pt] #3_tip) -- ([below=1pt] #3_left) -- ([below=1pt] #3_right) -- cycle
+}
+        % upside-down co-sharing node
+\newcommand\ALnodeCup[3][.5]{
+        \path (#2) -- +(-#1,-0.3) coordinate (#3_left) -- +(0,-0.3) coordinate (#3_mid) -- +(#1,-0.3) coordinate (#3_right) -- +(0,0.3) coordinate (#3_tip);
+        \draw [fill=gray] ([below=1pt] #3_tip) -- (#3_left) -- (#3_right) -- cycle
+}
+        % nullary sharing node
+\newcommand\ALnodeSnull[2]{
+        \path (#1) -- +(-.2,.1) coordinate (#2_left) -- +(.2,.1) coordinate (#2_right) -- +(0,-0.1) coordinate (#2_tip);
+        \draw (#2_tip) -- (#2_left) -- (#2_right) -- cycle
+}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{document}
+
+\maketitle
+
+%TODO mandatory: add short abstract of the document
+\begin{abstract}
+Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent convallis orci arcu, eu mollis dolor. Aliquam eleifend suscipit lacinia. Maecenas quam mi, porta ut lacinia sed, convallis ac dui. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse potenti. 
+\end{abstract}
+
+\section{Introduction}
+
+We investigate the computational meaning of the following \emph{switch} rule of deep-inference proof theory \cite{Tiu:06:A-System:ai, Guglielm07}:
+\begin{center}
+	\drv{(A \rightarrow B) \wedge C ; -[s] ; A \rightarrow (B \wedge C)}
+\end{center}
+On its own, it corresponds to an \emph{end-of-scope} marker in $\lambda$-calculus. This is a special annotation of a subterm, to indicate that a given variable does not occur free, so that a substitution on that variable can be aborted early. In the above rule, $A$ corresponds to the binding variable of an abstraction and $C$ to the subterm of said abstraction where it doesn't occur, while $B$ represents those subterms where it does occur.
+
+The main thrust of our work is to incorporate this rule, and its computational interpretation as a term construct, into the \emph{atomic $\lambda$-calculus} \cite{gundersen2013atomic}. This calculus results from an investigation of the following \emph{medial} rule:
+\begin{center}
+	\drv{(A \vee B) \rightarrow (C \wedge D) ; -[m] ; (A \rightarrow C) \wedge (B \rightarrow D)}
+\end{center}
+The medial rule enables duplication to proceed \emph{atomically}: on individual constructors (abstraction and application) rather than entire subterms. The atomic $\lambda$-calculus implements \emph{full laziness}, a standard notion of sharing where only the \emph{skeleton} of a term needs to be duplicated. Given a term $t$ which needs to be duplicated, full laziness allows to share all maximal subterms $u_{1}$, . . . , $u_{k}$ of $t$ that do not contain occurrences of a variable bound in $t$ outside $u_{i}$. The constructors in $t$ not in any $u_{i}$ are then part of the skeleton.
+
+Our investigation is then focused on the interaction of switch and medial. Based on this we develop the \emph{spinal atomic $\lambda$-calculus}, a natural evolution of the atomic $\lambda$-calculus. The new calculus improves on full laziness with \emph{spinal full laziness}, which duplicates the \emph{spine} rather than the skeleton. The spine of an abstraction are the direct paths from the binder to bound variables \cite{Balabonski12}. The graph below provides an example of this for the term $\lambda x . (\lambda z . z) \lambda y . (y y) x$, where the spine of $\lambda x$ is the very thick red line and the largest subterms that could be identied by an end-of-scope operator in the term calculus (or the switch rule in the proof theory) are enclosed by yellow boxes. %would be identiﬁed by an end-of-scope operator/the switch rule are enclosed by yellow boxes.
+
+
+\begin{center}
+	{\small   \begin{tikzpicture}[auto, scale = 0.75]
+		%%%%%%%%%%%%%
+		\filldraw[fill = yellow!20, draw = yellow!70, rounded corners] (-0.3, -1.25) rectangle (0.3, -2.5);
+		%\filldraw[fill = yellow!20, draw = yellow!70, rounded corners] (0.45, -2.75) rectangle (1.75, -4);
+		%%%%%%%%%%%%%
+		\node (a) at (0, 0) {$\lambda x$};
+		\node (b) at (0, -0.75) {$@$};
+		\node (c) at (0, -1.5) {$\lambda z$};
+		\node (d) at (0, -2.25) {$z$};
+		\node (e) at (0.75, -1.5) {$\lambda y$};
+		\node (f) at (0.75, -2.25) {$@$};
+		\node (g) at (0.75, -3) {$@$};
+		\node (h) at (0.75, -3.75) {$y$};
+		\node (i) at (1.5, -3.75) {$y$};
+		\node (j) at (2.25, -3) {$x$};
+		%%%%%%%%%%%%%
+		\draw [very thick, blue] (a) to (b);
+		\draw (b) to (c);
+		\draw (c) to (d);
+		\draw [rounded corners, blue, very thick] (b) -| (e);
+		\draw [blue, very thick] (e) to (f);
+		\draw [very thick, blue] (f) to (g);
+		\draw [blue, very thick, rounded corners] (f) -| (j);
+		\draw [blue, very thick] (g) to (h); \draw [rounded corners, blue, very thick] (g) -| (i);
+		%%%%%%%%%%%%%%
+	\end{tikzpicture}}
+\hspace{1cm}
+	{\small  \begin{tikzpicture}[auto, scale = 0.75]
+		%%%%%%%%%%%%%
+		\filldraw[fill = yellow!20, draw = yellow!70, rounded corners] (-0.3, -1.25) rectangle (0.3, -2.5);
+		\filldraw[fill = yellow!20, draw = yellow!70, rounded corners] (0.45, -2.75) rectangle (1.75, -4);
+		%%%%%%%%%%%%%
+		\node (a) at (0, 0) {$\lambda x$};
+		\node (b) at (0, -0.75) {$@$};
+		\node (c) at (0, -1.5) {$\lambda z$};
+		\node (d) at (0, -2.25) {$z$};
+		\node (e) at (0.75, -1.5) {$\lambda y$};
+		\node (f) at (0.75, -2.25) {$@$};
+		\node (g) at (0.75, -3) {$@$};
+		\node (h) at (0.75, -3.75) {$y$};
+		\node (i) at (1.5, -3.75) {$y$};
+		\node (j) at (2.25, -3) {$x$};
+		%%%%%%%%%%%%%
+		\draw [very thick, red] (a) to (b);
+		\draw (b) to (c);
+		\draw (c) to (d);
+		\draw [rounded corners, red, very thick] (b) -| (e);
+		\draw [red, very thick] (e) to (f);
+		\draw (f) to (g);
+		\draw [red, very thick, rounded corners] (f) -| (j);
+		\draw (g) to (h); \draw [rounded corners] (g) -| (i);
+		%%%%%%%%%%%%%%
+	\end{tikzpicture}}
+\hspace{1cm}
+	\raisebox{2cm}{
+	\begin{tabular}{l c}
+		{\small Spine} & 
+		 \raisebox{0.1cm}{\begin{tikzpicture}[auto]
+			\draw [red, very thick] (0, 0) to (1, 0);
+		\end{tikzpicture}}  \\[0.2cm]
+		{\small Skeleton} & {\begin{tikzpicture}[auto]
+			\draw [blue, very thick] (0, 0) to (1, 0);
+		\end{tikzpicture}} \\[0.2cm]
+		{\small Subterm} &
+		 \raisebox{-0.1cm}{\begin{tikzpicture}[auto]
+			\filldraw[fill = yellow!20, draw = yellow!70, rounded corners] (0, 0) rectangle (0.5, 0.5);
+		\end{tikzpicture}} 
+	\end{tabular}}
+\end{center}
+
+
+%\subsection{Alternative Introduction}
+%
+%The \emph{scope} of an abstraction $\lambda x . M$ in the $\lambda$-calculus implicitly extends the whole of $M$. When performing a substitution $M \{N / x\}$, the substitution will traverse the whole term $M$. By making the scope explicit, we can trim the traverse space of the substitution. If there is a subterm $P$, and we know the variable $x$ does not occur freely, then we can explicitly move it out of the scope of the abstraction $\lambda x . M$ and the substitution will not needlessly traverse through $P$. 
+
+\subsection{Related Work}
+
+Spine duplication has been implemented by Blanc et al.\ in \cite{blanc2007sharing}, by making use of labels in a dag-implementation. The main purpose of their work is to study sharing in Wadsworth's \emph{weak $\lambda$-calculus} \cite{wadsworth1971semantics} (further studied in \cite{CAGMAN1998239}). Balabonski \cite{Balabonski12} showed that spine duplication allows for an optimal reduction in the sense of L\'{e}vy \cite{levy1980optimal} for \emph{weak reduction} i.e.\ where a $\beta$-reduction $(\lambda x . t) s$ occurring in a subterm $u$ can only reduce if all free variables in the redex are also free in the term $u$. Blelloch and Greiner \cite{Blelloch:1995:PSF:224164.224210} showed that the weak call-by-value reduction strategy can be implemented in polynomial time with respect to the size of the initial term and the number of $\beta$ steps in said term. Given the restriction that $u$ is a closed term, this is then the same as \emph{closed reduction} \cite{fernandez1999closed, fernandez2005closed}. Our work generalizes spine duplication to the $\lambda$-calculus. It uses environments to implement sharing, and does not make use of labels, while maintaining a close intuition to dag-implementations. 
+
+End-of-scope markers in the $\lambda$-calculus have been seen throughout literature. \emph{Berkling's lambda bar} \cite{berkling1976symmetric} has shown to remove the need for variable names while maintaining correctness; improving efficiency by removing the need for alpha conversion \cite{BERKLING198289}. This result was generalized by \emph{Adbmal} (invert of ``Lambda'') \cite{hendriks2003lambda}. It was shown by using multiple variables, scopes can be sequenced rather than nested which correspond closely to the boxes in MELL proof nets of linear logic \cite{Lafont94fromproof-nets}. This approach was studied further in \cite{van2004lambdascope} as graph reduction that satisfies optimality \cite{levy1980optimal}. Although these approaches could identify the skeleton of a term, none however identify the spine of a term, which meant the scopes explicitly displayed may be larger than necessary from the perspective of performing substitution. This problem was solved by \emph{director strings}, introduced by Kennaway and Sleep in \cite{kennaway1988director} for combinator reduction and then generalized for any strategy by Fern\'{a}ndez et al.\ in \cite{fernandez2005lambda}. Director strings are an annotation on terms detailing the location of variable occurrences. An apt annotation on the body of an abstraction will consequently identify the spine of it. Despite being implementations that use director strings \cite{sinot2003efficient, fernandez2005lambda, fernandez2005closed}, an implementation with sharing techniques allowing for duplicating solely the spine could not be found. 
+
+{\color{red} Introduce the rest of the paper.}
+
+\section{Deep Inference}
+
+Deep inference is a methodology for designing proof systems. Inference rules in deep inference, such as switch and medial, can be applied `deeply' i.e.\ there is no concept of the main connective of a formula. The \emph{open deduction} formalism \cite{opendeduction10} is designed around this principle, where logical connectives can be applied at the level of derivations as well as formulae. A derivation from premise $A$ to conclusion $C$ (over the connectives conjunction and implication) is constructed as follows,
+\begin{definition}
+A \emph{derivation} in open deduction is defined as follows.
+\begin{center}
+\drv{A ; _ ; C}
+\hspace{0.5cm}
+::=
+\hspace{0.5cm}
+\drv{A}
+\hspace{0.2cm}
+$\vert$
+\hspace{0.2cm}
+\drv{\drv{A_{1} ; _ ; C_{1}} \wedge \drv{A_{2} ; _ ; C_{2}}}
+\hspace{0.2cm}
+$\vert$
+\hspace{0.2cm}
+\drv{\drv{C_{1} ; _ ; A_{1}} \rightarrow \drv{A_{2} ; _ ; C_{2}}}
+\hspace{0.2cm}
+$\vert$
+\hspace{0.2cm}
+\drv{A ; _ ; B_{1} ; -[r] ; B_{2} ; _ ; C}
+\end{center}
+\end{definition}
+
+\noindent where from left to right, (1) the premise and the conclusion can be the same formula i.e. $A = C$. (2) We can compose derivations horizontally with a conjunction $\wedge$, where $A = A_{1} \wedge A_{2}$ and $C = C_{1} \wedge C_{2}$. (3) We can compose derivations horizontally with an implication $\rightarrow$ where $A = A_{1} \rightarrow A_{2}$ and $C = C_{1} \rightarrow C_{2}$. Note that the derivation on the antecedent of the implication is inverted; it can be interpreted as a derivation where we treat the premise as the conclusion and the conclusion as the premise. Lastly (4) derivations can be composed vertically with an inference rule $r$ from $B_{1}$ to $B_{2}$. We work modulo symmetry, associativity, and unit laws of conjunction. Additionally the generic vertical composition of two derivations (without a mediating rule) exists as a derived operation in \cite{opendeduction10}.
+
+Open deduction was used to type the \emph{basic calculus}, which was introduced in \cite{gundersen2013atomic} as a basis for the atomic $\lambda$-calculus. We follow the same approach here; we reintroduce the basic calculus and show its typing system can be extended with the switch rule, and later expand on this to introduce the spinal atomic $\lambda$-calculus. We obtain a formulation of minimal logic together with the switch rule, from embedding its usual natural deduction system into open deduction. The rules are (respectively) called abstraction, switch, application and ($n$-ary) contraction from left to right.
+\begin{center}
+\drv{\top ; -[\lamrule] ; A \rightarrow A}
+\hspace{0.5cm}
+\drv{(A \rightarrow B) \wedge C ; -[s] ; A \rightarrow (B \wedge C)}
+\hspace{0.5cm}
+\drv{A \wedge (A \rightarrow B) ; -[\apprule] ; B}
+\hspace{0.5cm}
+\drv{A ; -[\sharerule] ; A \wedge \dots \wedge A}
+\end{center}
+These rules are used to type terms of the \emph{basic calculus}, given by the grammar
+\begin{definition}
+\label{def:basiccalc}
+\quad $s, t \quad {:}{:}{=} \quad x \quad \vert \quad \abs{x}{t} \quad \vert \quad \app{s}{t} \quad \vert \quad \share{s}{x_{1}, \dots, x_{n}}{t}$
+\end{definition}
+where the four constructors are called, from left to right, variable, abstraction, application and sharing. This is a \emph{linear} calculus, so each variable occurs at most once, and a sharing construct is used to represent multiple occurrences of a variable (or term). The variable bound by an abstraction must occur within the body of the abstraction i.e.\ in the term $\abs{x}{t}$, $x \in \fv{t}$. Lastly and similarly, each variable bound by the sharing construct must occur and become bound i.e.\ in the term $\share{s}{x_{1}, \dots, x_{n}}{t}$, each $x_{i} \in \fv{u}$ for all $1 \leq i \leq n$. 
+
+
+For a given set $\set{a, b, c, \dots}$ of \emph{atomic formulae}, the following two grammars define \emph{minimal formulae} and \emph{conjunctive formulae} respectively.
+
+\begin{center}
+$A, B, C \quad {:}{=} \quad a \, \, \, \vert \, \, \, A \rightarrow B$ \hspace{1cm} $\Gamma, \Delta \quad {:}{=} \quad A \, \, \, \vert \, \, \, \top \, \, \, \vert \, \, \, \Gamma \wedge \Delta$
+\end{center}
+
+The typing derivations in open deduction for this calculus is displayed in Figure \ref{fig:typebasic}, where the corresponding types and derivations for terms are in red. We add the boxes to aid the reader see the horizontal composition of derivations. The colour of the box has no meaning other than to help identify derivations. A variable $x$ may be typed by any minimal formula $A$, while the other constructors each correspond to inference rules, used within the context of further derivations. A term $t$ with free variables $x_{1}, \dots, x_{n}$ can be typed by a derivation from assumption $A_{1}^{{\color{red} x_{1}}} \wedge \dots \wedge A_{n}^{{\color{red} x_{n}}}$ to conclusion $C$. A \emph{typing judgement} $t : C$ then expresses that $t$ is typeable by a derivation with conclusion $C$. Note that a derivation occurring as the antecedent of an implication is always a minimal formula.
+
+\begin{figure}[h]
+\begin{center}
+\begin{tabular}{c c c c}
+\drv{A^{\color{red} x}}
+\hspace{0.2cm}
+&
+\drv{ \drv[yellow]{\top ; -[\lamrule] ; A \rightarrow A} \wedge \Gamma ; -[s] ; A \rightarrow \drv[green]{A^{\color{red} x} \wedge \Gamma ; _[\color{red} t] ; B}}
+\hspace{0.2cm}
+&
+\drv{\drv[yellow]{\Gamma ; _[\color{red}s] ; A} \wedge \drv[yellow]{\Delta ; _[\color{red}t] ; A \rightarrow B} ; -[\apprule] ; B}
+\hspace{0.2cm}
+&
+\drv{\drv[yellow]{ \Delta \wedge \drv[green]{\Gamma ; _[\color{red} t] ; A ; -[\sharerule] ; A^{\color{red} x_{1}} \wedge \dots \wedge A^{\color{red} x_{n}}}} ; _[\color{red} s ] ; B}
+\end{tabular}
+\end{center}
+\caption{Typing derivations for terms in the basic calculus}
+\label{fig:typebasic}
+\end{figure}
+
+%The terms can also be interpreted graphically, as displayed below. Notice that the derivations are rotated 180 degrees compared to the graphical depictions of the terms. 
+%\begin{center}
+%\begin{tabular}{c c c c}
+%{\begin{tikzpicture}[AL]
+% \draw [->] (0,1) -- (0,-1) ;
+%\end{tikzpicture}}
+%\hspace{0.2cm}
+%&
+% Lambda
+%{\begin{tikzpicture}[AL]
+% \ALnodeL{0,0}a;
+% \ALnodeT[.5]t{0,-1.5}t;
+% \draw [<-] (a_1) -- (0,1);
+% \draw [->] (a_2) -- (t_top);
+% \draw [<-,rounded corners] (a_3) -- (1,0) -- (1,-2.5) -| (0.25, -2.1);
+% \draw [->] (-0.25, -2.1) -- (-.25, -3.5);
+%\ALbar{(-.25,-2.6)};
+%\end{tikzpicture}}
+%\hspace{0.2cm}
+%&
+% Application
+%{\begin{tikzpicture}[AL]
+% \path (0,1) (0,-2.5);
+% \ALnodeA{0,0}a;
+% \ALnodeT[.5]s{0,-1.5}s;
+% \ALnodeT[.5]t{1.2,-1.5}t;
+% \draw [<-] (a_1) -- (0,1);
+% \draw [->] (a_2) -- (s_top);
+% \draw [->,rounded corners] (a_3) -| (t_top);
+% \draw [->] (t_bot) -- +(0pt, -10pt);
+% \ALbar{(t_bot) ++(0pt, -5pt)};
+% \draw [->] (s_bot) -- +(0pt, -10pt);
+% \ALbar{(s_bot) ++(0pt, -5pt)};
+%\end{tikzpicture}}
+%\hspace{0.2cm}
+%&
+% Sharing
+% {\begin{tikzpicture}[AL]
+% \ALnodeT[1.5]s{0,1.5}s;
+% \draw [->] (-0.7, .9) -- (-0.7, -3);
+% \ALbar{(-.7, -1)};
+% \begin{scope}[xshift = 5pt]
+% \ALnodeS{0,0}v;
+%\ALnodeT[.5]t{0,-1.5}t;
+% \draw [->] (s_bot -| v_left) -- (v_left);
+% \draw [->] (s_bot -| v_right) -- (v_right);
+% \draw [->] (v_tip) -- (t_top);
+% \ALdots{0,0.6};
+% \draw [->] (0, -2.1) -- (0, -3);
+% \ALbar{(0, -2.55)};
+%\end{scope}
+%\end{tikzpicture}}
+%\end{tabular}
+%\end{center}
+
+\noindent The semantics of the basic calculus, including the compilation and readback into the $\lambda$-calculus, can be found in \cite{gundersen2013atomic} and will not be repeated here.
+
+Although in the derivation for an abstraction in Figure \ref{fig:typebasic} we place the switch rule directly after the abstraction rule, this is not always the case. Consider the term $t = \lambda x . \lambda y . x y$, where $x : A \rightarrow B =  C$ and $y : A$. The following derivations are both typing judgements of $t : C \rightarrow A \rightarrow B$.
+\begin{center}
+\drv{\top ; -[\lamrule] ; C \rightarrow \drv[green]{C \wedge \drv[yellow]{\top ;-[\lamrule] ; A \rightarrow A} ; -[s] ; A \rightarrow \drv[magenta]{C \wedge A ; -[\apprule] ; B}}}
+\hspace{0.5cm}
+$\sim$
+\hspace{0.5cm}
+\drv{ \drv{\top ; -[\lamrule] ; C \rightarrow C} \wedge \drv[yellow]{\top ; -[\lamrule] ; A \rightarrow A} ; -[s] ; C \rightarrow \drv[green]{C \wedge (A \rightarrow A) ; -[s] ; A \rightarrow \drv[magenta]{C \wedge A ; -[\apprule] ; B}}}
+\end{center}
+
+The main difference between the two is that the first is \emph{scope-balanced} while the second is \emph{unbalanced} (terminology taken from \cite{hendriks2003lambda}). In derivations, the \emph{scope} of an abstraction is considered to be the subderivation found underneath the corresponding switch rule. In the scope-balanced derivation, the scope of the binder $\lambda x$ is the whole body of the term; any scopes of any binders underneath $\lambda x$ (such as $\lambda y$) are considered nested within the scope of $\lambda x$. The scope of an abstraction in the scope-balanced derivation corresponds to the skeleton of the term. In the unbalanced derivation, scopes are not strictly nested but can overlap. The variable $y$ (with type $A$) is now identified by the switch rule corresponding with $\lambda x$, and is not considered within the scope of $\lambda x$ in contrast to the balanced derivation where is was nested. The unbalanced scope of an abstraction corresponds with the spine of the term. Both derivations identify the application in all scope.
+
+%\begin{center}
+%{\color{red} Add a picture here highlighting the scopes? Should I be general or use the specific example}
+%\end{center}
+
+The atomic $\lambda$-calculus can be seen as using only scope-balanced derivations, and here we show that by using unbalanced derivations we can identify the spine of an abstraction, and moreover when introducing the medial rule to the typing system duplicate said spine by proof normalisation.
+%
+%We iterate the point here that the switch rule corresponds to an end-of-scope marker in the $\lambda$-calculus. To understand the idea, consider a closed term $\lambda x . t$ with $n$ maximal subterms $s_{1}, \dots, s_{n}$ that do not contain $x$ as a free variable. This abstraction can then be typed with the following derivation, where the derivation of $t$ is the composition of the derivations of each subterm $s_{i}$ as well as the derivation of the spine of $t$. It is possible to use a switch rule to mark each subterm independently, resulting in a possible explicit end-of-scope marker in the term calculus, but we choose to simplify such that each abstraction rule has at most one switch rule. 
+%
+%\begin{center}
+%\drv{\drv[yellow]{\top ; -[\lamrule] ; A \rightarrow A^{\color{red} x}} \wedge \drv{\top ; _[{\color{red} s_{1}}] ; B_{1}} \wedge \dots \wedge  \drv{\top ; _[{\color{red} s_{n}}] ; B_{n}} ; -[s] ; A \rightarrow \drv[green]{A \wedge B_{1} \wedge \dots \wedge B_{n} ; _[{\color{red} t-spine}] ; C}}
+%\end{center}
+
+
+\section{The Spinal Atomic $\lambda$-Calculus}
+
+%We extend the basic calculus with a new construct, based of the medial inference rule.  In classical logic, the medial rule is the key to reducing contractions to their atomic case during proof normalisation \cite{BrunTiu:01:A-Local-:mz}. This result also translates into intuitionistic logic, and is the key factor to allowing atomic reduction. The medial rule studied in \cite{gundersen2013atomic} uses disjunction, and to avoid introducing disjunction into the typing system the authors instead use the following \emph{distribution rule}, which combines the medial with a co-contraction rule (the reversed contraction rule that works with disjunction rather than conjunction). 
+%\begin{center}
+%	\drv{A \rightarrow (B \wedge C) ; -[d] ; (A \rightarrow B) \wedge (A \rightarrow C)} 
+%\end{center}
+%The distribution rule is introduced when an abstraction meets a contraction rule. The proof reduction step to be implemented in the spinal atomic $\lambda$-calculus is as follows.
+%\begin{center}
+%\drv{(A \rightarrow A) \wedge \Gamma ; -[s] ; A \rightarrow \drv[yellow]{A \wedge \Gamma ; _ ; B} ; -[\sharerule] ; (A \rightarrow B) \wedge (A \rightarrow B)}
+%\hspace{0.5cm}
+%$\rightsquigarrow$
+%\hspace{0.5cm}
+%\drv{(A \rightarrow A) \wedge \Gamma ; -[s] ; A \rightarrow \drv{\drv[yellow]{A \wedge \Gamma ; _ ; B} ; -[\sharerule] ; B \wedge B} ; -[d] ; (A \rightarrow B) \wedge (A \rightarrow B)}
+%\end{center}
+%
+%By doing this, we leave a contraction applied to a subderivation for a term $\lambda x . t$. This reduction step allows to push the contraction past the abstraction, inside the body $t$, without duplicating any part of $t$ itself. The abstraction $\lambda x$ becomes duplicated, creating \emph{phantom-abstractions} (the derivations that occur underneath the distributor). Phantom-abstractions can intuively be interpretated as partially duplicated abstractions. The idea is that the contraction continues to duplicate $t$ stepwise, and the copies gets substituted into the body of the phantom-abstractions, i.e.\ subderivations produceed by continuing the duplication of $t$ are moved underneath the distributor rule as shown in Figure \ref{fig:flush}.
+%\begin{figure}[h]
+%\begin{center}
+%\drv{(A \rightarrow A) \wedge \Gamma ; -[s] ; A \rightarrow \drv[yellow]{A \wedge \Gamma ; _ ; C ; -[\sharerule] ; \drv[green]{C ; _ ; B} \wedge \drv[green]{C ; _ ; B}} ; -[d] ; (A \rightarrow B) \wedge (A \rightarrow B)}
+%\hspace{0.5cm}
+%$\rightsquigarrow$
+%\hspace{0.5cm}
+%\drv{(A \rightarrow A) \wedge \Gamma ; -[s] ; A \rightarrow \drv[yellow]{A \wedge \Gamma ; _ ; C ; -[\sharerule] ; C \wedge C} ; -[d] ; (A \rightarrow \drv[green]{C ; _ ; B}) \wedge (A \rightarrow \drv[green]{\Delta ; _ ; B})}
+%\end{center}
+%\caption{Flushing terms through the distributor}
+%\label{fig:flush}
+%\end{figure}
+%
+%As the duplication of the body of the abstraction proceeds we may create contraction rules on derivations that do not contain the bound variable. Instead of duplicating, we can instead `lift' the derivation outside the scope of the abstraction. This is implemented in the following proof reduction step.
+%\begin{center}
+%\drv{(A \rightarrow A) \wedge \Gamma_{1} \wedge \Gamma_{2} ; -[s] ; A \rightarrow \drv[yellow]{\drv[green]{A \wedge \Gamma_{1} ; _ ; C \wedge C} \wedge \drv[magenta]{\Gamma_{2} ; _ ; D \wedge D}} ; -[d] ; (A \rightarrow C \wedge D) \wedge (A \rightarrow C \wedge D)}
+%\hspace{0.5cm}
+%$\rightsquigarrow$
+%\hspace{0.5cm}
+%\drv{(A \rightarrow A) \wedge \Gamma_{1} \wedge \drv[magenta]{\Gamma_{2} ; _ ; D \wedge D} ; -[s] ; A \rightarrow \drv[yellow]{\drv[green]{A \wedge \Gamma_{1} ; _ ; C \wedge C} \wedge D \wedge D} ; -[d] ; (A \rightarrow C \wedge D) \wedge (A \rightarrow C \wedge D)}
+%\end{center}
+%
+%\noindent After lifting the derivation, we may notice that the formula $D$ does not need to be affiliated with the switch rule but instead can be directly placed using switch rules on the phantom-abstractions. As we are duplicating an abstraction, the partially duplicated abstractions will also have scopes and it is natural that they would also have switch rules that maintain these scopes during duplication. The derivation we lift is not considered part of the spine, and by placing a switch rule on the phantom-abstraction we are transferring this information to the copies of the abstraction. Thus the spine of the copies are equal to the spine of the original.
+%\begin{center}
+%\drv{(A \rightarrow A) \wedge \Gamma_{1} \wedge \drv[magenta]{\Gamma_{2} ; _ ; D \wedge D} ; -[s] ; A \rightarrow \drv[yellow]{\drv[green]{A \wedge \Gamma_{1} ; _ ; C \wedge C} \wedge D \wedge D} ; -[d] ; (A \rightarrow C \wedge D) \wedge (A \rightarrow C \wedge D)}
+%\hspace{0.5cm}
+%$\rightsquigarrow$
+%\hspace{0.5cm}
+%\drv{\drv[cyan]{(A \rightarrow A) \wedge \Gamma_{1} ; -[s] ; A \rightarrow \drv[green]{A \wedge \Gamma_{1} ; _ ; C \wedge C} ; -[d] ; (A \rightarrow C) \wedge (A \rightarrow C)} \wedge \drv[magenta]{\Gamma_{2} ; _ ; D \wedge D} ; =[s] ; (A \rightarrow C \wedge D) \wedge (A \rightarrow C \wedge D)}
+%\end{center}
+%Eventually all the free variables affiliated with the switch are passed to the phantom-abstractions, and the switch rule associated with the abstraction being duplicated will be redundant. If we move all other derivations out of the distribution scope by lifting and flushing as shown in Figure \ref{fig:flush}, eventually the distribution rule will meet the abstraction rule. The distribution inference can then be eliminated by the reduction step below. 
+%\begin{center}
+%\drv{\top ; -[\lambda] ; A \rightarrow \drv{A ; -[\sharerule] ; A \wedge A} ; -[d] ; (A \rightarrow A) \wedge (A \rightarrow A)}
+%\hspace{0.5cm}
+%$\rightsquigarrow$
+%\hspace{0.5cm}
+%\drv{\drv{\top ; -[\lambda] ; A \rightarrow A} \wedge \drv{\top ; -[\lambda] ; A \rightarrow A}}
+%\end{center}
+%
+%To implement reductions of this kind, we extend the basic calculus (Definition \ref{def:basiccalc}) with two new constructs, the \emph{distributor} that corresponds to the distribution inference and \emph{phantom-abstractions} that correspond to the partially duplicated abstractions.
+
+We now formally introduce the syntax of the spinal atomic $\lambda$-calculus ($\FALC$).
+
+\begin{definition}[Pre-Terms] The \emph{pre-terms} $t \in \FALC$ are defined by the following syntax
+
+\begin{center}
+$t \quad {:}{:}{=} \quad x \quad \vert \quad \app{t}{t} \quad \vert \quad \fake{x}{\vec{y}}{t} \quad \vert \quad t[\Gamma]$ 
+%\end{center}
+%\begin{center}
+\\[0.2cm]
+$[\Gamma] \quad {:}{:}{=} \quad  [\vec{x} \leftarrow t] \quad \vert \quad \dist{}{\fakedist{e_{1}}{\vec{x_{1}}} \dots \fakedist{e_{n}}{\vec{x_{n}}}}{\overline{[\Gamma]}}{d}{\vec{y}}$  
+%\end{center}
+%\begin{center}
+\\[0.2cm]
+$\overline{[\Gamma]} \quad {:}{:}{=} \quad [\Gamma] \quad \vert \quad \overline{[\Gamma]}[\Gamma]$
+\end{center}
+
+\end{definition}
+
+We write $\vec{x}$ for a sequence of variables $x_{1}, \dots, x_{n}$ for $n \geq 0$. An abstraction $\fake{x}{x}{t}$ and a phantom-abstraction $\fake{x}{\vec{y}}{t}$ are two instances of the same construct. We call the variables inside the brackets the \emph{cover} of the abstraction. If the cover is the same as the preceeding variable, then we consider it to be an abstraction, otherwise it is a phantom-abstraction and we call the preceeding variable a \emph{phantom-variable}. The distributor  $\dist{u}{\fakedist{e_{1}}{\vec{x_{1}}} \dots \fakedist{e_{n}}{\vec{x_{n}}}}{\overline{[\Gamma]}}{d}{\vec{y}}$ captures the phantom-variables $e_{1}, \dots, e_{n}$ in $u$ and the covers associated with those phantom-variables are captured by the environment $\overline{[\Gamma]}$, which is a collection of closures $[\Gamma]$. We sometimes write the distributor as $\dist{u}{\vecdist{e}{x}}{\overline{[\Gamma]}}{d}{\vec{y}}$ when we are not concerned about the binding of phantom-variables. Terms are then pre-terms with sensible and correct bindings. To define terms, we first define \emph{free} and \emph{bound} variables and phantom variables.
+
+\begin{definition}[Free and Bound Variables] 
+\label{def:freeboundvar} The free variables $\fv{-}$ and bound variables $\bv{-}$ of a pre-term $t$ is defined as follows
+	\begin{align*}
+		\fv{x} &= \set{x} & \bv{x} &= \set{} \\
+		\fv{\app{s}{t}} &= \fv{s} \cup \fv{t} & \bv{\app{s}{t}} &= \bv{s} \cup \bv{t} \\
+		\fv{\fake{x}{x}{t}} &= \fv{t} - \set{x} & \bv{\fake{x}{x}{t}} &= \bv{t} \cup \set{x} \\
+		\fv{\fake{c}{\vec{x}}{t}} &= \fv{t} & \bv{\fake{c}{\vec{x}}{t}} &= \bv{t} \\
+		\fv{\share{u}{\vec{x}}{t}} &= \fv{u} \cup \fv{t} - \set{\vec{x}} & \bv{\share{u}{\vec{x}}{t}} &= \bv{u} \cup \bv{t} \cup \set{\vec{x}}  \\
+		\fv{\dist{u}{\vecdist{e}{x}}{\overline{[\Gamma]}}{c}{c}} &= \fv{u \overline{[\Gamma]}} - \set{c} & \bv{\dist{u}{\vecdist{e}{x}}{\overline{[\Gamma]}}{c}{c}} &= \bv{u \overline{[\Gamma]}} \\
+		\fv{\dist{u}{\vecdist{e}{x}}{\overline{[\Gamma]}}{c}{\vec{y}}} &= \fv{u \overline{[\Gamma]}} \cup \set{c} & \bv{\dist{u}{\vecdist{e}{x}}{\overline{[\Gamma]}}{c}{\vec{y}}} &= \bv{u \overline{[\Gamma]}} \\
+	\end{align*}
+\end{definition}
+
+\begin{definition}[Free and Bound Phantom-Variables] 
+\label{def:freeboundphan}
+The free phantom-variables $\fp{-}$ and bound phantom-variables $\bp{-}$ of the pre-term $t$ is defined as follows
+	\begin{align*}
+		\fp{x} &= \set{} & \bp{x} &= \set{} \\
+		\fp{\app{s}{t}} &= \fp{s} \cup \fp{t} & \bp{\app{s}{t}} &= \bp{s} \cup \bp{t} \\
+		\fp{\fake{x}{x}{t}} &= \fp{t} & \bp{\fake{x}{x}{t}} &= \bp{t}  \\
+		\fp{\fake{c}{\vec{x}}{t}} &= \fp{t} \cup \set{c}& \bp{\fake{c}{\vec{x}}{t}} &= \bp{t} \\
+		\fp{\share{u}{\vec{x}}{t}} &= \fp{u} \cup \fp{t} & \bp{\share{u}{\vec{x}}{t}} &= \bp{u} \cup \bp{t}
+	\end{align*}
+	\begin{align*}
+	\fp{\dist{u}{\fakedist{e_{1}}{\vec{x_{1}}} \dots \fakedist{e_{n}}{\vec{x_{n}}}}{\overline{[\Gamma]}}{c}{c}} &= \fp{u \overline{[\Gamma]}} - \set{e_{1}, \dots, e_{n}} \\
+	\bp{\dist{u}{\fakedist{e_{1}}{\vec{x_{1}}} \dots \fakedist{e_{n}}{\vec{x_{n}}}}{\overline{[\Gamma]}}{c}{c}} &= \bp{u \overline{[\Gamma]}} \cup \set{e_{1}, \dots, e_{n}} \\
+	\fp{\dist{u}{\fakedist{e_{1}}{\vec{x_{1}}} \dots \fakedist{e_{n}}{\vec{x_{n}}}}{\overline{[\Gamma]}}{c}{\vec{y}}} &= \fp{u \overline{[\Gamma]}} \cup \set{c} - \set{e_{1}, \dots, e_{n}} \\
+	\bp{\dist{u}{\fakedist{e_{1}}{\vec{x_{1}}} \dots \fakedist{e_{n}}{\vec{x_{n}}}}{\overline{[\Gamma]}}{c}{\vec{y}}} &= \bp{u \overline{[\Gamma]}} \cup \set{e_{1}, \dots, e_{n}} 
+	\end{align*}
+\end{definition}
+
+\noindent Variables are bound by abstractions (not phantoms) and sharings. Phantom-variables are bound by distributors. With these definitions, we can formally define the terms of $\FALC$.
+
+\begin{definition}[Terms]
+\label{def:falcterms}
+A \emph{term} $t \in \FALC$ is a pre-term with the following constraints
+\begin{enumerate}
+	\item  Each variable may occur at most once.
+	\item In an abstraction $\fake{x}{x}{t}$, $x \in \fv{t}$.
+	\item In a phantom-abstraction $\fake{c}{x_{1}, \dots, x_{n}}{t}$, $\set{x_{1}, \dots, x_{n}} \subset \fv{t}$.
+	\item  In a sharing $\share{u}{x_{1}, \dots, x_{n}}{t}$, $\set{x_{1}, \dots, x_{n}} \subset \fv{u}$.
+	\item  In a distributor $\dist{u}{\fakedist{e_{1}}{w^{1}_{1}, \dots, w^{1}_{k_{1}}} \dots \fakedist{e_{n}}{w^{n}_{1}, \dots, w^{n}_{k_{n}}}}{\overline{[\Gamma]}}{c}{c}$  
+	\begin{enumerate}
+		\item For all $1 \leq i \leq n$ and $1 \leq m \leq k_{n}$, $w^{i}_{m} \fv{u}$ and becomes bound by $\overline{[\Gamma]}$ .
+		\item $\set{\fakedist{e_{1}}{w^{1}_{1}, \dots, w^{1}_{k_{1}}}, \dots, \fakedist{e_{n}}{w^{n}_{1}, \dots, w^{n}_{k_{n}}}} \subset \fc{u}$, and $\set{e_{1}, \dots, e_{n}} \subset \fp{u}$, and each $e_{i}$ becomes bound.
+		\item The variable $c$ occurs somewhere in the environments $\overline{[\Gamma]}$.
+	\end{enumerate}
+	\item  In a distributor $\dist{u}{\fakedist{e_{1}}{w^{1}_{1}, \dots, w^{1}_{k_{1}}} \dots \fakedist{e_{n}}{w^{n}_{1}, \dots, w^{n}_{k_{n}}}}{\overline{[\Gamma]}}{c}{y_{1}, \dots, y_{m}}$  
+	\begin{enumerate}
+		\item Both $5(a)$ and $5(b)$ hold.
+		\item For all $1 \leq i \leq m$, $y_{i}$ occurs in the environments $\overline{[\Gamma]}$.
+	\end{enumerate}
+\end{enumerate}
+
+\end{definition}
+
+%\noindent Below we show some examples of pre-terms and terms
+%
+%\begin{itemize}
+%	\item Pre-Terms (not Terms)
+%
+%\begin{itemize}
+%	\item $\fake{c}{x}{y}$. 
+%
+%	Violating condition $3$ in Definition \ref{def:falcterms}.
+%	\item $\share{\app{x}{y}}{x, z}{w}$. 
+%
+%	Violating condition $4$
+%	\item $\app{\fake{e_{2}}{w_{2}}{w_{2}}}{(\app{(\fake{e_{1}}{w_{1}}{w_{1}})}{z})} \dist{}{\fakedist{e_{1}}{w_{1}}, \fakedist{e_{2}}{w_{2}}}{\share{}{w_{1}, w_{2}}{\fake{x}{x}{\app{x}{y}}}}{c}{z}$
+%
+%	Violating condition $6(b)$
+%\end{itemize}
+%	\item Terms
+%\begin{itemize}
+%	\item $\fake{x}{x}{x}$
+%	\item $\fake{x}{x}{(\fake{y}{y}{\share{\app{x_{1}}{(\app{x_{2}}{y})}}{x_{1}, x_{2}}{x}})}$
+%	\item $ \app{\fake{e_{2}}{w_{2}}{w_{2}}}{(\app{(\fake{e_{1}}{w_{1}}{w_{1}})}{z})} \dist{}{\fakedist{e_{1}}{w_{1}}, \fakedist{e_{2}}{w_{2}}}{\share{}{w_{1}, w_{2}}{\fake{x}{x}{\app{x}{c}}}}{c}{c}$
+%\end{itemize}
+%\end{itemize}
+
+We consider terms equal up to the congruence induced by the exchange of closures. Consider the term $t[\Gamma_{1}][\Gamma_{2}]$ where $[\Gamma_{1}]$ and $[\Gamma_{2}]$ are both closures. Then $t[\Gamma_{1}][\Gamma_{2}] \sim t[\Gamma_{2}][\Gamma_{1}]$ iff $[\Gamma_{2}]$ only binds variables and phantom-variables located in $t$. This equivalence is essential to the rewriting theory. We also consider terms equal up to symmetry of contraction. We consider the sequence of variables $xs$ modulo permutations. Let $\vec{x}$ be a list of variables and let $\vec{x_{P}}$ be a permutation of that list, then the following terms are considered equal.
+\begin{center}
+	$\share{u}{\vec{x}}{t} \sim \share{u}{\vec{x_{P}}}{t}$
+	\hspace{1cm}
+	$\fake{c}{\vec{x}}{t} \sim \fake{c}{\vec{x_{P}}}{t}$
+\end{center}
+
+\subsection{Typing System}
+
+\begin{figure}[h]
+ \drv{(A \rightarrow \Gamma) \wedge \Delta ; -[\switchrule] ; A^{\color{red}d} \rightarrow \drv[yellow]{\Gamma^{\color{red} \vec{x}} \wedge \Delta ; _[{\color{red}t}] ; C}}
+\hspace{1cm}
+\drv{\drv[yellow]{\drv[green]{(C \rightarrow C) \wedge \Delta ; -[\switchrule] ; C^{\color{red}c} \rightarrow
+	\drv[cyan]{C^{\color{red} c} \wedge \Delta ; _[{\color{red} \overline{[\Gamma]}} ] ; \Sigma \wedge \dots \wedge \Phi} ; -[\distrule] ; (C^{\color{red}e_{1}} \rightarrow \Sigma^{\vec{\color{red}x^{1}}}) \wedge \dots \wedge  (C^{\color{red}e_{n}} \rightarrow \Phi^{\vec{\color{red}x^{n}}})}
+	\wedge \Omega} ; _[{\color{red}u}] ; E} 
+\caption{Typing derivations for phantom-abstractions and distributors}
+\label{fig:derivphandist}
+\end{figure}
+
+The terms typed by the derivations in Figure \ref{fig:typebasic} and Figure \ref{fig:derivphandist}. Figure \ref{fig:derivphandist} shows the derivations for the terms $\fake{d}{\vec{x}}{t}$ and $\dist{u}{\fakedist{e_{1}}{\vec{x_{1}}} \dots \fakedist{e_{n}}{\vec{x_{n}}}}{\overline{[\Gamma]}}{c}{c}$. The distributor construct is typed using the medial rule as in \cite{gundersen2013atomic}. Notice that the medial rule in Figure \ref{fig:derivphandist} does not use disjunction compared to the medial rule in the introduction. In the derivation we combine the medial rule with a co-contraction rule to form the \emph{distribution rule} ($d$). Since the formula in the ante-cedent of an implication is always a minimal formula, doing this allows us to avoid introducing disjunction into the typing system. 
+
+The main difference between our calculus is the bindings. We create a new class of bindings, where phantom-variables are captured by the distributor but variables are captured by the environment of the distributor. This shows in the derivations since the types of the variables ($\Sigma$ and $\Phi$) are not captured by the distribution rule. 
+
+
+
+%\noindent The distributor is illustrated below; it is depicted as a box encompassing an environment and a co-contraction.
+%
+%\begin{center}
+%\begin{tabular}{c c}
+%{\begin{tikzpicture}[AL]
+%\filldraw[fill = green!30, draw = green!70, rounded corners] (-1, 0.7) rectangle (1, -3); 
+% \ALnodeP{0,0}a;
+% \ALnodeT[.5]t{0,-1.5}t;
+% \draw [<-] (a_1) -- (0,1);
+% \draw [->] (a_2) -- (t_top);
+% \draw [<-,rounded corners] (a_3) -- (1.5,0) -- (1.5,-2.5) -| (1.5, -3.5);
+% \draw [->] (-0.25, -2.1) -- (-.25, -3.5);
+%\ALbar{(-.25,-2.6)};
+% \draw [->] (0.25, -2.1) -- (.25, -3.5);
+%\ALbar{(.25,-2.6)};
+%\node at (-0.625, -2.5) {\tiny \color{red} $\vec{x}$};
+%\node at (0.625, -2.5) {\tiny \color{red} $\vec{y}$};
+%\node at (1.75, -2) {\tiny \color{red} $c$};
+%\end{tikzpicture}}
+%&
+%%%%%%%%%%%%%%
+%{\begin{tikzpicture}[AL]
+%\draw[rounded corners] (-2.5, 4.75) rectangle (6.5, -2.6);
+% \filldraw[fill = green!30, draw = green!70, rounded corners] (-0.75, 1) rectangle (0.75, -1.85);
+%\filldraw[fill = black!20, draw = black!70, rounded corners, thick] (-1, -2.8) rectangle (6.5, -5.5);
+%\ALnodeP{0, 0.5}a;
+% \draw[->] (-1.75, -2.6) -- (-1.75, -6);
+%\draw [->] (0, 5) -- (a_1);
+%\ALnodeT[.5]{}{0, -1}t; 
+%\draw [->] (a_2) -- (t_top);
+%\ALdots{2, 4};
+% \node at (0, 3) { $u$};
+%\begin{scope}[yshift = 2cm]
+% \filldraw[fill = green!30, draw = green!70, rounded corners] (3.25, 0.5) rectangle (4.75, -2.35);
+%\ALnodeP{4, 0}b;
+%\draw [->] (4, 1) -- (b_1);
+%\ALnodeT[.5]{}{4, -1.5}s;
+%\draw [->] (b_2) -- (s_top);
+%\end{scope}
+%\draw [<-, rounded corners] (b_3) -| (6, 2) -- (6, -4); 
+%\draw [<-, rounded corners] (a_3) -| (5, -4) ;
+%\ALdots{5.5, -2};
+%\ALdots{2, 1};
+%\ALnodeC{5.5, -4.2}c;
+%\ALnodeT[2.5]{\overline{\Gamma}}{2, -4}h;
+%\draw [->] (0, -1.6) -- (0, -3.35);
+%\draw [-] (4, 1.9) -- (4, 0.6);
+%\draw [->] (4, 0.4) -- (4, -3.35);
+%\draw [-] (-0.2, -1.6) -- (-0.2, -3.3);
+%\draw [->] (-0.2, -4.7) -- (-0.2, -6);
+%\ALbar{(0, -2.3)};
+%\ALbar{(-0.2, -2.3)};
+%\ALbar{(4, -0.6)};
+%\ALbar{(3.8, -0.6)};
+%\draw [->, rounded corners] (3, -4.6) |- (5, -5) -| (c_tip);
+%\draw [->] (1.8, -4.6) -- (1.8, -6);
+%\ALbar{(1.8, -5.1)};
+%\draw [-] (3.8, 1.9) -- (3.8, 0.6);
+%\draw [-] (3.8, 0.4) -- (3.8, -3.3);
+%\draw [-] (3.8, -4.7) -- (3.8, -4.9);
+%\draw [->] (3.8, -5.1) -- (3.8, -6); 
+% \node at (1.55, -2.25) {\tiny \color{red} $x^{1}_{1}, \dots, x^{1}_{k_{1}}$};
+%  \node at (2.6, -0.6) {\tiny \color{red} $x^{n}_{1}, \dots, x^{n}_{k_{n}}$};
+% \node at (4.7, -2.25) {\tiny \color{red} $e_{1}$};
+% \node at (5.7, -1.5) {\tiny \color{red} $e_{n}$};
+% \node at (5.8, -5) {\tiny \color{red} $y$};
+% \ALbar{(-1.75, -4.3)};
+%\end{tikzpicture}}
+%\\
+%$\fake{c}{\vec{x}}{t}$ &
+%$\dist{u}{\fakedist{e_{1}}{x^{1}_{1} \dots x^{1}_{k_{1}}} \dots \fakedist{e_{n}}{x^{n}_{1} \dots x^{n}_{k_{n}}}}{\overline{[\Gamma]}}{y}{y}$
+%\end{tabular}
+%\end{center}
+
+\subsection{Compilation and Readback}
+
+We now define the translations between $\FALC$ and the original $\lambda$-calculus. First we define the interpretation $\Lambda \rightarrow \FALC$ (\emph{compilation}). Intuitively, it replaces each abstraction $\lambda x . -$ with the term $\fake{x}{x}{\share{-}{x_{1}, \dots, x_{n}}{x}}$ where $x_{1}, \dots, x_{n}$ replace the occurrences of $x$. Actual substitutions are denoted as $\sub{}{t}{x}$. Let $\size{M}_{x}$ denote the number of occurrences of $x$ in $M$, and if $\size{M}_{x} = n$ let $M \frac{n}{x}$ denote $M$ with the occurrences of $x$ by fresh, distinct variables $x^{1}, \dots, x^{n}$. First, the translation of a \emph{closed} term $M$ is $\compile{M}'$, defined below
+
+\begin{definition}[Compilation]
+\label{def:compile}
+The interpretation for closed lambda terms, $\compile{\Lambda}' : \Lambda \rightarrow \FALC$ is defined below
+\begin{align*}
+	\compile{x}' &= x \\
+	\compile{\app{M}{N}}' &= \app{\compile{M}'}{\compile{N}'} \\
+	\compile{\abs{x}{M}}' &= 
+	\begin{cases}
+		\fake{x}{x}{\compile{M}'} & \text{if } \size{M}_{x} = 1 \\
+		\fake{x}{x}{\share{\compile{M \frac{n}{x}}'}{x^{1}, \dots, x^{n}}{x}} & \text{if } \size{M}_{x} = n \neq 1
+	\end{cases}
+\end{align*}
+\end{definition}
+
+\noindent For an arbitrary term $M$, if $x_{1}, \dots, x_{k}$ are the free variables of $M$ such that $\size{M}_{x_{i}} = n_{i} > 1$, the translation $\compile{M}$ is
+
+$$\compile{M \frac{n_{1}}{x_{1}} \dots \frac{n_{k}}{x_{k}} }' \share{}{x^{1}_{1}, \dots, x^{n_{1}}_{1}}{x_{1}} \dots \share{}{x^{1}_{k}, \dots, x^{n_{k}}_{k}}{x_{k}}$$
+
+The readback into the $\lambda$-calculus is slightly more complicated, specifically due to the bindings induced by the distributor. Interpreting a distributor $\trans{\dist{u}{\fakedist{e_{1}}{\vec{x_{1}}} \dots \fakedist{e_{n}}{\vec{x_{n}}}}{\overline{[\Gamma]}}{c}{c}}$ construct as a $\lambda$-term requires (1) converting the phantom-abstractions it binds in $u$ into abstractions (2) collapsing the environment (3) maintaining the bindings between the converted abstractions and the intended variables located in the environment. 
+
+%Collapsing the environment to a collection of substitutions $\sigma$ means we need to perform the substitutions either before of after interpreting $u$, i.e.\ $\trans{u}\sigma$ or $\trans{u \sigma}$. By performing the substitutions first, we conflict with condition $1$ of Definition \ref{def:falcterms}, therefore we only have the option to first interpret $u$ and then perform substitutions. Consequently, since the binding variable of abstractions in $u$ may occur in the terms of $\sigma$, intentionally due to (3), these substitutions would not be capture-avoiding. To elaborate, let $\vec{x_{1}} = x_{1}, x_{2}$. The collapsed envorinment is expected to have two substitutions $\sub{}{M_{1}}{x_{1}}, \sub{}{M_{2}}{x_{2}} \in \sigma$ where $M_{1}, M_{2} \in \Lambda$.It is possible that in $M_{1}$ or $M_{2}$ might contain $c$ as a free variable, which is the variable bound by the abstraction in the distributor. Therefore to maintain bindings, we would need the substitutions $\sub{}{M_{i} \sub{}{e_{1}}{c}}{x_{i}}$ for $i \in [2]$.
+%
+%Lastly, it may be the case that the phantom-abstraction in $u$ bound by the distributor is actually a part of a second distributor in $u$, i.e.\ the subterm $\dist{u'}{\fakedist{f_{1}}{\vec{y_{1}}} \dots \fakedist{f_{m}}{\vec{y_{m}}}}{\overline{[\Gamma]}}{e_{i}}{\vec{x_{i}}}$. The cover $\fakedist{e_{i}}{\vec{x_{i}}}$ is captured by the already interpreted distributor. We will have issues if we use the same reasoning as before here, since the intended bound variable for this cover is not located in this environment but would be substituted in from the previous collapsed environment (in $\sigma$). We cannot wait for these substitutions to be performed before we can interpret this distributor without breaking linearity. The solution is to use a map that is carried with the interpreting function. This map $\sigma$ (we overload notation) allows us to directly manipulate the substitutions. For further elaboration, let $\fakedist{e_{i}}{\vec{x_{i}}} = \fakedist{e_{1}}{x_{1}, x_{2}}$ from before. We know $\sub{}{M_{1} \sub{}{e_{1}}{c}}{x_{1}}, \sub{}{M_{2} \sub{}{e_{1}}{c}}{x_{2}} \in \sigma$. We can interpret this distributor, that allows us to perform the substitutions without breaking linearity since the results are stored in the map. Consider the collapsed environment $\sigma'$. For each cover captured, e.g.\ $\fakedist{f_{1}}{\vec{y_{1}}}$, and for each $y \in \vec{y_{1}}$, there is some term $N$ such that $\sub{}{N}{y} \in \sigma'$. We can maintain variable bindings (condition 3) then simply by reading the current map $\sigma$ and adding a new substitution as done before, resulting in $\sub{}{N \sub{}{M_{1} \sub{}{e_{1}}{c} \sub{}{f_{1}}{e_{1}}}{x_{1}} \sub{}{M_{2} \sub{}{e_{1}}{c} \sub{}{f_{1}}{e_{1}}}{x_{2}}}{y}$.
+
+\begin{definition}
+Given a total function $\sigma$ with domain $D$ and codomain $C$, we \emph{overwrite} the function with case $x \mapsto V$ where $x \in D$ and $V \in C$ such that
+
+$\sigma [ x \mapsto V ] (z) = \begin{cases} V & z = x \\ \sigma(z) & \text{otherwise}  \end{cases}$
+\end{definition}
+
+%\begin{definition}
+%We define a map $\sigma : V \rightarrow \Lambda$ to be an infinite set of pairs of variables and $\Lambda$-terms. Given a variable $x$, $\sigma(x) = M$ such that $(x \mapsto M) \in \sigma$ and there does not exist $N$ where $M \neq N$ and $(x \mapsto N) \in \sigma$
+%\end{definition}
+%
+%\noindent We use the following notation to make maps more concise.
+%
+%\begin{notation}
+%We write $\sigma = \set{x_{1} \mapsto M_{1}, \dots, x_{n} \mapsto M_{n}}$ to mean the map where for $x_{i} \in \set{x_{1}, \dots, x_{n}}$, $\sigma(x_{i}) = M_{i}$ and for $y \not\in \set{x_{1}, \dots, x_{n}}$, $\sigma(y) = y$.
+%\end{notation}
+
+When using the map $\sigma$ as part of the translation, the intuition is that for all bound variables $x$ in the term we are translatings, it should be that $\sigma(x) = x$. The map $\gamma : V \rightarrow V$ is defined similarly, and the purpose is to keep track of the binding of phantom-variables.
+
+\begin{definition}
+\label{def:readback}
+The interpretation $\readbackwmap{-}{-}{-} : \FALC \times (V \rightarrow \Lambda) \times (V \rightarrow V) \rightarrow \Lambda$ is defined as
+\begingroup
+\allowdisplaybreaks
+\begin{align*}
+	\readbackwmap{x}{\sigma}{\gamma} &= \sigma(x) \\[0.2cm]
+	\readbackwmap{\app{s}{t}}{\sigma}{\gamma} &= \app{\readbackwmap{s}{\sigma}{\gamma}}{\readbackwmap{t}{\sigma}{\gamma}} \\[0.2cm]
+	\readbackwmap{\fake{c}{c}{t}}{\sigma}{\gamma} &= \abs{c}{\readbackwmap{t}{\sigma[c \mapsto c]}{\gamma}} \\[0.2cm]
+	\readbackwmap{\fake{c}{x_{1}, \dots, x_{n}}{t}}{\sigma}{\gamma} &= \abs{c}{\readbackwmap{t}{\sigma[x_{i} \mapsto \sigma(x_{i}) \sub{}{c}{\gamma(c)}]_{i \in [n]}}{\gamma}} \\[0.2cm]
+	\readbackwmap{\share{u}{x_{1}, \dots, x_{n}}{t}}{\sigma}{\gamma} &= \readbackwmap{u}{\sigma[x_{i} \mapsto \readbackwmap{t}{\sigma}{\gamma}]_{i \in [n]}}{\gamma} \\[0.2cm]
+%\end{align*}
+%\begin{align*}
+	\readbackwmap{\dist{u}{\fakedist{e_{1}}{\vec{w_{1}}}, \dots, \fakedist{e_{n}}{\vec{w_{n}}}}{\overline{[\Gamma]}}{c}{c}}{\sigma}{\gamma} &= \readbackwmap{u \overline{[\Gamma]}}{\sigma}{\gamma[e_{i} \mapsto c]_{i \in [n]}} \\[0.2cm]
+	\readbackwmap{\dist{u}{\fakedist{e_{1}}{\vec{w_{1}}}, \dots, \fakedist{e_{n}}{\vec{w_{n}}}}{\overline{[\Gamma]}}{c}{x_{1}, \dots, x_{m}}}{\sigma}{\gamma} &= \readbackwmap{u \overline{[\Gamma]}}{\sigma'}{\gamma[e_{i} \mapsto c]_{i \in [n]}} \\
+	 & \text{ where } \sigma' = \sigma[x_{i} \mapsto \sigma(x_{i}) \sub{}{c}{\gamma(c)}]_{i \in [n]} \\
+\end{align*}
+\endgroup
+
+\end{definition}
+%We utilise two interpretations to define the readback. Given a term $N : \Lambda$, a substitution map $S : V \rightarrow \Lambda$, and a variable-indexed renaming $R: V \rightarrow V \rightarrow$, i.e.\ for a given $x$, $R_{x} : V \rightarrow V$ is a renaming function,  we can define the interpretation $\trans{t} = (\Lambda, R)$ that interprets a spinal atomic $\lambda$ terms as a pair consisting of a $\lambda$-term and renamings, and will use the auxiliary translation $\tranclos{[\Gamma]}$ which interprets closures as a pair $(S, R)$.
+%
+%A renaming $R$ \emph{modifies} a substitution $S$ by $S\{R\} : V \rightarrow \Lambda$, such that $S \{ R \} (x) = S(x) \{R_{x} \}$. So if $S$ has $\sub{}{N}{x}$, then $S \{ R \}$ has $\sub{}{N \{ R_{x} \}}{x}$. Renamings $R$ and $Q$ can be \emph{composed} $R \cdot Q = R_{x} \cdot Q_{x}$ for every $x$. Renaming can be \emph{joined} as $R + Q$ if $R_{x}$ and $Q_{x}$ agree where they are both defined. We thus define the translation.
+%
+%\begin{align*}
+%	\trans{x} &= (x, 0) \\
+%	\trans{st} &= (NM, R + Q) & \trans{s} = (N, R), \trans{t} = (M, Q) \\
+%	\trans{\fake{c}{\vec{x}}{t}} &= (\lambda c . N, R) & \trans{t} = (N, R) \\
+%	\trans{t [\Gamma]} &= (N \{S \{R \} \}, R \cdot Q) & \trans{t} = (N, R), \tranclos{[\Gamma]} = (S, Q) \\[1cm]
+%	\tranclos{\share{}{x_{1}, \dots, x_{n}}{t}} &= (\sub{}{N}{x_{1}} \dots \sub{}{N}{x_{n}}, R) & \trans{t} = (N, R) \\
+%	\tranclos{\dist{}{\fakedist{e_{1}}{\vec{w_{1}}}, \dots, \fakedist{e_{n}}{\vec{w_{n}}}}{\overline{[\Gamma]}}{c}{\vec{x}}} &= (S \{ R \}, R \cdot Q) & \tranclos{\overline{[\Gamma]}} = (S, Q) \\
+%	& & \text{each } R_{x} = \sub{}{e_{i}}{c} \text{ for each } x \in \vec{w_{i}}
+%\end{align*}
+%
+%In the term calculus, we consider terms equal up to the congruence induced by the exchange of closures. Consider the term $t[\Gamma_{1}][\Gamma_{2}]$ where $[\Gamma_{1}]$ and $[\Gamma_{2}]$ are both closures. Then $t[\Gamma_{1}][\Gamma_{2}] \sim t[\Gamma_{2}][\Gamma_{1}]$ iff $[\Gamma_{2}]$ only binds variables and phantom-variables located in $t$. This equivalence is essential to the rewriting theory.
+%
+%\begin{proposition}
+%Given $t[\Gamma_{1}][\Gamma_{2}] \sim t[\Gamma_{2}][\Gamma_{1}]$ , then $\readback{t[\Gamma_{1}][\Gamma_{2}]}{\sigma} = \readback{t[\Gamma_{2}][\Gamma_{1}]}{\sigma}$
+%\end{proposition}
+%\begin{proof}
+%
+%
+%Consider $\readback{t[\Gamma_{1}][\Gamma_{2}]}{}$, the intepretation of the closure $[\Gamma_{2}]$ may generate substitutions and recapturings $\sigma_{2}$ i.e.\ $\readback{t[\Gamma_{1}][\Gamma_{2}]}{} = \readback{t[\Gamma_{1}]}{} \sigma_{2}$. Using the same reasoning we can say $\readback{t[\Gamma_{1}]}{} \sigma_{2} = \readback{t}{} \sigma_{1} \sigma_{2}$. Since the variables bound by $[\Gamma_{2}]$ are only located in $t$ and not in any term in $\sigma_{1}$, we can exchange these bundles of substitutions and recapturings i.e.\ $\readback{t}{} \sigma_{1} \sigma_{2} = \readback{t}{} \sigma_{2} \sigma_{1} = \readback{t [\Gamma_{2}] [\Gamma_{1}]}{}$
+%\end{proof}
+
+\begin{lemma}
+\label{lem:preservedenotation}
+For $s, t \in \FALC$, if $s \sim t$ then $\trans{s} = \trans{t}$ 
+\end{lemma}
+
+\begin{lemma}
+\label{lem:preserve1to1correspondance}
+For a closed $t \in \FALC$, where $t$ has no distributor constructs and only variables are shared, and a closed $N \in \Lambda$. the following 
+$$\readback{\compile{N}'}{I} = N \hspace{1.5cm} \compile{\readback{t}{I}}' = t \hspace{1.5cm} \exists_{ M \in \Lambda} . t = \compile{M}'$$ 
+\end{lemma}
+
+\subsection{Rewrite Rules}
+
+Both the spinal atomic $\lambda$-calculus and the atomic $\lambda$-calculus of \cite{gundersen2013atomic} follow atomic reduction steps, i.e.\ they apply on individual constructors. The biggest difference is that our calculus is capable of duplicating not only the skeleton but also the spine. The rewrite rules in our calculus make use of 3 operations, \emph{substitution}, \emph{book-keeping}, and \emph{exorcism}.
+
+The operation \emph{substitution} $\sub{t}{s}{x}$ propagates through the term $t$, and replaces the free occurences of the variable $x$ with the term $s$. Moreover, if $x$ occurs in the cover of a phantom-variable $\fakedist{e}{\vec{y} \cdot x}$, then substitution replaces the $x$ in the cover with $\fv{s}$, $\fakedist{e}{\vec{y} \cdot \fv{s}}$.
+
+Although substitution performs some book-keeping on phantom-abstractions, we define an explicit notion of book-keeping $\psub{}{\vec{y}}{e}$ that updates the variables stored in a free cover i.e.\ for a term $t$, $\fakedist{e}{\vec{x}} \in \fc{t}$ then $\fakedist{e}{\vec{y}} \in \fc{\psub{t}{\vec{y}}{e}}$.
+
+The last operation we introduce is called \emph{exorcism} $\exor{}{c}{\vec{x}}$. We perform exorcisms on phantom-abstractions to convert them to abstractions. Intuitively, this will be performed on phantom-abstractions with phantom-variables bound to a distributor when said distributor is eliminated. It converts phantom-abstractions to abstractions by introducing a sharing of the phantom-variable that captures the variables in the cover, i.e.\ $\fake{c}{\vec{x}}{t} \exor{}{c}{\vec{x}} = \fake{c}{c}{\share{t}{\vec{x}}{c}}$.
+
+\begin{proposition}
+\label{prop:suboutcomm}
+Given $M \in \Lambda$ such that for all $v \in V$, $\gamma(v) \not\in \fv{M}$  and $\sigma(x) = x$, the translation $\readbackwmap{u}{\sigma}{\gamma}$ commutes with substitution $\sub{}{M}{x}$ in the following way 
+
+$$\readbackwmap{u \sub{}{t}{x}}{\sigma}{\gamma} = \readbackwmap{u}{\sigma[x \mapsto \readbackwmap{t}{\sigma}{\gamma}]}{\gamma}$$
+
+%$$\readbackwmap{u}{\sigma'}{\gamma} = \readbackwmap{u}{\sigma}{\gamma} \sub{}{M}{x}$$
+%
+%where $\sigma'(z) = \begin{cases} \sigma(z) \sub{}{M}{x} & z \neq x \\ M & \text{otherwise} \end{cases}$
+\end{proposition}
+
+%\begin{proposition}
+%\label{prop:subintrans}
+%Substitution commutes with the translation in the following way
+%
+%$$\readbackwmap{u \sub{}{t}{x}}{\sigma}{\gamma} = \readbackwmap{u}{\sigma[x \mapsto \readbackwmap{t}{\sigma}{\gamma}]}{\gamma}$$
+%\end{proposition}
+
+\begin{proposition}
+\label{prop:bkcomm}
+Book-keeping commutes with the translation in the following way
+
+if $\fake{c}{y_{1}, \dots, y_{m}} \in \fc{u}$ such that $\set{x_{1}, \dots, x_{n}} \subset \set{y_{1}, \dots, y_{m}}$
+
+and for those $z \in \set{y_{1}, \dots, y_{m}} / \set{x_{1}, \dots, x_{n}}$, $\gamma(c) \not\in \fv{\sigma(z)}$
+
+or if simply $\set{x_{1}, \dots, x_{n}} \cap \fv{u} = \set{}$
+
+$$\readbackwmap{u \psub{}{x_{1}, \dots, x_{n}}{c}}{\sigma}{\gamma} = \readbackwmap{u}{\sigma}{\gamma}$$
+
+\end{proposition}
+
+\begin{proposition}
+\label{prop:exorcomm}
+Exorcisms commute with the translation in the following way
+
+if $\fake{c}{x_{1}, \dots, x_{n}} \in \fc{u}$ or $\set{x_{1}, \dots, x_{n}} \cap \fv{u} = \set{}$
+
+$$\readbackwmap{u \exor{}{c}{x_{1}, \dots, x_{n}}}{\sigma}{\gamma} = \readbackwmap{u}{\sigma[x_{i} \mapsto c]_{i \in [n]}}{\gamma}$$
+\end{proposition}
+
+Using these operations, we define the rewrite rules that allow for spinal duplication. Firstly we have beta reduction ($\rightsquigarrow_{\beta}$), which requires an abstraction and not a phantom-abstraction.
+\begin{equation}  \label{red:beta} \tag{$\beta$}
+\app{(\fake{x}{x}{t})}{s} \rightsquigarrow_{\beta} \sub{t}{s}{x}
+\end{equation}
+However, its effect is very different: here $\beta$-reduction is a linear operation, since the bound variable $x$ occurs exactly once in the body $t$. Any duplication of the term t in the atomic lambda-calculus proceeds via the sharing reductions, which we define next. The first set of sharing reduction rules move closures towards the outside of a term. Most of these rewrite rules only change the typing derivations in the way that subderivations are composed, with the exception of moving a closure out of scope of a distributor. 
+\begin{align}
+\app{s[\Gamma]}{t} &\rightsquigarrow_{L} (\app{s}{t})[\Gamma]   \label{red:liftappleft} \tag{$l_{1}$} \\
+\app{s}{t[\Gamma]} &\rightsquigarrow_{L} (\app{s}{t})[\Gamma] \label{red:liftappright} \tag{$l_{2}$} \\
+\fake{d}{\vec{x}}{t[\Gamma]} &\rightsquigarrow_{L} (\fake{d}{\vec{x}}{t})[\Gamma]  \text{ if } \set{\vec{x}} \cap \fv{t} = \set{\vec{x}}  \label{red:liftabs} \tag{$l_{3}$} \\
+\share{u}{x_{1}, \dots, x_{n}}{t[\Gamma]} &\rightsquigarrow_{L} \share{u}{x_{1}, \dots, x_{n}}{t}[\Gamma] \label{red:liftshare} \tag{$l_{4}$}
+\end{align}
+For the case of lifting a closure outside a distributor, we use a notation $\bindvars{[\Gamma]}$ to identify the variables captured by a closure, i.e.$\bindvars{\share{}{\vec{x}}{t}} = \set{\vec{x}}$ and $\bindvars{\dist{}{\fakedist{e_{1}}{\vec{x_{1}}}, \dots, \fakedist{e_{n}}{\vec{x_{x}}}}{\overline{[\Gamma]}}{c}{c}} = \set{\vec{x_{1}}, \dots, \vec{x_{n}}}$. Then let $\set{\vec{z}} = \bindvars{[\Gamma]}$ in the following rewrite rule, that can only occur if $\set{\vec{x}} \cap \fv{[\Gamma]} = \set{}$.
+\begin{equation} \label{red:distshare} \tag{$l_{5}$}
+\begin{multlined}
+\dist{u}{\fakedist{e_{1}}{\vec{w_{1}}} \dots \fakedist{e_{n}}{\vec{w_{n}}}}{\overline{[\Gamma]} [\Gamma]}{c}{\vec{x}} \\ \rightsquigarrow_{L} \dist{u {\psub{}{(\vec{w_{i}} / \vec{z})}{e_{i}}}_{i \in [n]}}{\fakedist{e_{1}}{\vec{w_{1}} / \vec{z}} \dots \fakedist{e_{n}}{\vec{w_{n}} / \vec{z}}}{\overline{[\Gamma]}}{c}{\vec{x}}[\Gamma] 
+\end{multlined}
+\end{equation}
+
+The proof rewrite rule corresponding with the rewrite rule \ref{red:distshare} can be broken down into two parts. The first part is readjusting how the derivations compose as shown below.
+
+\begin{center}
+\begin{tabular}{c c c}
+	$\drv{(C \rightarrow \Gamma) \wedge \Delta \wedge \Omega ; -[\switchrule] ; C^{\color{red} c} \rightarrow \drv[yellow]{\drv[green]{\Gamma^{\color{red} \vec{x}} \wedge \Delta \wedge \drv[cyan]{\Omega ; _[\color{red} t] ; A \wedge \dots \wedge A}} ; _[\color{red} {[\Gamma]}] ; \Sigma_{1}^{{\color{red} \vec{w_{1}}}} \dots \Sigma_{n}^{{\color{red} \vec{w_{n}}}} } ; -[\distrule] ; (C \rightarrow \Sigma_{1}) \wedge \dots \wedge (C \rightarrow \Sigma_{n})}$
+	& $\rightsquigarrow_{L}$ &
+	$\drv{(C \rightarrow \Gamma) \wedge \Delta \wedge \drv[cyan]{\Omega ; _[\color{red} t] ; A \wedge \dots \wedge A} ; -[\switchrule] ; C^{\color{red} c} \rightarrow \drv[yellow]{\drv[green]{\Gamma^{\color{red} \vec{x}} \wedge \Delta \wedge A \dots A} ; _[\color{red} {[\Gamma]}] ; \Sigma_{1}^{{\color{red} \vec{w_{1}}}} \dots \Sigma_{n}^{{\color{red} \vec{w_{n}}}} } ; -[\distrule] ; (C \rightarrow \Sigma_{1}) \wedge \dots \wedge (C \rightarrow \Sigma_{n})}$
+\end{tabular}
+\end{center}
+The second part of the rewrite rule justifies the need for the book-keeping operation. In the rewrite below, let $A$ be the type of a variable $z$ where $z \in \vec{z}$. After lifting, we want to remove the variable from the cover as to ensure correctness since the variables in the cover denote the variables captured by the environment. Book-keeping allows us to remove these variables simultaneously. 
+\begin{center}
+\begin{tabular}{c c c}
+	$\drv{(C \rightarrow \Gamma^{\color{red} \vec{x}}) \wedge \Delta \wedge A ; -[\switchrule] ; C^{\color{red} c} \rightarrow \drv[yellow]{\drv[green]{\Gamma \wedge \Delta ; _[{\color{red} \overline{[\Gamma]}}] ; \Sigma_{1} \wedge \dots \wedge \Sigma_{n}} \wedge A^{{\color{red} z}} ; . ; \Sigma_{1} \wedge \dots \wedge \Sigma_{i} \wedge A \wedge \dots \wedge \Sigma_{n}}  ; -[\distrule] ; \dots \wedge (C^{{\color{red} e_{i}}} \rightarrow \Sigma_{i}^{{\color{red} \vec{w}}} \wedge A) \wedge \dots}$
+	& $\rightsquigarrow$ &
+	$\drv{\drv{(C \rightarrow \Gamma^{\color{red} \vec{x}}) \wedge \Delta ; -[\switchrule] ; C^{\color{red} c} \rightarrow \drv[yellow]{\drv[green]{\Gamma \wedge \Delta ; _[{\color{red} \overline{[\Gamma]}}] ; \Sigma_{1} \wedge \dots \wedge \Sigma_{n}} ; . ; \Sigma_{1} \wedge \dots \wedge \Sigma_{i} \wedge \dots \wedge \Sigma_{n}}  ; -[\distrule] ; \dots \wedge (C \rightarrow \Sigma_{i}) \wedge \dots}\wedge A^{\color{red} z} ; . ; \dots \wedge \drv[cyan]{(C^{\color{red} e_{i}} \rightarrow \Sigma_{i}^{{\color{red} \vec{w} }}) \wedge A ; -[\switchrule] ; C \rightarrow \Sigma_{i} \wedge A} \wedge \dots}$
+\end{tabular}
+\end{center}
+
+The lifting rules ($l_{i}$) are justified by the need to lift closures out of the distributor, as opposed to duplicating them. The second set of rewrite rules, consecutive sharings are compounded and unary sharings are applied as substitutions.
+\begin{align}
+\share{\share{u}{w_{1}, \dots, w_{m}}{y_{i}}}{y_{1}, \dots, y_{n}}{t} & \rightsquigarrow_{C} \share{u}{y_{1}, \dots, y_{i-1}, w_{1}, \dots, w_{m}, y_{i+1}, \dots, y_{n}}{t}   \label{red:mergeshare} \tag{$c_{1}$} \\
+\share{u}{x}{t} & \rightsquigarrow_{C} \sub{u}{t}{x} \label{red:compshare} \tag{$c_{2}$}
+\end{align}
+
+The atomic steps for duplicating are given in the third and final set of rewrite rules. The first being the atomic duplication step of an application, which is the same rule used in \cite{gundersen2013atomic}. The proof rewrite steps for each rule are also provided. For simplicity, we only show the binary case for each rule.
+\begin{equation} \label{red:appdup} \tag{$d_{1}$}
+\share{u}{x_{1} \dots x_{n}}{\app{s}{t}} \rightsquigarrow_{D} \share{\share{\sub{\sub{u}{\app{z_{1}}{y_{1}}}{x_{1}}\dots}{\app{z_{n}}{y_{n}}}{x_{n}}}{z_{1} \dots z_{n}}{s}}{y_{1} \dots y_{n}}{t}
+\end{equation}
+\begin{center}
+\drv{(A \rightarrow B) \wedge A ; -[\apprule] ; B ; -[\sharerule] ; B \wedge B}
+\hspace{0.5cm}
+\drv{\drv{(A \rightarrow B) ; -[\sharerule] ; (A \rightarrow B) \wedge (A \rightarrow B)} \wedge \drv{B ; -[\sharerule] ; B \wedge B} ; . ; \drv{(A \rightarrow B) \wedge A ; -[\apprule] ; B} \wedge \drv{(A \rightarrow B) \wedge A ; -[\apprule] ; B}}
+\end{center}
+\begin{equation} \label{red:absdup} \tag{$d_{2}$}
+\begin{multlined}
+\share{u}{x_{1}, \dots, x_{n}}{\fake{c}{\vec{y}}{t}} \rightsquigarrow_{D} \\
+\sub{u}{\fake{e_{i}}{w^{i}_{1}}{w^{i}_{1}}}{x_{i}}_{1 \leq i \leq n} \dist{}{\fakedist{e_{1}}{w^{1}_{1}} \dots \fakedist{e_{n}}{w^{n}_{1}}}{\share{}{w^{1}_{1}, \dots, w^{n}_{1}}{t}}{c}{\vec{y}}
+\end{multlined}
+\end{equation}
+\begin{center}
+\drv{(A \rightarrow B) \wedge \Gamma ; -[\switchrule] ; A \rightarrow \drv[cyan]{B \wedge \Gamma ; _ ; C} ; -[\sharerule] ; (A \rightarrow C) \wedge (A \rightarrow C)}
+\hspace{0.5cm}
+\drv{(A \rightarrow B) \wedge \Gamma ; -[\switchrule] ; A \rightarrow \drv[cyan]{B \wedge \Gamma ; _ ; C ; -[\sharerule] ; C \wedge C} ; -[\distrule] ; (A \rightarrow C) \wedge (A \rightarrow C)}
+\end{center}
+\begin{equation} \label{red:distelim} \tag{$d_{3}$}
+\dist{u}{\fakedist{e_{1}}{\vec{w_{1}}} \dots \fakedist{e_{n}}{\vec{w_{n}}}}{\share{}{\vec{w_{1}}, \dots, \vec{w_{n}}}{c}}{c}{c} \rightsquigarrow_{D} \exor{\exor{u}{e_{1}}{\vec{w_{1}}} \dots}{e_{n}}{\vec{w_{n}}}
+\end{equation}
+\begin{center}
+\drv{ ; -[\lamrule] ; A \rightarrow \drv{A ; -[\sharerule] ; A \wedge A} ; -[\distrule] ; (A \rightarrow A) \wedge (A \rightarrow A)}
+\hspace{0.5cm}
+\drv{\drv{ ; -[\lamrule] ; A \rightarrow A} \wedge \drv{ ; -[\lamrule] ; A \rightarrow A}}
+\end{center}
+
+\begin{proposition}
+If $s \rightsquigarrow_{L, C, D} t$ and $s : C$, then $t : C$
+\end{proposition}
+
+\begin{lemma}[Sharing reduction preserves denotation]
+\label{lem:preservesdenotation}
+ If $s \rightsquigarrow_{L, D, C} t$ then $\readbackwmap{s}{\sigma}{\gamma} = \readbackwmap{t}{\sigma}{\gamma}$
+\end{lemma}
+
+\section{Strong Normalisation of Sharing Reductions}
+
+In order to show our calculus is strongly normalising, we first show that the sharing reduction rules are strongly normalising. To do this, we make use of an `intermediate calculus' called the weakening calculus. Following the approaches of \cite{gundersen2013atomic, he2018atomic}, we indite a measure on terms based on its connection with the weakening calculus. We show that this measure strictly decreases as sharing reduction progresses.
+
+\begin{definition}
+\label{def:weakterms}
+The $\weaksymbol$-terms and the weakening calculus ($\WEAK$) are
+\begin{equation*}
+	T, U, V \quad {:}{:}{=} \quad x \quad \vert \quad \abs{x}{T^{*}}\quad \vert \quad \app{U}{V} \quad \vert \quad \share{T}{}{U} \quad \vert \quad \bullet \hfill \text{(*) where $x \in \fv{T}$}
+\end{equation*}
+\end{definition}
+
+The terms are variable, abstraction, application, weakening, and a bullet. In the weakening $\share{T}{}{U}$, the subterm $U$ is \emph{weakened}. The interpretation of atomic terms to weakening terms $\readweakwmap{-}{-}{-}$ can be seen as an extension of the translation into the $\lambda$-calculus (Definition \ref{def:readback})
+
+\begin{definition}
+\label{def:transfalcweak}
+	The interpretation $\readweakwmap{-}{-}{-} : \FALC \times (V \rightarrow \WEAK) \times (V \rightarrow V) \rightarrow \WEAK$ with maps $\sigma : V \rightarrow \WEAK$ and $\gamma : V \rightarrow V$ is defined as an extension of the translation in (Definition \ref{def:readback}) with the following additional special cases.
+	\begin{align*}
+		\readweakwmap{\share{u}{}{t}}{\sigma}{\gamma} &= \share{\readweakwmap{u}{\sigma}{\gamma}}{}{\readweakwmap{t}{\sigma}{\gamma}} \\[0.2cm]
+		\readweakwmap{\dist{u}{}{\overline{[\Gamma]}}{c}{c}}{\sigma}{\gamma} &= \readweakwmap{u \overline{[\Gamma]}}{\sigma[c \mapsto \bullet]}{\gamma} \\[0.2cm]
+		\readweakwmap{\dist{u}{}{\overline{[\Gamma]}}{c}{x_{1}, \dots, x_{n}}}{\sigma}{\gamma} &= \readweakwmap{u \overline{[\Gamma]}}{\sigma'}{\gamma} \\
+		& \text{where } \sigma'(z) = \begin{cases} \sigma(z) \sub{}{\bullet}{\gamma(c)} & z \in \set{x_{1}, \dots, x_{n}} \\ \sigma(z) & \text{otherwise} \end{cases} \\
+	\end{align*}
+\end{definition}
+
+\noindent We also have translations of the weakening calculus to and from the lambda calculus. Both of these translations have been provided in  \cite{gundersen2013atomic}. The interpretation $\readbackweak{-}$ from weakening terms to $\lambda$-terms discards all weakenings. The interpretation $\compweak{-} : \Lambda \rightarrow \WEAK$ is defined below.
+
+\begin{definition}
+\label{def:transweak}
+The interpretation $M \in \Lambda$, $\compweak{-} : \Lambda \rightarrow \WEAK$ is defined by
+\begin{align*}
+	\compweak{x} &= x \\
+	\compweak{\app{M}{N}} &= \app{\compweak{M}}{\compweak{N}} \\
+	\compweak{\abs{x}{N}} &= 
+	\begin{cases}
+		\abs{x}{\compweak{N}} & \text{if } x \in \fv{N} \\
+		\abs{x}{\compweak{N} \share{}{}{x}} & \text{otherwise}
+	\end{cases}
+\end{align*}
+\end{definition}
+\noindent The following equalities can be observed, where $\sigma^{\Lambda}(z) = \readbackweak{\sigma^{\weaksymbol}(z)} $.
+\begin{proposition}
+\label{prop:equalterms}
+For $N \in \Lambda$ and $t \in \FALC$ the following properties hold
+\begin{center}
+\begin{tabular}{c@{\hskip 0.5in} c@{\hskip 0.5in} c}
+%	\begin{tikzpicture}[auto]
+%		\node (ale) at (-0.5, 0) {$\FALC$};
+%		\node (bob) at (2.5, 0) {$\WEAK$};
+%		\node (cat) at (1,-2) {$\Lambda$};
+%		%%%%%%%%%%%%%
+%		\draw [->,red] (ale) to node [black] {$\readweakwmap{-}{\sigma^{\weaksymbol}}{\gamma}$}  (bob);
+%		\draw [->,blue] (bob) to node [black] {$\readbackweak{-}$}  (cat);
+%		\draw [->, purple] (ale) to node [black, swap] {$\readbackwmap{-}{\sigma^{\Lambda}}{\gamma}$} (cat);
+%	\end{tikzpicture}
+%	&
+%	\begin{tikzpicture}[auto]
+%		\node (ale) at (0, 0) {$\FALC$};
+%		\node (bob) at (2, 0) {$\WEAK$};
+%		\node (cat) at (1,-2) {$\Lambda$};
+%		%%%%%%%%%%%%%
+%		\draw [->,red] (ale) to node [black] {$\composeweak{-}$}  (bob);
+%		\draw [->,orange] (cat) to node [black, swap] {$\compweak{-}$}  (bob);
+%		\draw [->, yellow] (cat) to node [black] {$\compile{-}$} (ale);
+%	\end{tikzpicture}
+%	&
+%	\begin{tikzpicture}[auto]
+%		\node (ale) at (0, -2) {$\Lambda$};
+%		\node (bob) at (2, -2) {$\Lambda$};
+%		\node (cat) at (1,0) {$\WEAK$};
+%		%%%%%%%%%%%%%
+%		\draw [->,black] (ale) to node [black] {$=$}  (bob);
+%		\draw [->,orange] (ale) to node [black] {$\compweak{-}$}  (cat);
+%		\draw [->, blue] (cat) to node [black] {$\readbackweak{-}$} (bob);
+%	\end{tikzpicture}
+%	\\
+	$\readbackweak{\readweakwmap{t}{\sigma^{\weaksymbol}}{\gamma}} = \readbackwmap{t}{\sigma^{\Lambda}}{\gamma}$
+	&
+	$\composeweak{\compile{N}} = \compweak{N}$
+	&
+	$\readbackweak{\compweak{N}} = N$
+\end{tabular}
+
+\end{center}
+
+\end{proposition}
+
+\noindent Here we can take advantage that preservation of strong normalisation has been proven for this weakening calculus already in \cite{gundersen2013atomic}, providing the proof for Proposition \ref{prop:willemresult}. Additionally, similar ideas and results can be found elsewhere, i.e.\ with memory in \cite{klop1980thesis}, the $\lambda$-$I$ calculus in \cite{barendregt1984lambda}, the $\lambda$-void calculus \cite{kesneraccattoli12}, and the weakening $\lambda\mu$-calculus \cite{he2018atomic}.
+
+\begin{definition}
+In the weakening calculus, $\beta$-reduction is defined as follows, where $\overline{[\Gamma]}$ are weakening constructs.
+\begin{equation}
+\tag{$\weaksymbol_{\beta}$}
+	\app{((\abs{x}{T}) \overline{[\Gamma]})}{U} \rightarrow_{\beta} \sub{T}{U}{x} \overline{[\Gamma]} \\
+\end{equation}
+\end{definition}
+
+\begin{proposition}
+\label{prop:willemresult}
+ If $N \in \Lambda$ is strongly normalising, then so is $\compweak{N}$
+\end{proposition}
+
+When translating from the spinal atomic $\lambda$-calculus to the weakening calculus, weakenings are maintained whilst sharings are interpreted through duplication via substitution. Thus the reduction rules in the weakening calculus cover the spinal reductions for nullary distributors and weakenings.
+
+\begin{definition}
+The weakening reductions ($\rightarrow_{\weaksymbol}$) proceeds as follows.
+\begingroup
+\allowdisplaybreaks
+\begin{align*}
+	\tag{$\weaksymbol_{1}$}
+	\abs{x}{\share{T}{}{U}} &\rightarrow_{\weaksymbol} (\abs{x}{T})\share{}{}{U} \quad \text{if } x \not\in \fv{U} \\
+	\tag{$\weaksymbol_{2}$}
+	\app{\share{U}{}{T}}{V} &\rightarrow_{\weaksymbol} (\app{U}{V}) \share{}{}{T} \\
+	\tag{$\weaksymbol_{3}$}
+	\app{U}{\share{V}{}{T}} &\rightarrow_{\weaksymbol} (\app{U}{V}) \share{}{}{T} \\
+	\tag{$\weaksymbol_{4}$}
+	\share{T}{}{\share{U}{}{V}} &\rightarrow_{\weaksymbol} \share{T}{}{U} \share{}{}{V} \\
+	\tag{$\weaksymbol_{5}$}
+	\share{T}{}{\abs{x}{U}} &\rightarrow_{\weaksymbol} \share{T}{}{U \sub{}{\bullet}{x}} \\
+	\tag{$\weaksymbol_{6}$}
+	\share{T}{}{\app{U}{V}} &\rightarrow_{\weaksymbol} T \share{}{}{U} \share{}{}{V} \\
+	\tag{$\weaksymbol_{7}$}
+	\share{T}{}{\bullet} &\rightarrow_{\weaksymbol} T \\
+	\tag{$\weaksymbol_{8}$}
+	\share{T}{}{U} &\rightarrow_{\weaksymbol} T \quad \text{if $U$ is a subterm of $T$}
+\end{align*}
+\endgroup
+\end{definition}
+\noindent It is easy to see that these rules correspond to special cases of the sharing reduction rules for $\FALC$. Lifting a closure relates ($\weaksymbol_{1}$) and (\ref{red:liftabs}), ($\weaksymbol_{2}$) and  (\ref{red:liftappleft}), ($\weaksymbol_{3}$) and (\ref{red:liftappright}), ($\weaksymbol_{4}$) and (\ref{red:liftshare}), ($\weaksymbol_{5}$) and (\ref{red:absdup}), and duplicating a term relates ($\weaksymbol_{6}$) and (\ref{red:appdup}), and  ($\weaksymbol_{7}$) and (\ref{red:distelim}). It is not so obvious to see what the case ($\weaksymbol_{8}$) corresponds to. If $U$ is a subterm of $T$, then in the corresponding $\FALC$-term this term would be shared and one of the copies would be in a weakening. Thus this reduction relates to the case (\ref{red:mergeshare}), where we remove the weakening. We demonstrate by considering $t \share{}{}{y} \share{}{\vec{x} \cdot y \cdot \vec{z}}{u}  \rightsquigarrow_{C} t \share{}{\vec{x} \cdot \vec{z}}{u}$. On the left hand side, the corresponding weakening-term (obtained by $\compweak{-}$) would have the weakening $\share{}{}{U}$ where $U = \compweak{u}$. This is because $U$ is substituted into $\share{}{}{y}$, but on the right hand side this would be gone. This situation can only occur if there are other copies of $U$ substituted into the term. This corresponds to if only the corresponding (\ref{red:mergeshare}) reduction rule can occur. This resemblace is confirmed by the following Lemmas.
+
+\begin{lemma}
+\label{lem:sharepreservebeta}
+	If $t \rightsquigarrow_{\beta} u$ then $\composeweak{t} \rightarrow^{\plus}_{\beta} \composeweak{u}$
+\end{lemma}
+
+\begin{lemma}
+\label{theo:sharepreserve}
+	If $t \rightsquigarrow_{(C, D, L)} u$ and for any $x \in \bv{t} \cup \fp{t}$ and for all $z$, $x \not\in \fv{\sigma(z)}$.  $$\readweakwmap{t}{\sigma}{\gamma} \rightarrow^{*}_{\weaksymbol} \readweakwmap{u}{\sigma}{\gamma}$$
+
+\end{lemma}
+
+We now define the components that we use for our measure on spinal atomic $\lambda$-terms that we will use to prove strong normalisation of sharing reductions. The \emph{height} of a term is intuitively a multiset of integers that record the distance of each sharing. The distance is measured by the number of constructors from the sharing node to the root of the term in its graphical notation. The height is defined on terms as $\height{i}{-}$, where $i$ is an integer. We say $\height{}{t}$ for $\height{1}{t}$. We use $\cupdot$ to denote the disjoint union of two multisets. We denote $\height{i}{[\Gamma_{1}]} \cupdot \dots \cupdot \height{i}{[\Gamma_{n}]}$ as $\height{i}{\overline{[\Gamma]}}$ for the environment $\overline{[\Gamma]} = [\Gamma_{1}], \dots, [\Gamma_{n}]$.
+
+\begin{definition}[Sharing Height]
+The sharing height $\height{i}{t}$ of a term $t$ is given by
+\begingroup
+\allowdisplaybreaks
+\begin{align*}
+	\height{i}{x} &= \set{} \\
+	\height{i}{ \app{s}{t} } &= \height{i+1}{s} \cupdot \height{i+1}{t} \\
+	\height{i}{\fake{c}{\vec{x}}{t}} &= \height{i + 1}{t} \\
+	\height{i}{t[\Gamma]} &= \height{i}{t} \cupdot \height{i}{[\Gamma]} \cupdot \set{i^{1}} \\
+	\height{i}{\share{}{x_{1}, \dots, x_{n}}{t}} &= \height{i+1}{t}\\
+	\height{i}{\dist{}{\vecdist{e}{\vec{w}}}{\overline{[\Gamma]}}{c}{\vec{x}}} &= \height{i + 1}{\overline{[\Gamma]}} \cupdot \set{(i + 1)^{n}} \text{ where $n$ is the number of closures in $\overline{[\Gamma]}$}
+\end{align*}
+\endgroup
+\end{definition}
+
+\noindent This measure then strictly decreases for the rewrite rules \ref{red:liftappleft}, \ref{red:liftappright}, \ref{red:liftabs}, \ref{red:liftshare} and \ref{red:distshare}.
+
+\begin{lemma} 
+\label{theo:liftingheight}
+If $t \rightsquigarrow_{(L)} u$ then $\height{i}{t} > \height{i}{u}$
+\end{lemma}
+
+The other measure we consider is the \emph{weight} of a term. Intuitively this quantifies the remaining duplications, which are performed with $\rightsquigarrow_{D}$ reductions. Calculating the weight of a term requires an auxiliary function from variables to integers. This function is defined by assigning integer weights to the variables of a term. This auxiliary function is defined on terms $\weightvar{i}{-}$, where $i$ is an integer. To measure variables independently of binders is vital. It allows to measure distributors, which duplicate $\lambda$'s but not the bound variable. Also, only bound variables for abstractions are measured since variables bound by sharings are substituted in the interpretation.
+
+\begin{definition}[Variable Weights]
+The function $\weightvar{i}{t}$ returns a function that assigns integer weights to the free variables of $t$. It is defined by the following
+\begin{align*}
+	\weightvar{i}{x} &= \set{x \mapsto i} \\
+	\weightvar{i}{\app{s}{t}} &= \weightvar{i}{s} \cupdot \weightvar{i}{t} \\
+	\weightvar{i}{\fake{c}{c}{t}} &= \weightvar{i}{t} / \set{c} \\
+	\weightvar{i}{\fake{c}{\vec{x}}{t}} &= \weightvar{i}{t} \cupdot \set{c \mapsto i} \\
+	\weightvar{i}{\share{t}{}{s}} &= \weightvar{i}{t} \cupdot \weightvar{1}{s} \\
+	\weightvar{i}{\share{t}{x_{1}, \dots, x_{n}}{s}} &= \weightvar{i}{t} / \set{x_{1}, \dots, x_{n}} \cupdot \weightvar{f(x_{1}) + \dots + f(x_{n})}{s} \text{ where } f = \weightvar{i}{t} \\
+	\weightvar{i}{\dist{t}{\fakedist{e_{1}}{\vec{w_{1}}} \dots \fakedist{e_{n}}{\vec{w_{n}}}}{\overline{[\Gamma]}}{c}{c}} &= \weightvar{i}{t\overline{[\Gamma]}} / \set{c, e_{1}, \dots, e_{n}} \\
+	\weightvar{i}{\dist{t}{\fakedist{e_{1}}{\vec{w_{1}}} \dots \fakedist{e_{n}}{\vec{w_{n}}}}{\overline{[\Gamma]}}{c}{\vec{x}}} &= \weightvar{i}{t\overline{[\Gamma]}} / \set{e_{1}, \dots, e_{n}} \cupdot \set{c \mapsto i}
+\end{align*}
+\end{definition}
+
+\noindent The weight of a term can then be defined via the use of this auxiliary function. The auxiliary function is used when calculating the weight of a sharing, where the sharing weight of the variables bound by the sharing play a significant role in calculating the weight of the shared term. In the case of a weakening, we assign an initial weight of $1$ to indicate that the constructor is not duplicated by appears at least once in the weakening calculus. Again we say $\weight{}{t} = \weight{1}{t}$.
+
+\begin{definition}[Sharing Weight]
+The sharing weight $\weight{i}{t}$ of a term $t$ is a multiset of integers computed by the function defined below
+\begin{align*}
+	\weight{i}{x} &= \set{} \\
+	\weight{i}{\app{s}{t}} &= \weight{i}{s} \cupdot \weight{i}{t} \cupdot \set{i}\\ 
+	\weight{i}{\fake{c}{c}{t}} &= \weight{i}{t} \cupdot \set{i} \cupdot \set{\weightvar{i}{t}(c)} \\
+	\weight{i}{\fake{c}{\vec{x}}{t}} &= \weight{i}{t} \cupdot \set{i} \\
+	\weight{i}{\share{t}{}{s}} &= \weight{i}{t} \cupdot \weight{1}{s} \\
+	\weight{i}{\share{t}{x_{1}, \dots, x_{n}}{s}} &= \weight{i}{t} \cupdot \weight{f(x_{1}) + \dots + f(x_{n})}{s} \text{ where } f = \weightvar{i}{t} \\
+	\weight{i}{\dist{t}{\fakedist{e_{1}}{\vec{w_{1}}} \dots \fakedist{e_{n}}{\vec{w_{n}}}}{\overline{[\Gamma]}}{c}{c}} &= \weight{i}{t\overline{[\Gamma]}} \cupdot \set{\weightvar{i}{t\overline{[\Gamma]}} (c)} \\ % \cupdot \set{f(e_{1}), \dots, f(e_{n})} \\
+	\weight{i}{\dist{t}{\fakedist{e_{1}}{\vec{w_{1}}} \dots \fakedist{e_{n}}{\vec{w_{n}}}}{\overline{[\Gamma]}}{c}{\vec{x}}} &= \weight{i}{t\overline{[\Gamma]}}
+\end{align*}
+\end{definition}
+
+\noindent We show that this measure then strictly decreases on the rewrite rules \ref{red:appdup}, \ref{red:absdup}, \ref{red:distelim} and is unaffected by all the other sharing reduction rules.
+
+\begin{lemma}
+\label{theo:decreaseweight}
+If $t \rightsquigarrow_{D} u$ then $\weight{i}{t} > \weight{i}{u}$
+\end{lemma}
+
+\begin{lemma} 
+\label{theo:liftingweight}
+If $t \rightsquigarrow_{(L, C)} u$ then $\weight{i}{t} = \weight{i}{u}$
+\end{lemma}
+
+The last measure we consider is the number of closures in the term, where is can be easily observed that the rewrite rules \ref{red:mergeshare} and \ref{red:compshare} strictly decrease this measure, and that the $\rightsquigarrow_{L}$ rules do not alter the number of closures. We then use this along with height and weight to define a \emph{sharing measure} on terms.
+
+\begin{definition}
+The \emph{sharing measure} of a $\FALC$-term $t$ is a triple ($\weight{}{t}$, $C$, $\height{}{t}$) where $C$ is the number of closures in $t$. We can compare two different sharing measures by considering the lexicographical preferences according to weight $>$ number of closures $>$ height.
+\end{definition}
+
+\begin{theorem} 
+\label{theo:sharingstronglynormal}
+Sharing reduction $\rightsquigarrow_{(D, L, C)}$ is strongly normalising
+\end{theorem}
+\begin{proof}
+From Lemma \ref{theo:decreaseweight}, Lemma \ref{theo:liftingweight}, and Lemma \ref{theo:liftingheight}, it follows that the sharing measure of a term is strictly decreasing under $\rightsquigarrow_{(D, L, C)}$, proving the statement.
+\end{proof}
+
+\noindent Now that we have proven the sharing reductions are strongly normalising, we can prove that they are confluent for closed terms.
+
+\begin{theorem}
+\label{theo:strongnormal}
+The sharing reduction relation $\rightsquigarrow_{(R, D, L, C)}$ is confluent 
+\end{theorem}
+\begin{proof}
+ Lemma \ref{lem:preservedenotation} tells us that the preservation is preserved under reduction i.e.\ for $s \rightsquigarrow_{(R, D, L, C)} t$, $\readback{s}{} = \readback{t}{}$. Therefore given $t \rightsquigarrow^{*}_{(R, D, L, C)} s_{1}$ and $t \rightsquigarrow^{*}_{(R, D, L, C)} s_{2}$, $\readback{t}{} = \readback{s_{1}}{} = \readback{s_{2}}{}$. Since we know that sharing reductions are strongly normalising, we know there exists terms $u_{1}$ and $u_{2}$ in sharing normal form such that $s_{1} \rightsquigarrow^{*}_{(R, D, L, C)} u_{1}$ and $s_{2} \rightsquigarrow^{*}_{(R, D, L, C)} u_{2}$. Lemma \ref{lem:preserve1to1correspondance} tells us that terms in closed terms in sharing normal form are in correspondence with their denotations i.e.\ $ \compile{\readback{t}{I}}' = t $. Since by Lemma \ref{lem:preservedenotation} we know $\readback{u_{1}}{} = \readback{s_{1}}{} = \readback{s_{2}}{} = \readback{u_{2}}{}$, and by Lemma \ref{lem:preserve1to1correspondance} $ \compile{\readback{u_{1}}{I}}' = u_{1} $ and $\compile{\readback{u_{2}}{I}}' = u_{2}$, we can conclude $u_{1} = u_{2}$. Hence, we prove confluence. 
+\end{proof}
+
+\section{Preservation of Strong Normalisation}
+
+Here we show how $\FALC$ preserves strong normalisation with respect to the $\lambda$-calculus. Recall that by Proposition \ref{prop:equalterms} that for all $N \in \Lambda$, $\composeweak{\compile{N}} = \compweak{N}$, and that Proposition \ref{prop:willemresult} states if a term $N \in \Lambda$ is strongly normalising then so is $\compweak{N}$. Observe that the statement `if term $M$ has an infinite reduction sequence then term $N$ has an infinite reduction sequence' is equivalent to `if term $N$ is strongly normalising then term $M$ is strongly normalising' by contraposition. Therefore, given a strongly normalising term $N \in \Lambda$, we know that its corresponding weakening term is also strongly normalising. Furthermore, since $\composeweak{\compile{N}} = \compweak{N}$, we know that $\composeweak{\compile{N}}$ is also strongly normalising.
+
+\begin{center}
+	\begin{tikzpicture}[auto]
+		\node (a1) at (0, 4) {$\FALC$}; 
+		\node (w1) at (2, 4) {$\WEAK$}; 
+		\node (l1) at (4, 4) {$\Lambda$};
+		\node (li) at (4, 2) {$\infinity$}; \node (wi) at (2, 2) {$\infinity$}; \node (ai) at (0, 2) { \color{myGreen} $\infinity$};
+		%%%%%%%%%%%%
+		\draw [->, decorate,decoration={snake,amplitude=.4mm,segment length=2mm,post length=1mm}] (l1) -> (li);
+		 \draw [->, decorate,decoration={snake,amplitude=.4mm,segment length=2mm,post length=1mm}] (w1) -> (wi);
+		 \draw [->, myGreen, decorate,decoration={snake,amplitude=.4mm,segment length=2mm,post length=1mm}] (a1) -> (ai);
+		\draw [myGreen] (-0.3, 2.75) -- (0.3, 3.25); \draw (1.7, 2.75) -- (2.3, 3.25); \draw (3.7, 2.75) -- (4.3, 3.25);
+		\draw  [->, black] (l1) to node [black] {$\compweak{-}$} (w1);
+		\draw [->, black] (a1) to node [black, swap] {$\composeweak{-}$} (w1);
+		\draw [->, black, bend right = 45] (l1) to node [black, swap] {$\compile{-}$} (a1);
+		\node (lol) at (3, 2) {$\stackrel{\hbox{\tiny Prop \ref{prop:willemresult}}}{\hbox{$\Leftarrow$}}$};
+		\node (lol) at (1, 2) {$\stackrel{\hbox{\tiny ??}}{\hbox{ $\Leftarrow$}}$};
+		%\node (ale) at (-0.5, 0) {$\FALC$};
+		%\node (bob) at (2.5, 0) {$\WEAK$};
+		%\node (cat) at (1,-2) {$\Lambda$};
+		%%%%%%%%%%%%%
+		%%\draw [->,red] (ale) to node [black] {$\transweak{-}{I}$}  (bob);
+		%\draw [->,orange] (cat) to node [black, swap] {$\compweak{-}$}  (bob);
+		%\draw [->, yellow] (cat) to node [black] {$\compile{-}$} (ale);
+	\end{tikzpicture}
+\end{center}
+
+\noindent We prove that the spinal atomic $\lambda$-calculus preserves strong normalisation with the following.
+
+
+%by contradiction i.e. if we assume that $\compile{N}$ has an infinite reduction path, then the following Lemma proves that this will lead to a contradiction.
+
+\begin{lemma}
+\label{lem:infinitepath}
+For $t \in \FALC$ has an infinite reduction path, then $\composeweak{t}$ also has an infinite reduction path.
+\end{lemma}
+
+\begin{proof}
+Due to Theorem \ref{theo:strongnormal}, we know that the infinite reduction path contains an infinite $\beta$-reduction. This means in the reduction sequence, between each $\beta$-reduction, there are finite many $\rightsquigarrow_{(D, L, C)}$ reduction steps. Lemma \ref{theo:sharepreserve} says each $\rightsquigarrow_{(D, L, C)}$ step in $\FALC$ corresponds to zero or more weakening reductions ($\rightsquigarrow^{*}_{\weaksymbol}$). Lemma \ref{lem:sharepreservebeta} says that each beta reduction in $\FALC$ corresponds to one or more $\beta$-steps in $\WEAK$. Therefore, it is inevitable that $\composeweak{t}$ also has an infinite reduction path.
+\end{proof}
+
+% Prop 40 = PSN of weak calc, 
+
+%For a given $N \in \Lambda$ that is strongly normalising, we show $\compile{N}$ is strongly normalising
+%
+% by contradiction. If there were an infinite reduction sequence $\compile{N}$, then Lemma \ref{lem:infinitepath} would state that there is a infinite reduction sequence from $\composeweak{\compile{N}}$. Yet Proposition \ref{prop:willemresult} says that $\compweak{N}$ does not have an infinite reduction. Hence $\compile{N}$ does not have an infinite sequence, and is strongly normalising. This is the proof for our main theorem.
+
+\begin{theorem}
+ If $N \in \Lambda$ is strongly normalising, then so is $\compile{N}$.
+\end{theorem}
+
+\begin{proof}
+For a given $N \in \Lambda$ that is strongly normalising, we know by Lemma \ref{prop:willemresult} that $\compweak{N}$ is strongly normalising. Then $\composeweak{\compile{N}}$ is strongly normalising, since Proposition \ref{prop:equalterms} states that $\compweak{N} = \composeweak{\compile{N}}$. Then by Lemma \ref{lem:infinitepath}, which states that if $\composeweak{t}$ is strongly normalising, then $t$ is strongly normalising, proves that $\compile{N}$ is strongly normalising.
+\end{proof}
+
+\section{Conclusion and Further Remarks}
+
+
+
+%Once we fully duplicate the abstraction, the phantom-abstractions will convert to abstractions. %and thus will use a switch rule will depict the scope oas depicted in Figure \ref{fig:typebasic}.
+
+
+
+% The abstraction λx becomes shared between the two conjuncts in C∧C, while the contraction continues to duplicate t stepwise. When it reaches the λ-inference at the top, the distribution inference can be eliminated by the reduction step below (omitting the assumption of the λ-rule for simplicity), corresponding to rewrite rule (11) in Section IV.
+
+
+%
+%This work discusses scopes in the $\lambda$-calculus. First we discuss the distinction between \emph{balanced} and \emph{scope balanced} scoping. The $\lambda$-calculus itself does not make the scope explicit, and is scope balanced by default.
+%
+%A calculus uses a \emph{single variable} when only one variable name is used to define a term (such as Dr Brown indices \cite{de1972lambda}), (and otherwise it uses \emph{multiple variables}).
+%
+%Berkling's lambda bar \cite{berkling1976symmetric}. They show the denotational semantics, proving that is consistently extends the $\lambda$-calculus. They prove that this extension omits the need to rename variables during $\beta$-reduction. 
+%
+%This extension was generalised in \cite{bird_paterson_1999} such that (1) the operator could be applied to terms and not just variables and consequently (2) allow for the succession of scopes, and further in Adbmal \cite{hendriks2003lambda} to allow for a calculus with multiple variables and explicit scopes. They show confluence for this calculus while maintaining \emph{scope balanced} scopes during reduction.
+%
+%Atomic $\lambda$-calculus \cite{gundersen2013atomic} does not have explicit scope operators, and is by default scope balanced. It is a linear calculus, and is therefore uses multiple variables. It also uses explicit substitutions. However, unlike adbmal, it implements \emph{explicit sharing}. 
+
+%A balanced scoping can have \emph{nested} scopes and \emph{succession} of scopes.
+
+
+%%
+%% Bibliography
+%%
+
+%% Please use bibtex, 
+
+\bibliography{lipics-v2019-sample-article}
+
+\newpage
+
+\appendix
+
+\section{The Spinal Atomic $\lambda$-Calculus}
+
+\subsection{Compilation and Readback}
+
+In this section we provide the proof for Proposition \ref{lem:preserve1to1correspondance}: For $s, t \in \FALC$, if $s \sim t$ then $\trans{s} = \trans{t}$.
+
+\begin{proof}
+Let us consider the cases. 
+\newline
+\newline
+$t[\Gamma_{1}][\Gamma_{2}] \sim t[\Gamma_{2}][\Gamma_{1}]$
+\newline
+Consider $\readbackwmap{t[\Gamma_{1}][\Gamma_{2}]}{\sigma}{\gamma} = \readbackwmap{t[\Gamma_{1}]}{\sigma'}{\gamma'} = \readbackwmap{t}{\sigma''}{\gamma''}$. Since due to conditions any variable $x \in \bindvars{[\Gamma_{2}]}$ cannot occur in $[\Gamma_{1}]$, for all subterms $s$ located in $[\Gamma_{1}]$, $\readbackwmap{s}{\sigma'}{\gamma'} = \readbackwmap{s}{\sigma}{\gamma}$. Therefore $\readbackwmap{t}{\sigma''}{\gamma''} = \readbackwmap{t[\Gamma_{2}]}{\sigma'''}{\gamma'''} = \readbackwmap{t[\Gamma_{2}][\Gamma_{1}]}{\sigma}{\gamma}$.
+\newline
+\newline
+The remaining cases discuss permutations of variables in sharings and phantom-abstractions. In both these cases, we overwrite $\sigma$ for the cases of the variables in said sharing or phantom-abstractions. The order in which they appear do not influence the translation since we do this for all variables regardless. 
+\end{proof}
+
+We also provide the proof for Lemma \ref{lem:preserve1to1correspondance}: For a closed $t \in \FALC$, where $t$ has no distributor constructs and only variables are shared, and a closed $N \in \Lambda$. the following 
+$$\readback{\compile{N}'}{I} = N \hspace{1.5cm} \compile{\readback{t}{I}}' = t \hspace{1.5cm} \exists_{ M \in \Lambda} . t = \compile{M}'$$ 
+
+\begin{proof}
+We prove $\readbackclose{\compile{N}'} = N $ by induction on $N$
+\newline
+\newline
+Base Case: Variable
+\newline
+$\readbackclose{\compile{x}'} = \readbackclose{x} = x$
+\newline
+\newline
+Inductive Case: Application
+\newline
+$\readbackclose{\compile{\app{M}{N}}'} = \app{\readbackclose{\compile{M}'}}{\readbackclose{\compile{N}'}} = \app{M}{N}$
+\newline
+\newline
+Inductive Case: Abstraction
+\newline
+$\readbackclose{\compile{\abs{x}{M}}'} $
+\newline
+\indent Case: $\size{M}_{x} = 1$
+\newline
+\indent $= \abs{x}{\readbackclose{\compile{M}'}} = \abs{x}{M}$
+\newline
+\newline
+\indent Case: $\size{M}_{x} = n$
+\newline
+\indent $= \abs{x}{\readbackclose{ \compile{M \frac{n}{x}}' \share{}{x_{1}, \dots, x_{n}}{x}}} = \abs{x}{\readbackwmap{\compile{M \frac{n}{x}}'}{\sigma}{I}} = \abs{x}{\readbackclose{\compile{M \frac{n}{x}}'}} \sub{}{x}{x_{i}}_{1 \leq i \leq n}$
+\newline
+\indent $\IH \abs{x}{M \frac{n}{x} \sub{}{x}{x_{i}}_{1 \leq i \leq n}} = \abs{x}{M}$
+\newline
+\newline
+\newline
+We prove $ \compile{\readbackclose{t}}' = t$ by induction on $t$
+\newline
+\newline
+Base Case: Variable
+\newline
+$\compile{\readbackclose{x}}' = \compile{x}' = x$
+\newline
+\newline
+Inductive Case: Application
+\newline
+$\compile{\readbackclose{\app{s}{t}}}' = \app{\compile{\readbackclose{s}}'}{\compile{\readbackclose{t}}'} \IH \app{s}{t}$
+\newline
+\newline
+Inductive Case: Abstraction
+\newline
+\indent Case: $\compile{\readbackclose{\fake{x}{x}{t}}}' = \fake{x}{x}{\compile{\readbackclose{t}}'} \IH \fake{x}{x}{t}$
+\newline
+\newline
+\indent Case: $\compile{\readbackclose{\fake{x}{x}{t \share{}{x_{1}, \dots, x_{n}}{x}}}}' = \compile{\abs{x}{\readbackwmap{t}{\sigma}{I}}}'$
+\newline
+\indent $= \compile{\abs{x}{\readbackclose{t} \sub{}{x}{x_{i}}_{1 \leq i \leq n}}}' = \fake{x}{x}{ \compile{\readbackclose{t}}' \share{}{x_{1}, \dots, x_{n}}{x}}$
+\newline
+\indent $ \IH \fake{x}{x}{ t \share{}{x_{1}, \dots, x_{n}}{x}} $
+\newline
+\newline
+The proof for $\exists_{ M \in \Lambda} . t = \compile{M}'$ is the same as in \cite{gundersen2013atomic}.
+\end{proof}
+
+\subsection{Rewrite Rules}
+
+In this section we provide the proof for Proposition \ref{prop:suboutcomm}: Given $M \in \Lambda$ such that for all $v \in V$, $\gamma(v) \not\in \fv{M}$  and $\sigma(x) = x$, the translation $\readbackwmap{u}{\sigma}{\gamma}$ commutes with substitution $\sub{}{M}{x}$ in the following way 
+
+$$\readbackwmap{u \sub{}{t}{x}}{\sigma}{\gamma} = \readbackwmap{u}{\sigma[x \mapsto \readbackwmap{t}{\sigma}{\gamma}]}{\gamma}$$
+
+%$$\readbackwmap{u}{\sigma'}{\gamma} = \readbackwmap{u}{\sigma}{\gamma} \sub{}{M}{x}$$
+%
+%where $\sigma'(z) = \begin{cases} \sigma(z) \sub{}{M}{x} & z \neq x \\ M & \text{otherwise} \end{cases}$
+
+\begin{proof}
+We prove this by induction on $u$
+\newline
+\newline
+Base Case: Variable
+\newline
+$\readbackwmap{x \sub{}{t}{x}}{\sigma}{\gamma} = \readbackwmap{t}{\sigma}{\gamma} = \readbackwmap{x}{\sigma'}{\gamma}$
+\newline
+\newline
+$\readbackwmap{y}{\sigma}{\gamma} = \sigma(y) = \sigma'(y) = \readbackwmap{y}{\sigma'}{\gamma}$
+\newline
+\newline
+Inductive Case: Application
+\newline
+$\readbackwmap{\app{u}{s} \sub{}{t}{x}}{\sigma}{\gamma} = \app{\readbackwmap{u \sub{}{t}{x}}{\sigma}{\gamma}}{\readbackwmap{s \sub{}{t}{x}}{\sigma}{\gamma}} \IH \app{\readbackwmap{u}{\sigma'}{\gamma}}{\readbackwmap{s}{\sigma'}{\gamma}} = \readbackwmap{\app{u}{s}}{\sigma'}{\gamma}$
+\newline
+\newline
+Inductive Case: Abstraction
+\newline
+$\readbackwmap{(\fake{c}{c}{s}) \sub{}{t}{x}}{\sigma}{\gamma} = \abs{c}{\readbackwmap{s \sub{}{t}{x}}{\sigma}{\gamma}} \IH \abs{c}{\readbackwmap{s}{\sigma'}{\gamma}} = \readbackwmap{\fake{c}{c}{s}}{\sigma'}{\gamma}$
+\newline
+\newline
+Inductive Case: Phantom-Abstraction
+\newline
+$\readbackwmap{(\fake{c}{x_{1}, \dots, x_{n}}{s}) \sub{}{t}{x}}{\sigma}{\gamma}$
+\newline
+\indent Case: $x \in \set{x_{1}, \dots, x_{n}}$
+\newline
+\indent $= \readbackwmap{(\fake{c}{x_{1}, \dots, x_{n}, x}{s}) \sub{}{t}{x}}{\sigma}{\gamma} = \readbackwmap{\fake{c}{x_{1}, \dots, x_{n}, y_{1}, \dots, y_{m}}{s} \sub{}{t}{x}}{\sigma}{\gamma}$
+\newline
+\indent where $\set{y_{1}, \dots, y_{m}} = \fv{t}$
+\newline
+\indent $= \abs{c}{\readbackwmap{s \sub{}{t}{x}}{\sigma''}{\gamma}} \IH \abs{c}{\readbackwmap{s}{\sigma'''_{1}}{\gamma}} = \abs{c}{\readbackwmap{s}{\sigma'''_{2}}{\gamma}} = \readbackwmap{\fake{c}{x_{1}, \dots, x_{n}, x}{s}}{\sigma'}{\gamma}$
+\newline
+\indent where $\sigma''(z) = \begin{cases} \sigma(z) \sub{}{c}{\gamma(c)} & \text{if } z \in \set{x_{1}, \dots, x_{n}, y_{1}, \dots, y_{m}} \\ \sigma(z) & \text{otherwise} \end{cases}$
+\newline
+\indent $\sigma'''_{1} = \sigma''[x \mapsto \readbackwmap{t}{\sigma''}{\gamma}]$
+\newline
+\indent $\sigma'''_{2}(z) = \begin{cases} \readbackwmap{t}{\sigma''}{\gamma} \sub{}{c}{\gamma(c)} & z = x \\ \sigma(z) \sub{}{c}{\gamma(c)} & z \in \set{x_{1}, \dots, x_{n}} \\ \sigma(z) & \text{otherwise} \end{cases}$
+\newline
+\newline
+\indent Case: $x \not\in \set{x_{1}, \dots, x_{n}}$
+\newline
+\indent $= \readbackwmap{\fake{c}{x_{1}, \dots, x_{n}}{s \sub{}{t}{x}}}{\sigma}{\gamma} = \abs{c}{\readbackwmap{s \sub{}{t}{x}}{\sigma''}{\gamma}} \IH \abs{c}{\readbackwmap{t}{\sigma''[x \mapsto \readbackwmap{t}{\sigma''}{\gamma}]}{\gamma}} = \abs{c}{\readbackwmap{t}{\sigma''[x \mapsto \readbackwmap{t}{\sigma}{\gamma}]}{\gamma}} = \readbackwmap{\fake{c}{x_{1}, \dots, x_{n}}{s}}{\sigma[x \mapsto \readbackwmap{t}{\sigma}{\gamma}]}{\gamma}$
+\newline
+\indent where
+\newline
+\indent $\sigma'' = \sigma[x_{i} \mapsto \sigma(x_{i}) \sub{}{c}{\gamma(c)}]_{i \in [n]}$
+\newline
+\newline
+Inductive Case: Sharing
+\newline
+$\readbackwmap{\share{u}{z_{1}, \dots, z_{n}}{s} \sub{}{t}{x}}{\sigma}{\gamma} = \readbackwmap{\share{u \sub{}{t}{x}}{z_{1}, \dots, z_{n}}{s \sub{}{t}{x}} }{\sigma}{\gamma} = \readbackwmap{u \sub{}{t}{x}}{\sigma''}{\gamma}$
+\newline
+$\IH \readbackwmap{u}{\sigma'''}{\gamma} = \readbackwmap{\share{u}{z_{1}, \dots, z_{n}}{s}}{\sigma'}{\gamma}$
+\newline
+where 
+\newline
+$\sigma'' = \sigma [z_{1} \mapsto \readbackwmap{s \sub{}{t}{x}}{\sigma}{\gamma} , \dots , z_{n} \mapsto \readbackwmap{s \sub{}{t}{x}}{\sigma}{\gamma} ]$
+\newline
+$\sigma''' = \sigma' [z_{1} \mapsto \readbackwmap{s}{\sigma'}{\gamma} , \dots , z_{n} \mapsto \readbackwmap{s }{\sigma'}{\gamma} ]$
+\newline
+\newline
+Inductive Case: Distributor 1
+\newline
+$\readbackwmap{\dist{u}{\fakedist{e_{1}}{\vec{w_{1}}}, \dots, \fakedist{e_{n}}{\vec{w_{n}}}}{\overline{[\Gamma]}}{c}{c} \sub{}{t}{x}}{\sigma}{\gamma}$
+\newline
+$= \readbackwmap{u \overline{[\Gamma]} \sub{}{t}{x}}{\sigma}{\gamma'} \IH \readbackwmap{u \overline{[\Gamma]}}{\sigma'}{\gamma'}$
+\newline
+$= \readbackwmap{\dist{u}{\fakedist{e_{1}}{\vec{w_{1}}}, \dots, \fakedist{e_{n}}{\vec{w_{n}}}}{\overline{[\Gamma]}}{c}{\vec{x}} }{\sigma'}{\gamma}$
+\newline
+where
+\newline
+$\gamma' = \gamma [e_{1} \mapsto c, \dots, e_{n} \mapsto c]$
+\newline
+\newline
+Inductive Case: Distributor 2
+\newline
+$\readbackwmap{\dist{u}{\fakedist{e_{1}}{\vec{w_{1}}}, \dots, \fakedist{e_{n}}{\vec{w_{n}}}}{\overline{[\Gamma]}}{c}{\vec{x}} \sub{}{t}{x}}{\sigma}{\gamma}$
+\newline
+$= \readbackwmap{u \overline{[\Gamma]} \sub{}{t}{x}}{\sigma''}{\gamma'} \IH \readbackwmap{u \overline{[\Gamma]}}{\sigma'''}{\gamma'}$
+\newline
+$= \readbackwmap{\dist{u}{\fakedist{e_{1}}{\vec{w_{1}}}, \dots, \fakedist{e_{n}}{\vec{w_{n}}}}{\overline{[\Gamma]}}{c}{\vec{x}} }{\sigma'}{\gamma}$
+\newline
+where
+\newline
+$\gamma' = \gamma [e_{1} \mapsto c, \dots, e_{n} \mapsto c]$
+\end{proof}
+
+The proof for Proposition \ref{prop:bkcomm} (repeated here) is shown below. Book-keeping commutes with the translation in the following way
+
+if $\fake{c}{y_{1}, \dots, y_{m}} \in \fc{u}$ such that $\set{x_{1}, \dots, x_{n}} \subset \set{y_{1}, \dots, y_{m}}$
+
+and for those $z \in \set{y_{1}, \dots, y_{m}} / \set{x_{1}, \dots, x_{n}}$, $\gamma(c) \not\in \fv{\sigma(z)}$
+
+or if simply $\set{x_{1}, \dots, x_{n}} \cap \fv{u} = \set{}$
+
+$$\readbackwmap{u \psub{}{x_{1}, \dots, x_{n}}{c}}{\sigma}{\gamma} = \readbackwmap{u}{\sigma}{\gamma}$$
+
+\begin{proof}
+We prove this by induction on $u$
+\newline
+\newline
+Base Case: Variable
+\newline
+$\readbackwmap{x \psub{}{x_{1}, \dots, x_{n}}{c}}{\sigma}{\gamma} = \readbackwmap{x}{\sigma}{\gamma} = \sigma(x) = \sigma'(x) = \readbackwmap{x}{\sigma'}{\gamma'}$
+\newline
+Since is cannot be that $x \in \set{x_{1}, \dots, x_{n}}$
+\newline
+\newline
+Base Case: Phantom-Abstraction
+\newline
+$\readbackwmap{(\fake{c}{y_{1}, \dots, y_{m}}{t}) \psub{}{x_{1}, \dots, x_{n}}{c}}{\sigma}{\gamma} = \readbackwmap{\fake{c}{x_{1}, \dots, x_{n}}{t}}{\sigma}{\gamma}$
+\newline
+$= \abs{c}{\readbackwmap{t}{\sigma''}{\gamma}} = \abs{c}{\readbackwmap{t}{\sigma''}{\gamma'}}  = \readbackwmap{\fake{c}{y_{1}, \dots, y_{m}}{t}}{\sigma'}{\gamma'}$
+\newline
+where
+\newline
+$\sigma = \sigma_{1} [x_{1} \mapsto M_{1} , \dots ,  x_{n} \mapsto M_{n} ]$
+\newline
+$\sigma'' = \sigma_{1} [x_{1} \mapsto M_{1} \sub{}{c}{d} , \dots ,  x_{n} \mapsto M_{n} \sub{}{c}{d} ]$
+\newline
+$\gamma(c) = d$
+\newline
+Note: due to condition of Proposition any $\set{y_{i} \mapsto M_{i} \sub{}{c}{d}} = \set{ y_{i} \mapsto M_{i} }$
+\newline
+\newline
+Base Case: Distributor
+\newline
+$\readbackwmap{\dist{u}{\fakedist{e_{1}}{\vec{w_{1}}}, \dots, \fakedist{e_{n}}{\vec{w_{n}}}}{\overline{[\Gamma]}}{c}{y_{1}, \dots, y_{m}}  \psub{}{x_{1}, \dots, x_{n}}{c}}{\sigma}{\gamma}$
+\newline
+$= \readbackwmap{\dist{u}{\fakedist{e_{1}}{\vec{w_{1}}}, \dots, \fakedist{e_{n}}{\vec{w_{n}}}}{\overline{[\Gamma]}}{c}{x_{1}, \dots, x_{n}} }{\sigma}{\gamma} = \readbackwmap{u \overline{[\Gamma]}}{\sigma'}{\gamma'}$
+\newline
+$= \readbackwmap{\dist{u}{\fakedist{e_{1}}{\vec{w_{1}}}, \dots, \fakedist{e_{n}}{\vec{w_{n}}}}{\overline{[\Gamma]}}{c}{y_{1}, \dots, y_{m}} }{\sigma}{\gamma}$
+\newline
+where
+$\gamma' = \gamma [e_{1} \mapsto c, \dots, e_{n} \mapsto c]$
+\newline
+$\sigma = \sigma_{1} [x_{1} \mapsto M_{1} , \dots , x_{n} \mapsto M_{n} ]$
+\newline
+$\sigma' = \sigma_{1} [ x_{1} \mapsto M_{1} \sub{}{c}{\gamma(c)} , \dots , x_{n} \mapsto M_{n} \sub{}{c}{\gamma(c)} ]$
+\newline
+\newline
+Inductive Case: Application
+\newline
+$\readbackwmap{(\app{s}{t})  \psub{}{x_{1}, \dots, x_{n}}{c}}{\sigma}{\gamma} = \app{\readbackwmap{s\psub{}{x_{1}, \dots, x_{n}}{c}}{\sigma}{\gamma}}{\readbackwmap{t\psub{}{x_{1}, \dots, x_{n}}{c}}{\sigma}{\gamma}}$
+\newline
+$\IH  \app{\readbackwmap{s}{\sigma}{\gamma}}{\readbackwmap{t}{\sigma}{\gamma}} = \readbackwmap{\app{s}{t}}{\sigma}{\gamma}$
+\newline
+\newline
+Inductive Case: Abstraction
+\newline
+$\readbackwmap{(\fake{z}{z}{t})  \psub{}{x_{1}, \dots, x_{n}}{c}}{\sigma}{\gamma} = \abs{z}{\readbackwmap{t \psub{}{x_{1}, \dots, x_{n}}{c}}{\sigma}{\gamma}} \IH \abs{z}{\readbackwmap{t}{\sigma}{\gamma}} = \readbackwmap{\fake{z}{z}{t}}{\sigma}{\gamma}$
+\newline
+\newline
+Inductive Case: Phantom-Abstraction
+\newline
+$\readbackwmap{(\fake{d}{z_{1}, \dots, z_{m}}{t}) \psub{}{x_{1}, \dots, x_{n}}{c}}{\sigma}{\gamma} = \abs{d}{\readbackwmap{t  \psub{}{x_{1}, \dots, x_{n}}{c}}{\sigma'}{\gamma}}$
+\newline
+$\IH \abs{d}{\readbackwmap{t}{\sigma'}{\gamma}} = \readbackwmap{\fake{d}{z_{1}, \dots, z_{m}}{t}}{\sigma}{\gamma}$
+\newline
+\newline
+Inductive Case: Sharing
+\newline
+$\readbackwmap{\share{u}{z_{1}, \dots, z_{m}}{t} \psub{}{x_{1}, \dots, x_{n}}{c}}{\sigma}{\gamma}$
+\newline
+$ = \readbackwmap{\share{u \psub{}{x_{1}, \dots, x_{n}}{c}}{z_{1}, \dots, z_{m}}{t \psub{}{x_{1}, \dots, x_{n}}{c}} }{\sigma}{\gamma} $
+\newline
+$= \readbackwmap{u \psub{}{x_{1}, \dots, x_{n}}{c}}{\sigma'}{\gamma} \IH \readbackwmap{u}{\sigma''}{\gamma} = \readbackwmap{\share{u}{z_{1}, \dots, z_{m}}{t}}{\sigma}{\gamma}$
+\newline
+\newline
+Inductive Case: Distributor
+\newline
+$\readbackwmap{\dist{u}{\fakedist{e_{1}}{\vec{w_{1}}}, \dots, \fakedist{e_{m}}{\vec{w_{m}}}}{\overline{[\Gamma]}}{d}{d}  \psub{}{x_{1}, \dots, x_{n}}{c}}{\sigma}{\gamma}$
+\newline
+$= \readbackwmap{\dist{u}{\fakedist{e_{1}}{\vec{w_{1}}}, \dots, \fakedist{e_{m}}{\vec{w_{m}}}}{\overline{[\Gamma]} \psub{}{x_{1}, \dots, x_{n}}{c}}{d}{d} }{\sigma}{\gamma}$
+\newline
+$= \readbackwmap{u \overline{[\Gamma]}\psub{}{x_{1}, \dots, x_{n}}{c}}{\sigma}{\gamma'} \IH \readbackwmap{u \overline{[\Gamma]}}{\sigma}{\gamma'}$
+\newline
+$= \readbackwmap{\dist{u}{\fakedist{e_{1}}{\vec{w_{1}}}, \dots, \fakedist{e_{m}}{\vec{w_{m}}}}{\overline{[\Gamma]}}{d}{d}}{\sigma}{\gamma}$
+\end{proof}
+
+
+The proof for \ref{prop:exorcomm} (repeated here) is below. Exorcisms commute with the translation in the following way
+
+if $\fake{c}{x_{1}, \dots, x_{n}} \in \fc{u}$ or $\set{x_{1}, \dots, x_{n}} \cap \fv{u} = \set{}$
+
+$$\readbackwmap{u \exor{}{c}{x_{1}, \dots, x_{n}}}{\sigma}{\gamma} = \readbackwmap{u}{\sigma[x_{i} \mapsto c]_{i \in [n]}}{\gamma}$$
+
+\begin{proof}
+We prove this by induction on $u$
+\newline
+\newline
+Base Case: Variable
+\newline
+$\readbackwmap{z \exor{}{c}{x_{1}, \dots, x_{n}}}{\sigma}{\gamma} = \readbackwmap{z}{\sigma}{\gamma} = \sigma(z) = \sigma'(z) = \readbackwmap{z}{\sigma'}{\gamma}$
+\newline
+\newline
+Base Case: Phantom-Abstraction
+\newline
+$\readbackwmap{(\fake{c}{x_{1}, \dots, x_{n}}{t})  \exor{}{c}{x_{1}, \dots, x_{n}} }{\sigma}{\gamma} = \readbackwmap{\fake{c}{c}{t \share{}{x_{1}, \dots, x_{n}}{c}}}{\sigma}{\gamma}$
+\newline
+$= \abs{c}{\readbackwmap{t \share{}{x_{1}, \dots, x_{n}}{c}}{\sigma}{\gamma}} = \abs{c}{\readbackwmap{t}{\sigma'}{\gamma}} = \readbackwmap{\fake{c}{x_{1}, \dots, x_{n}}{t}}{\sigma'}{\gamma}$
+\newline
+\newline
+Base Case: Distributor
+\newline
+$\readbackwmap{\dist{u}{\fakedist{e_{1}}{\vec{w_{1}}}, \dots, \fakedist{e_{m}}{\vec{w_{m}}}}{\overline{[\Gamma]}}{c}{x_{1}, \dots, x_{n}} \exor{}{c}{x_{1}, \dots, x_{n}} }{\sigma}{\gamma}$
+\newline
+$= \readbackwmap{\dist{u}{\fakedist{e_{1}}{\vec{w_{1}}}, \dots, \fakedist{e_{m}}{\vec{w_{m}}}}{\overline{[\Gamma]} \share{}{x_{1}, \dots, x_{n}}{c}}{c}{c} }{\sigma}{\gamma}$
+\newline
+$= \readbackwmap{u \overline{[\Gamma]} \share{}{x_{1}, \dots, x_{n}}{c} }{\sigma}{\gamma'} = \readbackwmap{u \overline{[\Gamma]}}{\sigma'}{\gamma'}$
+\newline
+$= \readbackwmap{\dist{u}{\fakedist{e_{1}}{\vec{w_{1}}}, \dots, \fakedist{e_{m}}{\vec{w_{m}}}}{\overline{[\Gamma]}}{c}{x_{1}, \dots, x_{n}}}{\sigma'}{\gamma}$
+\newline
+\newline
+Inductive Case: Application
+\newline
+$\readbackwmap{(\app{s}{t}) \exor{}{c}{x_{1}, \dots, x_{n}} }{\sigma}{\gamma} = \app{\readbackwmap{s \exor{}{c}{x_{1}, \dots, x_{n}}}{\sigma}{\gamma}}{\readbackwmap{t \exor{}{c}{x_{1}, \dots, x_{n}}}{\sigma}{\gamma}}$
+\newline
+$\IH \app{\readbackwmap{s}{\sigma'}{\gamma}}{\readbackwmap{t}{\sigma'}{\gamma}} = \readbackwmap{\app{s}{t}}{\sigma'}{\gamma}$
+\newline
+\newline
+Inductive Case: Abstraction
+\newline
+$\readbackwmap{(\fake{z}{z}{t}) \exor{}{c}{x_{1}, \dots, x_{n}} }{\sigma}{\gamma} = \abs{z}{\readbackwmap{t  \exor{}{c}{x_{1}, \dots, x_{n}}}{\sigma}{\gamma}}$
+\newline
+$\IH \abs{z}{\readbackwmap{t}{\sigma'}{\gamma}} = \readbackwmap{\fake{z}{z}{t}}{\sigma'}{\gamma}$
+\newline
+\newline
+Inductive Case: Phantom-Abstraction
+\newline
+$\readbackwmap{(\fake{d}{z_{1}, \dots, z_{m}}{t}) \exor{}{c}{x_{1}, \dots, x_{n}} }{\sigma}{\gamma} = \abs{d}{\readbackwmap{t  \exor{}{c}{x_{1}, \dots, x_{n}}}{\sigma''}{\gamma}}$
+\newline
+$\IH \abs{d}{\readbackwmap{t}{\sigma'''}{\gamma}} = \readbackwmap{\fake{d}{z_{1}, \dots, z_{m}}{t}}{\sigma'}{\gamma}$
+\newline
+\newline
+Inductive Case: Sharing
+\newline
+$\readbackwmap{\share{u}{z_{1}, \dots, z_{m}}{t} \exor{}{c}{x_{1}, \dots, x_{n}} }{\sigma}{\gamma}$
+\newline
+$= \readbackwmap{\share{u \exor{}{c}{x_{1}, \dots, x_{n}}}{z_{1}, \dots, z_{m}}{t \exor{}{c}{x_{1}, \dots, x_{n}}}}{\sigma}{\gamma}$
+\newline
+$= \readbackwmap{u \exor{}{c}{x_{1}, \dots, x_{n}} }{\sigma''}{\gamma} \IH \readbackwmap{u}{\sigma'''}{\gamma} = \readbackwmap{\share{u}{z_{1}, \dots, z_{m}}{t}}{\sigma'}{\gamma}$
+\newline
+\newline
+Inductive Case: Distributor
+\newline
+$\readbackwmap{\dist{u}{\fakedist{e_{1}}{\vec{w_{1}}}, \dots, \fakedist{e_{m}}{\vec{w_{m}}}}{\overline{[\Gamma]}}{d}{d} \exor{}{c}{x_{1}, \dots, x_{n}} }{\sigma}{\gamma}$
+\newline
+$= \readbackwmap{\dist{u}{\fakedist{e_{1}}{\vec{w_{1}}}, \dots, \fakedist{e_{m}}{\vec{w_{m}}}}{\overline{[\Gamma]} \exor{}{c}{x_{1}, \dots, x_{n}}}{d}{d}  }{\sigma}{\gamma}$
+\newline
+$= \readbackwmap{u \overline{[\Gamma]} \exor{}{c}{x_{1}, \dots, x_{n}}}{\sigma}{\gamma'} \IH \readbackwmap{u \overline{[\Gamma]}}{\sigma'}{\gamma'}$
+\newline
+$= \readbackwmap{\dist{u}{\fakedist{e_{1}}{\vec{w_{1}}}, \dots, \fakedist{e_{m}}{\vec{w_{m}}}}{\overline{[\Gamma]}}{d}{d} }{\sigma}{\gamma'}$
+\end{proof}
+
+\noindent We prove Lemma \ref{lem:preservesdenotation} on a case by case basis. If $s \rightsquigarrow_{L, D, C} t$ then $\readbackwmap{s}{\sigma}{\gamma} = \readbackwmap{t}{\sigma}{\gamma}$
+
+\begin{proof}
+We prove this by induction. First we to a case-by-case basis for the base case.
+\newline
+\newline
+Case: (\ref{red:mergeshare}) 
+$$\share{\share{u}{\vec{w}}{y}}{\vec{x} \cdot y}{t} \rightsquigarrow_{C} \share{u}{\vec{x} \cdot \vec{w}}{t} $$
+$\readbackwmap{\share{\share{u}{\vec{w}}{y}}{\vec{x} \cdot y}{t}}{\sigma}{\gamma} = \readbackwmap{\share{u}{\vec{w}}{y}}{\sigma'}{\gamma} = \readbackwmap{u}{\sigma''}{\gamma} = \readbackwmap{\share{u}{\vec{x} \cdot \vec{w}}{t}}{\sigma}{\gamma}$
+\newline
+where
+\newline
+$\sigma' = \sigma [x \mapsto \readbackwmap{t}{\sigma}{\gamma}]_{\forall x \in \vec{x}} [y \mapsto \readbackwmap{t}{\sigma}{\gamma}]$
+\newline
+$\sigma'' = \sigma' [w \mapsto \readbackwmap{t}{\sigma}{\gamma}]_{\forall w \in \vec{w}}$
+\newline
+\newline
+\newline
+Case: (\ref{red:compshare})
+$$\share{u}{x}{t} \rightsquigarrow_{C} \sub{u}{t}{x}$$
+$\readbackwmap{\share{u}{x}{t}}{\sigma}{\gamma} = \readbackwmap{u}{\sigma[x \mapsto \readbackwmap{t}{\sigma}{\gamma}]}{\gamma} = \readbackwmap{\sub{u}{t}{x}}{\sigma}{\gamma} $\
+\newline
+\newline
+Case: (\ref{red:appdup})
+$$\share{u}{x_{1} \dots x_{n}}{\app{s}{t}} \rightsquigarrow_{D} \share{\share{\sub{\sub{u}{\app{z_{1}}{y_{1}}}{x_{1}}\dots}{\app{z_{n}}{y_{n}}}{x_{n}}}{z_{1} \dots z_{n}}{s}}{y_{1} \dots y_{n}}{t}$$
+$\readbackwmap{\share{u}{x_{1} \dots x_{n}}{\app{s}{t}}}{\sigma}{\gamma} = \readbackwmap{u}{\sigma'}{\gamma}$
+\newline
+where
+\newline
+$\sigma' = \sigma [ x_{i} \mapsto \readbackwmap{\app{s}{t}}{\sigma}{\gamma}]_{1 \leq i \leq n} = \sigma [x_{i} \mapsto \app{\readbackwmap{s}{\sigma}{\gamma}}{\readbackwmap{t}{\sigma}{\gamma}}]_{1 \leq i \leq n}$
+\newline
+\newline
+$\readbackwmap{ \share{\share{\sub{\sub{u}{\app{z_{1}}{y_{1}}}{x_{1}}\dots}{\app{z_{n}}{y_{n}}}{x_{n}}}{z_{1} \dots z_{n}}{s}}{y_{1} \dots y_{n}}{t}}{\sigma}{\gamma}$
+\newline
+$=\readbackwmap{\sub{\sub{u}{\app{z_{1}}{y_{1}}}{x_{1}}\dots}{\app{z_{n}}{y_{n}}}{x_{n}} }{\sigma''}{\gamma} $
+\newline
+where
+\newline
+$\sigma'' = \sigma [z_{i} \mapsto \readbackwmap{s}{\sigma}{\gamma}]_{1 \leq i \leq n} [y_{i} \mapsto \readbackwmap{t}{\sigma}{\gamma}]_{1 \leq i \leq n}$ since $y_{i} \not\in \fv{s}$
+\newline
+$= \readbackwmap{u}{\sigma'''}{\gamma}$
+\newline
+where
+\newline
+$\sigma''' = \sigma'' [x_{i} \mapsto \readbackwmap{\app{z_{i}}{y_{i}}}{\sigma''}{\gamma}]_{1 \leq i \leq n} = \sigma [x_{i} \mapsto \app{\readbackwmap{s}{\sigma}{\gamma}}{\readbackwmap{t}{\sigma}{\gamma}}]_{1 \leq i \leq n}$
+\newline
+since $z_{i}$ and $y_{i} \not\in \fv{u}$
+\newline
+\newline
+Case: (\ref{red:absdup})
+$$\share{u}{x_{1}, \dots, x_{n}}{\fake{c}{\vec{y}}{t}} \rightsquigarrow_{D}$$
+$$\sub{u}{\fake{e_{i}}{w^{i}_{1}}{w^{i}_{1}}}{x_{i}}_{1 \leq i \leq n} \dist{}{\fakedist{e_{1}}{w^{1}_{1}} \dots \fakedist{e_{n}}{w^{n}_{1}}}{\share{}{w^{1}_{1}, \dots, w^{n}_{1}}{t}}{c}{\vec{y}}$$
+\newline
+SubCase: $\vec{y} = c$
+\newline
+$\readbackwmap{\share{u}{x_{1}, \dots, x_{n}}{\fake{c}{c}{t}}}{\sigma}{\gamma} = \readbackwmap{u}{\sigma'}{\gamma}$
+\newline
+where $\sigma' = \sigma [x_{i} \mapsto \readbackwmap{\fake{c}{c}{t}}{\sigma}{\gamma}]_{1 \leq i \leq n} = \sigma [x_{i} \mapsto \abs{c}{\readbackwmap{t}{\sigma}{\gamma}}]_{1 \leq i \leq n}$
+\newline
+\newline
+$\readbackwmap{\sub{u}{\fake{e_{i}}{w^{i}_{1}}{w^{i}_{1}}}{x_{i}}_{1 \leq i \leq n} \dist{}{\fakedist{e_{1}}{w^{1}_{1}} \dots \fakedist{e_{n}}{w^{n}_{1}}}{\share{}{w^{1}_{1}, \dots, w^{n}_{1}}{t}}{c}{c}}{\sigma}{\gamma}$
+\newline
+$\readbackwmap{\sub{u}{\fake{e_{i}}{w^{i}_{1}}{w^{i}_{1}}}{x_{i}}_{1 \leq i \leq n} \share{}{w^{1}_{1}, \dots, w^{n}_{1}}{t} }{\sigma}{\gamma'}$
+\newline
+$= \readbackwmap{\sub{u}{\fake{e_{i}}{w^{i}_{1}}{w^{i}_{1}}}{x_{i}}_{1 \leq i \leq n}}{\sigma'}{\gamma'}$
+\newline
+where
+\newline
+$\gamma' = \gamma [e_{1}  \mapsto c, \dots, e_{n} \mapsto c]$
+\newline
+$\sigma' = \sigma [w^{i}_{1} \mapsto \readbackwmap{t}{\sigma}{\gamma'}]_{1 \leq i \leq n} = \sigma [w^{i}_{1} \mapsto \readbackwmap{t}{\sigma}{\gamma}]_{1 \leq i \leq n}$
+\newline
+$= \readbackwmap{u}{\sigma''}{\gamma'} = \readbackwmap{u}{\sigma''}{\gamma}$
+\newline
+where
+\newline
+$\sigma'' = \sigma' [x_{i} \mapsto \readbackwmap{\fake{e_{i}}{w^{i}_{1}}{w^{i}_{1}}}{\sigma'}{\gamma'}]_{1 \leq i \leq n} = \sigma' [x_{i} \mapsto \abs{e_{i}}{\readbackwmap{w^{i}_{1}}{\sigma'_{i}}{\gamma'}}]_{1 \leq i \leq n}$
+\newline
+\indent $= \sigma' [x_{i} \mapsto \abs{e_{i}}{\readbackwmap{t}{\sigma}{\gamma} \sub{}{e_{i}}{c}}]_{1 \leq i \leq n} =_{\alpha} \sigma' [x_{i} \mapsto \abs{c}{\readbackwmap{t}{\sigma}{\gamma}}]_{1 \leq i \leq n}$
+\newline
+\indent $=  \sigma [x_{i} \mapsto \abs{c}{\readbackwmap{t}{\sigma}{\gamma}}]_{1 \leq i \leq n}$ since $w^{i}_{1} \not\in \fv{u}$
+\newline
+\newline
+SubCase: $\vec{y} = \set{y_{1}, \dots, y_{m}}$
+\newline
+$\readbackwmap{\share{u}{x_{1}, \dots, x_{n}}{\fake{c}{y_{1}, \dots, y_{m}}{t}}}{\sigma}{\gamma} = \readbackwmap{u}{\sigma'}{\gamma}$
+\newline
+where 
+\newline
+$\sigma' = \sigma [x_{i} \mapsto \readbackwmap{\fake{c}{y_{1}, \dots, y_{m}}{t}}{\sigma}{\gamma}]_{1 \leq i \leq n} = \sigma [x_{i} \mapsto \abs{c}{\readbackwmap{t}{\sigma''}{\gamma}}]_{1 \leq i \leq n}$
+\newline
+$\sigma = \sigma_{1} [y_{1} \mapsto M_{1} , \dots , y_{m} \mapsto M_{m} ]$
+\newline
+$\sigma'' = \sigma_{1}[ y_{1} \mapsto M_{1} \sub{}{c}{\gamma(c)} , \dots , y_{m} \mapsto M_{m} \sub{}{c}{\gamma(c)}]$
+\newline
+\newline
+$\readbackwmap{\sub{u}{\fake{e_{i}}{w^{i}_{1}}{w^{i}_{1}}}{x_{i}}_{1 \leq i \leq n} \dist{}{\fakedist{e_{1}}{w^{1}_{1}} \dots \fakedist{e_{n}}{w^{n}_{1}}}{\share{}{w^{1}_{1}, \dots, w^{n}_{1}}{t}}{c}{y_{1}, \dots, y_{m}}}{\sigma}{\gamma}$
+\newline
+$\readbackwmap{\sub{u}{\fake{e_{i}}{w^{i}_{1}}{w^{i}_{1}}}{x_{i}}_{1 \leq i \leq n} \share{}{w^{1}_{1}, \dots, w^{n}_{1}}{t}}{\sigma''}{\gamma'}$
+\newline
+where $\gamma' = \gamma[e_{1} \mapsto c, \dots, e_{n} \mapsto c]$
+\newline
+$= \readbackwmap{\sub{u}{\fake{e_{i}}{w^{i}_{1}}{w^{i}_{1}}}{x_{i}}_{1 \leq i \leq n}}{\sigma'''}{\gamma'}$
+\newline
+where $\sigma''' = \sigma'' [ w^{i}_{1} \mapsto \readbackwmap{t}{\sigma''}{\gamma'}]_{1 \leq i \leq n} = \sigma'' [w^{i}_{1} \mapsto \readbackwmap{t}{\sigma''}{\gamma}]_{1 \leq i \leq n}$
+\newline
+$= \readbackwmap{u}{\sigma''''}{\gamma'} = \readbackwmap{u}{\sigma''''}{\gamma}  = \readbackwmap{u}{\sigma''}{\gamma}$
+\newline
+where $\sigma'''' = \sigma''' [x_{i} \mapsto \readbackwmap{\fake{e_{i}}{w^{i}_{1}}{w^{i}_{1}}}{\sigma'''}{\gamma'}]_{1 \leq i \leq n} = \sigma''' [x_{i} \mapsto \abs{e_{i}}{\readbackwmap{w^{i}_{1}}{\sigma'''_{i}}{\gamma'}}]_{1 \leq i \leq n}$
+\newline
+\indent $= \sigma''' [x_{i} \mapsto \abs{e_{i}}{\readbackwmap{t}{\sigma''}{\gamma} \sub{}{e_{i}}{\gamma'(e_{i})}}]_{1 \leq i \leq n} =_{\alpha} \sigma''' [x_{i} \mapsto \abs{c}{\readbackwmap{t}{\sigma''}{\gamma}}]_{1 \leq i \leq n}$
+\newline
+\newline
+Case: (\ref{red:distelim})
+$$\dist{u}{\fakedist{e_{1}}{\vec{w_{1}}} \dots \fakedist{e_{n}}{\vec{w_{n}}}}{\share{}{\vec{w_{1}}, \dots, \vec{w_{n}}}{c}}{c}{c} \rightsquigarrow_{D} \exor{\exor{u}{e_{1}}{\vec{w_{1}}} \dots}{e_{n}}{\vec{w_{n}}}$$
+$\readbackwmap{\dist{u}{\fakedist{e_{1}}{\vec{w_{1}}} \dots \fakedist{e_{n}}{\vec{w_{n}}}}{\share{}{\vec{w_{1}}, \dots, \vec{w_{n}}}{c}}{c}{c} }{\sigma}{\gamma}$
+\newline
+$= \readbackwmap{u \share{}{\vec{w_{1}}, \dots, \vec{w_{n}}}{c} }{\sigma}{\gamma'} = \readbackwmap{u}{\sigma'}{\gamma'} $
+\newline
+$= \readbackwmap{ \exor{\exor{u}{e_{1}}{\vec{w_{1}}} \dots}{e_{n}}{\vec{w_{n}}}}{\sigma}{\gamma'} = \readbackwmap{ \exor{\exor{u}{e_{1}}{\vec{w_{1}}} \dots}{e_{n}}{\vec{w_{n}}}}{\sigma}{\gamma}$
+\newline
+\newline
+For the remaining cases, we say $\readbackwmap{t[\Gamma]}{\sigma}{\gamma}$ produces $\readbackwmap{t}{\sigma_{\Gamma}}{\gamma_{\Gamma}}$ where $\sigma_{\Gamma}$ and $\gamma_{\Gamma}$ are the resulting maps from interpreting the closure $[\Gamma]$
+\newline
+Case: (\ref{red:liftappleft})
+$$\app{s[\Gamma]}{t} \rightsquigarrow_{L} (\app{s}{t})[\Gamma]$$
+\newline
+$\readbackwmap{\app{s[\Gamma]}{t}}{\sigma}{\gamma} = \app{\readbackwmap{s}{\sigma_{\Gamma}}{\gamma_{\Gamma}}}{\readbackwmap{t}{\sigma}{\gamma}} = \app{\readbackwmap{s}{\sigma_{\Gamma}}{\gamma_{\Gamma}}}{\readbackwmap{t}{\sigma_{\Gamma}}{\gamma_{\Gamma}}} = \readbackwmap{(\app{s}{t}) [\Gamma]}{\sigma}{\gamma}$
+\newline
+\newline
+Case: (\ref{red:liftappright})
+$$\app{s[\Gamma]}{t} \rightsquigarrow_{L} (\app{s}{t})[\Gamma]$$
+$\readbackwmap{\app{s}{(t [\Gamma])}}{\sigma}{\gamma} = \app{\readbackwmap{s}{\sigma}{\gamma}}{\readbackwmap{t}{\sigma_{\Gamma}}{\gamma_{\Gamma}}} = \app{\readbackwmap{s}{\sigma_{\Gamma}}{\gamma_{\Gamma}}}{\readbackwmap{t}{\sigma_{\Gamma}}{\gamma_{\Gamma}}} = \readbackwmap{(\app{s}{t}) [\Gamma]}{\sigma}{\gamma}$
+\newline
+\newline
+Case: (\ref{red:liftabs})
+$$\fake{d}{\vec{x}}{t[\Gamma]} \rightsquigarrow_{L} (\fake{d}{\vec{x}}{t})[\Gamma] $$
+\newline
+\indent SubCase: $\vec{x} = d$
+\newline
+$\readbackwmap{\fake{d}{d}{t[\Gamma]}}{\sigma}{\gamma} = \abs{d}{\readbackwmap{t [\Gamma]}{\sigma}{\gamma}} = \abs{d}{\readbackwmap{t}{\sigma_{\Gamma}}{\gamma_{\Gamma}}} = \readbackwmap{\fake{d}{d}{t}}{\sigma_{\Gamma}}{\gamma_{\Gamma}} = \readbackwmap{(\fake{d}{d}{t}) [\Gamma]}{\sigma}{\gamma}$
+\newline
+\newline
+\indent SubCase: $\vec{x} = x_{1}, \dots, x_{n}$
+\newline
+$\readbackwmap{\fake{d}{x_{1}, \dots, x_{n}}{t[\Gamma]}}{\sigma}{\gamma} = \abs{d}{\readbackwmap{t [\Gamma]}{\sigma'}{\gamma}} = \abs{d}{\readbackwmap{t}{\sigma'_{\Gamma}}{\gamma_{\Gamma}}} = \readbackwmap{\fake{d}{x_{1}, \dots, x_{n}}{t}}{\sigma_{\Gamma}}{\gamma_{\Gamma}}$
+\newline
+$= \readbackwmap{(\fake{d}{x_{1}, \dots, x_{n}}{t}) [\Gamma]}{\sigma}{\gamma}$
+\newline
+since we know $x_{1}, \dots, x_{n} \not\in \fv{[\Gamma]}$
+\newline
+\newline
+Case: (\ref{red:liftshare})
+$$\share{u}{\vec{x}}{t[\Gamma]} \rightsquigarrow_{L} \share{u}{\vec{x}}{t}[\Gamma]$$
+$\readbackwmap{\share{u}{\vec{x}}{t[\Gamma]}}{\sigma}{\gamma} = \readbackwmap{u}{\sigma'}{\gamma} = \readbackwmap{u}{\sigma''}{\gamma_{\Gamma}} = \readbackwmap{\share{u}{\vec{x}}{t}}{\sigma_{\Gamma}}{\gamma_{\Gamma}} = \readbackwmap{\share{u}{\vec{x}}{t[\Gamma]}}{\sigma}{\gamma}$
+\newline
+where
+\newline
+$\sigma' = \sigma [x \mapsto \readbackwmap{t [\Gamma]}{\sigma}{\gamma}]_{\forall x \in \vec{x}} = \sigma[x \mapsto \readbackwmap{t}{\sigma_{\Gamma}}{\gamma_{\Gamma}}]_{\forall x \in \vec{x}}$
+\newline
+$\sigma'' =  \sigma_{\Gamma} [x \mapsto \readbackwmap{t}{\sigma_{\Gamma}}{\gamma_{\Gamma}}]_{\forall x \in \vec{x}}$
+\newline
+\newline
+Cases: (\ref{red:distshare}) 
+$$\dist{u}{\fakedist{e_{1}}{\vec{w_{1}}} \dots \fakedist{e_{n}}{\vec{w_{n}}}}{\overline{[\Gamma]} [\Gamma]}{c}{\vec{x}}  \rightsquigarrow_{L}$$ $$\dist{u {\psub{}{(\vec{w_{i}} / \vec{z})}{e_{i}}}_{i \in [n]}}{\fakedist{e_{1}}{\vec{w_{1}} / \vec{z}} \dots \fakedist{e_{n}}{\vec{w_{n}} / \vec{z}}}{\overline{[\Gamma]}}{c}{\vec{x}}[\Gamma] $$
+\indent SubCase: $\vec{x} = c$
+\newline
+$\readbackwmap{\dist{u}{\fakedist{e_{1}}{\vec{w_{1}}} \dots \fakedist{e_{n}}{\vec{w_{n}}}}{\overline{[\Gamma]} [\Gamma]}{c}{c}}{\sigma}{\gamma} = \readbackwmap{u \overline{[\Gamma]} [\Gamma]}{\sigma}{\gamma'} = \readbackwmap{u \overline{[\Gamma]}}{\sigma_{\Gamma}}{\gamma'_{\Gamma}}$
+\newline
+$= \readbackwmap{u \overline{[\Gamma]} \psub{}{\vec{z_{1}}}{e_{1}} \dots \psub{}{\vec{z_{n}}}{e_{n}} }{\sigma_{\Gamma}}{\gamma'_{\Gamma}} =  \readbackwmap{u \psub{}{\vec{z_{1}}}{e_{1}} \dots \psub{}{\vec{z_{n}}}{e_{n}} \overline{[\Gamma]}}{\sigma_{\Gamma}}{\gamma'_{\Gamma}}$
+\newline
+$= \readbackwmap{ \dist{u \psub{}{\vec{z_{1}}}{e_{1}} \dots \psub{}{\vec{z_{n}}}{e_{n}} }{\fakedist{e_{1}}{\vec{z_{1}}} \dots \fakedist{e_{n}}{\vec{z_{n}}}}{\overline{[\Gamma]}}{c}{c}}{\sigma_{\Gamma}}{\gamma_{\Gamma}}$
+\newline
+$= \readbackwmap{ \dist{u \psub{}{\vec{z_{1}}}{e_{1}} \dots \psub{}{\vec{z_{n}}}{e_{n}} }{\fakedist{e_{1}}{\vec{z_{1}}} \dots \fakedist{e_{n}}{\vec{z_{n}}}}{\overline{[\Gamma]}}{c}{c} [\Gamma]}{\sigma}{\gamma}$
+\newline
+\newline
+\indent SubCase: $\vec{x} = x_{1}, \dots, x_{m}$
+\newline
+$\readbackwmap{\dist{u}{\fakedist{e_{1}}{\vec{w_{1}}} \dots \fakedist{e_{n}}{\vec{w_{n}}}}{\overline{[\Gamma]} [\Gamma]}{c}{x_{1}, \dots, x_{m}}}{\sigma}{\gamma} $
+\newline
+$= \readbackwmap{u \overline{[\Gamma]} [\Gamma]}{\sigma'}{\gamma'} = \readbackwmap{u \overline{[\Gamma]}}{\sigma'_{\Gamma}}{\gamma'_{\Gamma}} = \readbackwmap{u \overline{[\Gamma]} \psub{}{\vec{z_{1}}}{e_{1}} \dots \psub{}{\vec{z_{n}}}{e_{n}} }{\sigma_{\Gamma}}{\gamma'_{\Gamma}}$
+\newline
+$ =  \readbackwmap{u \psub{}{\vec{z_{1}}}{e_{1}} \dots \psub{}{\vec{z_{n}}}{e_{n}} \overline{[\Gamma]}}{\sigma_{\Gamma}}{\gamma'_{\Gamma}}$
+\newline
+$= \readbackwmap{\dist{u \psub{}{\vec{z_{1}}}{e_{1}} \dots \psub{}{\vec{z_{n}}}{e_{n}} }{\fakedist{e_{1}}{\vec{z_{1}}} \dots \fakedist{e_{n}}{\vec{z_{n}}}}{\overline{[\Gamma]}}{c}{x_{1}, \dots, x_{n}}}{\sigma_{\Gamma}}{\gamma_{\Gamma}}$
+\newline
+$= \readbackwmap{\dist{u \psub{}{\vec{z_{1}}}{e_{1}} \dots \psub{}{\vec{z_{n}}}{e_{n}} }{\fakedist{e_{1}}{\vec{z_{1}}} \dots \fakedist{e_{n}}{\vec{z_{n}}}}{\overline{[\Gamma]}}{c}{x_{1}, \dots, x_{n}} [\Gamma]}{\sigma}{\gamma}$
+\newline
+\newline
+Inductive Case: Application $t \rightsquigarrow_{(C, D, L)} t'$
+\newline
+$\readbackwmap{\app{t}{s}}{\sigma}{\gamma} = \app{\readbackwmap{t}{\sigma}{\gamma}}{\readbackwmap{s}{\sigma}{\gamma}} \IH \app{\readbackwmap{t'}{\sigma}{\gamma}}{\readbackwmap{s}{\sigma}{\gamma}} = \readbackwmap{\app{t'}{s}}{\sigma}{\gamma}$
+\end{proof}
+
+\newpage
+
+\section{Strong Normalisation of Sharing Reductions}
+
+The weakening calculus is used to show preservation of strong normalisation with respect to the $\lambda$-calculus. A $\beta$-step in our calculus may occur within a weakening, and therefore is simulated by zero $\beta$-steps in the $\lambda$-calculus. Therefore if there is an infinite reduction path located inside a weakening in $\FALC$, then the reduction path is not preserved in the corresponding $\lambda$-term as there are no weakenings. To deal with this, just as done in \cite{kesneraccattoli12, gundersen2013atomic, he2018atomic}, we make use of the weakening calculus. A $\beta$-step is non-deleteing precisely because of the weakening construct. If a $\beta$-step would be deleting in the $\lambda$-calculus, then the weakening calculus would instead keep the deleted term around as `garbage', which can continue to reduce unless explicitly `garbage-collected' by extra (non-$\beta$) reduction steps. The weakening calculus has already been shown to preserve strong normalisation through the use of a perpetual strategy in \cite{gundersen2013atomic}. A part of proving PSN is then using the weakening calculus to prove that if $t \in \FALC$ has a infinite reduction path, then its translation into the weakening calculus also has an infinite reduction path. 
+
+First we demonstrate that our readback translation (Definition \ref{def:transfalcweak}) is truly an extention of the translation into the $\lambda$-calculus (Definition \ref{def:readback}). We therefore demonstrate that our operations (substitution, book-keeping, and exorcisms) commute with the two translation functions in the same way.
+
+\begin{proposition}
+\label{prop:suboutcomm}
+Given $M \in \Lambda$ such that for all $v \in V$, $\gamma(v) \not\in \fv{M}$  and $\sigma(x) = x$, the translation $\readweakwmap{u}{\sigma}{\gamma}$ commutes with substitution $\sub{}{M}{x}$ in the following way 
+
+$$\readweakwmap{u \sub{}{t}{x}}{\sigma}{\gamma} = \readweakwmap{u}{\sigma[x \mapsto \readweakwmap{t}{\sigma}{\gamma}]}{\gamma}$$
+\end{proposition}
+
+\begin{proof}
+We prove this by induction on $u$. The argument is similar to the proof of Proposition \ref{prop:suboutcomm}. We only discuss here to cases involving the three special cases defined in Definition \ref{def:transfalcweak}.
+\newline
+\newline
+Inductive Case: Weakening
+\newline
+$\readweakwmap{\share{u}{}{s} \sub{}{t}{x}}{\sigma}{\gamma} = \share{\readweakwmap{u \sub{}{t}{x}}{\sigma}{\gamma}}{}{\readweakwmap{s \sub{}{t}{x}}{\sigma}{\gamma}}$
+\newline
+$\IH \share{ \readweakwmap{u}{\sigma'}{\gamma}}{}{ \readweakwmap{s}{\sigma'}{\gamma}} =  \readweakwmap{\share{u}{}{s}}{\sigma'}{\gamma}$
+\newline
+\newline
+Inductive Case: Distributor
+\newline
+$\readweakwmap{\dist{u}{}{\overline{[\Gamma]}}{c}{\vec{x}} \sub{}{t}{x}}{\sigma}{\gamma}$
+\newline
+\newline
+\indent SubCase: $\vec{x} = c$
+\newline
+$\readweakwmap{\dist{u}{}{\overline{[\Gamma]}}{c}{c} \sub{}{t}{x}}{\sigma}{\gamma} = \readweakwmap{\dist{u}{}{\overline{[\Gamma]} \sub{}{t}{x}}{c}{c} }{\sigma}{\gamma}$
+\newline
+$= \readweakwmap{u \overline{[\Gamma]} \sub{}{t}{x}}{\sigma''}{\gamma'} \IH \readweakwmap{u \overline{[\Gamma]}}{\sigma'''}{\gamma'} = \readweakwmap{\dist{u}{}{\overline{[\Gamma]}}{c}{c}}{\sigma'}{\gamma}$
+\newline
+where
+\newline
+$\sigma'' = \sigma \cup \set{c \mapsto \bullet}$
+\newline
+$\sigma''' = \sigma \cup \set{c \mapsto \bullet} \cup \set{x \mapsto \readweakwmap{t}{\sigma''}{\gamma'}} = \sigma \cup \set{c \mapsto \bullet} \cup \set{x \mapsto \readweakwmap{t}{\sigma}{\gamma}} $
+\newline
+\newline
+\indent SubCase: $\vec{x} = x_{1}, \dots, x_{n}$
+\newline
+$\readweakwmap{\dist{u}{}{\overline{[\Gamma]}}{c}{x_{1}, \dots, x_{n}} \sub{}{t}{x}}{\sigma}{\gamma}$
+\newline
+\newline
+\indent \indent SubSubCase: $\vec{x} = x_{1}, \dots, x_{n}, x$
+\newline
+$\readweakwmap{\dist{u}{}{\overline{[\Gamma]}}{c}{x_{1}, \dots, x_{n}, x} \sub{}{t}{x}}{\sigma}{\gamma}$
+\newline
+$\readweakwmap{\dist{u}{}{\overline{[\Gamma]}  \sub{}{t}{x}}{c}{x_{1}, \dots, x_{n}, y_{1}, \dots, y_{m}}}{\sigma}{\gamma}$
+\newline
+where $\set{y_{1}, \dots, y_{m}} = \fv{t}$
+\newline
+$= \readweakwmap{u \overline{[\Gamma]} \sub{}{t}{x}}{\sigma''}{\gamma}$
+\newline
+where 
+\newline
+$\sigma = \sigma_{1} \cup \set{x_{1} \mapsto M_{1}, \dots, x_{n} \mapsto M_{n}, y_{1} \mapsto N_{1}, \dots, y_{m} \mapsto N_{m}}$
+\newline
+$\sigma'' = \sigma_{1} \cup \{ x_{1} \mapsto M_{1} \sub{}{\bullet}{\gamma(c)},$
+\newline
+\indent \indent  $\dots, x_{n} \mapsto M_{n}\sub{}{\bullet}{\gamma(c)}, y_{1} \mapsto N_{1}\sub{}{\bullet}{\gamma(c)}, \dots, y_{m} \mapsto N_{m}\sub{}{\bullet}{\gamma(c)} \} $
+\newline
+$\IH \readweakwmap{u \overline{[\Gamma]} }{\sigma'''}{\gamma} = \readweakwmap{\dist{u}{}{\overline{[\Gamma]}}{c}{x_{1}, \dots, x_{n}, x}}{\sigma'}{\gamma}$
+\newline
+where
+$\sigma''' = \sigma'' \cup \set{x \mapsto \readweakwmap{t}{\sigma''}{\gamma}} = \sigma'' \cup \set{x \mapsto \readweakwmap{t}{\sigma'}{\gamma} \sub{}{\bullet}{\gamma(c)}}$
+\newline
+since $\set{y_{1}, \dots, y_{m}} = \fv{t}$
+\newline
+\newline
+\indent \indent SubSubCase: $\vec{x} = x_{1}, \dots, x_{n}$
+\newline
+$\readweakwmap{\dist{u}{}{\overline{[\Gamma]}}{c}{x_{1}, \dots, x_{n}} \sub{}{t}{x}}{\sigma}{\gamma} = \readweakwmap{\dist{u}{}{\overline{[\Gamma]} \sub{}{t}{x} }{c}{x_{1}, \dots, x_{n}} }{\sigma}{\gamma}$
+\newline
+$\readweakwmap{u \overline{[\Gamma]} \sub{}{t}{x}}{\sigma''}{\gamma} \IH \readweakwmap{u \overline{[\Gamma]}}{\sigma'''}{\gamma} = \readweakwmap{\dist{u}{}{\overline{[\Gamma]}}{c}{x_{1}, \dots, x_{n}} }{\sigma'}{\gamma} $
+\newline
+$\sigma = \sigma_{1} \cup \set{x_{1} \mapsto M_{1}, \dots, x_{n} \mapsto M_{n}}$
+\newline
+$\sigma'' = \sigma_{1} \cup \set{x_{1} \mapsto M_{1} \sub{}{\bullet}{\gamma(c)}, \dots, x_{n} \mapsto M_{n} \sub{}{\bullet}{\gamma(c)}}$
+\newline
+$\sigma''' = \sigma'' \cup \set{x \mapsto \readweakwmap{t}{\sigma''}{\gamma}} = \sigma'' \cup \set{x \mapsto \readweakwmap{t}{\sigma}{\gamma}}$
+\newline
+since $\set{x_{1}, \dots, x_{n}} \cap \fv{t} = \set{}$
+\end{proof}
+
+Below we repeat Proposition \ref{prop:equalterms}.
+
+For $N \in \Lambda$ and $t \in \FALC$ the following properties hold
+\begin{center}
+\begin{tabular}{c@{\hskip 0.5in} c@{\hskip 0.5in} c}
+	\begin{tikzpicture}[auto]
+		\node (ale) at (-0.5, 0) {$\FALC$};
+		\node (bob) at (2.5, 0) {$\WEAK$};
+		\node (cat) at (1,-2) {$\Lambda$};
+		%%%%%%%%%%%%%
+		\draw [->,red] (ale) to node [black] {$\readweakwmap{-}{\sigma^{\weaksymbol}}{\gamma}$}  (bob);
+		\draw [->,blue] (bob) to node [black] {$\readbackweak{-}$}  (cat);
+		\draw [->, purple] (ale) to node [black, swap] {$\readbackwmap{-}{\sigma^{\Lambda}}{\gamma}$} (cat);
+	\end{tikzpicture}
+	&
+	\begin{tikzpicture}[auto]
+		\node (ale) at (0, 0) {$\FALC$};
+		\node (bob) at (2, 0) {$\WEAK$};
+		\node (cat) at (1,-2) {$\Lambda$};
+		%%%%%%%%%%%%%
+		\draw [->,red] (ale) to node [black] {$\composeweak{-}$}  (bob);
+		\draw [->,orange] (cat) to node [black, swap] {$\compweak{-}$}  (bob);
+		\draw [->, yellow] (cat) to node [black] {$\compile{-}$} (ale);
+	\end{tikzpicture}
+	&
+	\begin{tikzpicture}[auto]
+		\node (ale) at (0, -2) {$\Lambda$};
+		\node (bob) at (2, -2) {$\Lambda$};
+		\node (cat) at (1,0) {$\WEAK$};
+		%%%%%%%%%%%%%
+		\draw [->,black] (ale) to node [black] {$=$}  (bob);
+		\draw [->,orange] (ale) to node [black] {$\compweak{-}$}  (cat);
+		\draw [->, blue] (cat) to node [black] {$\readbackweak{-}$} (bob);
+	\end{tikzpicture}
+	\\
+	$\readbackweak{\readweakwmap{t}{\sigma^{\weaksymbol}}{\gamma}} = \readbackwmap{t}{\sigma^{\Lambda}}{\gamma}$
+	&
+	$\composeweak{\compile{N}} = \compweak{N}$
+	&
+	$\readbackweak{\compweak{N}} = N$
+\end{tabular}
+
+\end{center}
+
+\noindent where $\sigma^{\Lambda}(z) = \readbackweak{\sigma^{\weaksymbol}(z)} $.
+
+\begin{proof}
+We prove $\readbackweak{\readweakwmap{u}{\sigma^{\weaksymbol}}{\gamma}} = \readbackwmap{u}{\sigma^{\Lambda}}{\gamma}$ by induction on $u$.
+\newline
+\newline
+Base Case: Variable
+\newline
+$\readbackweak{\readweakwmap{x}{\sigma^{\weaksymbol}}{\gamma}} = \readbackweak{\sigma^{\weaksymbol}(x)} = \readbackwmap{x}{\sigma^{\Lambda}}{\gamma}$
+\newline
+\newline
+Inductive Case: Application
+\newline
+$\readbackweak{\readweakwmap{\app{s}{t}}{\sigma^{\weaksymbol}}{\gamma}} = \app{\readbackweak{\readweakwmap{s}{\sigma^{\weaksymbol}}{\gamma}}}{\readbackweak{\readweakwmap{t}{\sigma^{\weaksymbol}}{\gamma}}} \IH \app{\readbackwmap{s}{\sigma^{\Lambda}}{\gamma}}{\readbackwmap{t}{\sigma^{\Lambda}}{\gamma}} = \readbackwmap{\app{s}{t}}{\sigma^{\Lambda}}{\gamma}$
+\newline
+\newline
+Inductive Case: Abstraction
+\newline
+$\readbackweak{\readweakwmap{\fake{x}{x}{t}}{\sigma^{\weaksymbol}}{\gamma}} = \abs{x}{\readbackweak{\readweakwmap{t}{\sigma^{\weaksymbol}}{\gamma}}} \IH \abs{x}{\readbackwmap{t}{\sigma^{\Lambda}}{\gamma}} = \readbackwmap{\fake{x}{x}{t}}{\sigma^{\Lambda}}{\gamma}$
+\newline
+\newline
+Inductive Case: Phantom-Abstraction
+\newline
+$\readbackweak{\readweakwmap{\fake{c}{x_{1}, \dots, x_{n}}{t}}{\sigma^{\weaksymbol}}{\gamma}} = \abs{c}{\readbackweak{\readweakwmap{t}{\sigma_{1}^{\weaksymbol}}{\gamma}}} \IH \abs{c}{\readbackwmap{x}{\sigma_{1}^{\Lambda}}{\gamma}} = \readbackwmap{\fake{c}{x_{1}, \dots, x_{n}}{t}}{\sigma^{\Lambda}}{\gamma}$
+\newline
+where
+\newline
+$\sigma_{1}^{\weaksymbol} = \sigma [x_{1} \mapsto \sigma(x_{1}) \sub{}{c}{\gamma(c)}, \dots, x_{n} \mapsto \sigma(x_{n})  \sub{}{c}{\gamma(c)}]$
+\newline
+$\sigma_{1}^{\Lambda} = \sigma [x_{1} \mapsto \readbackweak{\sigma(x_{1})} \sub{}{c}{\gamma(c)}, \dots, x_{n} \mapsto \readbackweak{\sigma(x_{n})}  \sub{}{c}{\gamma(c)}]$
+\newline
+\newline
+Inductive Case: Weakening
+\newline
+$\readbackweak{\readweakwmap{\share{u}{}{t}}{\sigma^{\weaksymbol}}{\gamma}} = \readbackweak{\readweakwmap{u}{\sigma^{\weaksymbol}}{\gamma}} \IH \readbackwmap{u}{\sigma^{\Lambda}}{\gamma} = \readbackwmap{\share{u}{}{t}}{\sigma^{\Lambda}}{\gamma}$
+\newline
+\newline
+Inductive Case: Sharing
+\newline
+$\readbackweak{\readweakwmap{\share{u}{x_{1}, \dots, x_{n}}{t}}{\sigma^{\weaksymbol}}{\gamma}} = \readbackweak{\readweakwmap{u}{\sigma_{1}^{\weaksymbol}}{\gamma}} \IH \readbackwmap{u}{\sigma_{1}^{\Lambda}}{\gamma}= \readbackwmap{\share{u}{x_{1}, \dots, x_{n}}{t}}{\sigma^{\Lambda}}{\gamma}$
+\newline
+where 
+\newline
+$\sigma_{1}^{\weaksymbol} = \sigma^{\weaksymbol} [x_{i} \mapsto \readweakwmap{t}{\sigma^{\weaksymbol}}{\gamma}]_{1 \leq i \leq n}$
+\newline
+$\sigma_{1}^{\Lambda} = \sigma^{\Lambda} [x_{i} \mapsto \readbackweak{\readweakwmap{t}{\sigma^{\weaksymbol}}{\gamma}}]_{1 \leq i \leq n} \IH  \sigma^{\Lambda} [x_{i} \mapsto \readbackwmap{t}{\sigma^{\Lambda}}{\gamma} ]_{1 \leq i \leq n} $
+\newline
+\newline
+Inductive Case: Distributor
+\newline
+$\readbackweak{\readweakwmap{\dist{u}{\fakedist{e_{1}}{\vec{w_{1}}}, \dots, \fakedist{e_{m}}{\vec{w_{m}}}}{\overline{[\Gamma]}}{c}{\vec{x}}}{\sigma^{\weaksymbol}}{\gamma}}$
+\newline
+\newline
+\indent SubCase: $\vec{x} = c$
+\newline
+$\readbackweak{\readweakwmap{\dist{u}{\fakedist{e_{1}}{\vec{w_{1}}}, \dots, \fakedist{e_{m}}{\vec{w_{m}}}}{\overline{[\Gamma]}}{c}{c}}{\sigma^{\weaksymbol}}{\gamma}}$
+\newline
+$= \readbackweak{\readweakwmap{u \overline{[\Gamma]}}{\sigma}{\gamma'}} \IH \readbackwmap{u \overline{[\Gamma]}}{\sigma^{\Lambda}}{\gamma'}$
+\newline
+$= \readbackwmap{\dist{u}{\fakedist{e_{1}}{\vec{w_{1}}}, \dots, \fakedist{e_{m}}{\vec{w_{m}}}}{\overline{[\Gamma]}}{c}{c}}{\sigma^{\Lambda}}{\gamma}$
+\newline
+\newline
+\indent SubCase: $\vec{x} = x_{1}, \dots, x_{n}$
+\newline
+$\readbackweak{\readweakwmap{\dist{u}{\fakedist{e_{1}}{\vec{w_{1}}}, \dots, \fakedist{e_{m}}{\vec{w_{m}}}}{\overline{[\Gamma]}}{c}{x_{1}, \dots, x_{n}}}{\sigma^{\weaksymbol}}{\gamma}}$
+\newline
+$\readbackweak{\readweakwmap{u \overline{[\Gamma]}}{\sigma_{1}^{\weaksymbol}}{\gamma'}} \IH \readbackwmap{u \overline{[\Gamma]}}{\sigma_{1}^{\Lambda}}{\gamma'}$
+\newline
+$= \readbackwmap{\dist{u}{\fakedist{e_{1}}{\vec{w_{1}}}, \dots, \fakedist{e_{m}}{\vec{w_{m}}}}{\overline{[\Gamma]}}{c}{x_{1}, \dots, x_{n}}}{\sigma^{\Lambda}}{\gamma}$\
+\newline
+where
+\newline
+$\sigma_{1}^{\weaksymbol} = \sigma [x_{1} \mapsto \sigma(x_{1}) \sub{}{c}{\gamma(c)}, \dots, x_{n} \mapsto \sigma(x_{n})  \sub{}{c}{\gamma(c)}]$
+\newline
+$\sigma_{1}^{\Lambda} = \sigma [x_{1} \mapsto \readbackweak{\sigma(x_{1})} \sub{}{c}{\gamma(c)}, \dots, x_{n} \mapsto \readbackweak{\sigma(x_{n})}  \sub{}{c}{\gamma(c)}]$
+\newline
+\newline
+We prove $\composeweak{\compile{N}} = \compweak{N}$ by induction on $N$. We prove this statement by first proving it for closed terms.
+\newline
+\newline
+Base Case: Variable
+\newline
+$\composeweak{\compile{x}'} = \composeweak{x} =  x = \compweak{x}$
+\newline
+\newline
+Inductive Case: Application
+\newline
+$\composeweak{\compile{\app{M}{N}}'}= \app{\composeweak{\compile{M}'}}{\composeweak{\compile{N}'}} \IH \app{\compweak{M}}{\compweak{N}} = \compweak{\app{M}{N}} $
+\newline
+\newline
+Inductive Case: Abstraction
+\newline
+$\composeweak{\compile{\abs{x}{M}}'}$
+\newline
+\indent SubCase: $\size{M}_{x} = 0$
+\newline
+\indent $= \abs{x}{\composeweak{\compile{M}' \share{}{}{x}}} = \abs{x}{\composeweak{\compile{M}'} \share{}{}{x}} \IH \abs{x}{\compweak{M} \share{}{}{x}} = \compweak{\abs{x}{M}}$
+\newline
+\newline
+\indent SubCase: $\size{M}_{x} = 1$
+\newline
+\indent $= \abs{x}{\composeweak{\compile{M}'}} \IH \abs{x}{\compweak{M}} = \compweak{\abs{x}{M}}$
+\newline
+\newline
+\indent SubCase: $\size{M}_{x} = n > 1$
+\newline
+\indent $= \composeweak{\compile{M \frac{n}{x} }' \share{}{x^{1}, \dots, x^{n}}{x}} = \readweakwmap{\compile{M \frac{n}{x} }' }{\sigma}{I} \byprop{prop \ref{prop:suboutcommweak}} \composeweak{\compile{M \frac{n}{x}}'} \sub{}{x}{x_{i}}_{1 \leq i \leq n}$
+\newline
+\indent $\IH \compweak{M \frac{n}{x}} \sub{}{x}{x_{i}}_{1 \leq i \leq n} = \compweak{M}$
+\newline
+\newline
+Now that we have proven is works for closed terms, we can show the statement $\composeweak{\compile{N}} = \compweak{N}$ holds
+\newline
+\newline
+$\composeweak{\compile{N}} =  \composeweak{\compile{N \frac{n_{1}}{x_{1}} \dots \frac{n_{k}}{x_{k}}}' \share{}{x^{1}_{1}, \dots, x^{n_{1}}_{1}}{x_{1}} \dots \share{}{x^{1}_{k}, \dots, x^{n_{k}}_{k}}{x_{k}} }$
+\newline
+$\byprop{prop \ref{prop:suboutcommweak}} \composeweak{\compile{N \frac{n_{1}}{x_{1}} \dots \frac{n_{k}}{x_{k}}}' } \sub{}{x_{i}}{x^{j}_{i}}_{1 \leq i \leq k, 1 \leq j \leq n_{i}} = \compweak{N \frac{n_{1}}{x_{1}} \dots \frac{n_{k}}{x_{k}}}\sub{}{x_{i}}{x^{j}_{i}}_{1 \leq i \leq k, 1 \leq j \leq n_{i}} = \compweak{N}$
+\end{proof}
+
+\end{document}
