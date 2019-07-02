@@ -265,7 +265,7 @@ The main thrust of our work is to incorporate this rule, and its computational i
 \end{center}
 The medial rule enables duplication to proceed \emph{atomically}: on individual constructors (abstraction and application) rather than entire subterms. The atomic $\lambda$-calculus implements \emph{full laziness}, a standard notion of sharing where only the \emph{skeleton} of a term needs to be duplicated. Given a term $t$ which needs to be duplicated, full laziness allows to share all maximal subterms $u_{1}$, . . . , $u_{k}$ of $t$ that do not contain occurrences of a variable bound in $t$ outside $u_{i}$. The constructors in $t$ not in any $u_{i}$ are then part of the skeleton.
 
-Our investigation is then focused on the interaction of switch and medial. Based on this we develop the \emph{spinal atomic $\lambda$-calculus}, a natural evolution of the atomic $\lambda$-calculus. The new calculus improves on full laziness with \emph{spinal full laziness}, which duplicates the \emph{spine} rather than the skeleton. The spine of an abstraction are the direct paths from the binder to bound variables \cite{Balabonski12}. The graph below provides an example of this for the term $\lambda x . (\lambda z . z) \lambda y . (y y) x$, where the spine of $\lambda x$ is the very thick red line and the largest subterms that could be identied by an end-of-scope operator in the term calculus (or the switch rule in the proof theory) are enclosed by yellow boxes. %would be identiﬁed by an end-of-scope operator/the switch rule are enclosed by yellow boxes.
+Our investigation is then focused on the interaction of switch and medial. Based on this we develop the \emph{spinal atomic $\lambda$-calculus}, a natural evolution of the atomic $\lambda$-calculus. The new calculus duplicates the \emph{spine} rather than the skeleton. The spine of an abstraction are the direct paths from the binder to bound variables (terminology taken from \cite{Balabonski12}). The graph below provides an example of this for the term $\lambda x . (\lambda z . z) \lambda y . (y y) x$, where the spine of $\lambda x$ is the very thick red line and the largest subterms that could be identied by an end-of-scope operator in the term calculus (or the switch rule in the proof theory) are enclosed in boxes. %would be identiﬁed by an end-of-scope operator/the switch rule are enclosed by yellow boxes.
 
 
 \begin{center}
@@ -352,7 +352,7 @@ End-of-scope markers in the $\lambda$-calculus have been seen throughout literat
 
 {\color{red} Introduce the rest of the paper.}
 
-\section{Deep Inference}
+\section{Typing a $\lambda$-calculus in open deduction}
 
 Deep inference is a methodology for designing proof systems. Inference rules in deep inference, such as switch and medial, can be applied `deeply' i.e.\ there is no concept of the main connective of a formula. The \emph{open deduction} formalism \cite{opendeduction10} is designed around this principle, where logical connectives can be applied at the level of derivations as well as formulae. A derivation from premise $A$ to conclusion $C$ (over the connectives conjunction and implication) is constructed as follows,
 \begin{definition}
@@ -996,7 +996,8 @@ If $s \rightsquigarrow_{L, C, D} t$ and $s : C$, then $t : C$
 
 \section{Strong Normalisation of Sharing Reductions}
 
-In order to show our calculus is strongly normalising, we first show that the sharing reduction rules are strongly normalising. To do this, we make use of an `intermediate calculus' called the weakening calculus. Following the approaches of \cite{gundersen2013atomic, he2018atomic}, we indite a measure on terms based on its connection with the weakening calculus. We show that this measure strictly decreases as sharing reduction progresses.
+In order to show our calculus is strongly normalising, we first show that the sharing reduction rules are strongly normalising. To do this, we make use of an `intermediate calculus' called the weakening calculus. Following the approaches of \cite{gundersen2013atomic}, we indite a measure on terms based on its connection with the weakening calculus. We show that this measure strictly decreases as sharing reduction progresses. Additionally, similar ideas and results can be found elsewhere, i.e.\ with memory in \cite{klop1980thesis}, the $\lambda$-$I$ calculus in \cite{barendregt1984lambda}, the $\lambda$-void calculus \cite{kesneraccattoli12}, and the weakening $\lambda\mu$-calculus \cite{he2018atomic}.
+
 
 \begin{definition}
 \label{def:weakterms}
@@ -1081,8 +1082,7 @@ For $N \in \Lambda$ and $t \in \FALC$ the following properties hold
 
 \end{proposition}
 
-\noindent Here we can take advantage that preservation of strong normalisation has been proven for this weakening calculus already in \cite{gundersen2013atomic}, providing the proof for Proposition \ref{prop:willemresult}. Additionally, similar ideas and results can be found elsewhere, i.e.\ with memory in \cite{klop1980thesis}, the $\lambda$-$I$ calculus in \cite{barendregt1984lambda}, the $\lambda$-void calculus \cite{kesneraccattoli12}, and the weakening $\lambda\mu$-calculus \cite{he2018atomic}.
-
+\noindent Here we can take advantage that preservation of strong normalisation has been proven for this weakening calculus already in \cite{gundersen2013atomic}, providing the proof for Proposition \ref{prop:willemresult}. 
 \begin{definition}
 In the weakening calculus, $\beta$-reduction is defined as follows, where $\overline{[\Gamma]}$ are weakening constructs.
 \begin{equation}
@@ -1225,7 +1225,7 @@ From Lemma \ref{theo:decreaseweight}, Lemma \ref{theo:liftingweight}, and Lemma 
 The sharing reduction relation $\rightsquigarrow_{(D, L, C)}$ is confluent 
 \end{theorem}
 \begin{proof}
- Lemma \ref{lem:preservesdenotation} tells us that the preservation is preserved under reduction i.e.\ for $s \rightsquigarrow_{(R, D, L, C)} t$, $\readback{s}{} = \readback{t}{}$. Therefore given $t \rightsquigarrow^{*}_{(D, L, C)} s_{1}$ and $t \rightsquigarrow^{*}_{(D, L, C)} s_{2}$, $\readback{t}{} = \readback{s_{1}}{} = \readback{s_{2}}{}$. Since we know that sharing reductions are strongly normalising, we know there exists terms $u_{1}$ and $u_{2}$ in sharing normal form such that $s_{1} \rightsquigarrow^{*}_{(D, L, C)} u_{1}$ and $s_{2} \rightsquigarrow^{*}_{(D, L, C)} u_{2}$. Lemma \ref{lem:preserve1to1correspondance} tells us that terms in closed terms in sharing normal form are in correspondence with their denotations i.e.\ $ \compile{\readback{t}{I}}' = t $. Since by Lemma \ref{lem:preservesdenotation} we know $\readback{u_{1}}{} = \readback{s_{1}}{} = \readback{s_{2}}{} = \readback{u_{2}}{}$, and by Lemma \ref{lem:preserve1to1correspondance} $ \compile{\readback{u_{1}}{I}}' = u_{1} $ and $\compile{\readback{u_{2}}{I}}' = u_{2}$, we can conclude $u_{1} = u_{2}$. Hence, we prove confluence. 
+ Lemma \ref{lem:preservesdenotation} tells us that the preservation is preserved under reduction i.e.\ for $s \rightsquigarrow_{(D, L, C)} t$, $\readback{s}{} = \readback{t}{}$. Therefore given $t \rightsquigarrow^{*}_{(D, L, C)} s_{1}$ and $t \rightsquigarrow^{*}_{(D, L, C)} s_{2}$, $\readback{t}{} = \readback{s_{1}}{} = \readback{s_{2}}{}$. Since we know that sharing reductions are strongly normalising, we know there exists terms $u_{1}$ and $u_{2}$ in sharing normal form such that $s_{1} \rightsquigarrow^{*}_{(D, L, C)} u_{1}$ and $s_{2} \rightsquigarrow^{*}_{(D, L, C)} u_{2}$. Lemma \ref{lem:preserve1to1correspondance} tells us that terms in closed terms in sharing normal form are in correspondence with their denotations i.e.\ $ \compile{\readback{t}{I}}' = t $. Since by Lemma \ref{lem:preservesdenotation} we know $\readback{u_{1}}{} = \readback{s_{1}}{} = \readback{s_{2}}{} = \readback{u_{2}}{}$, and by Lemma \ref{lem:preserve1to1correspondance} $ \compile{\readback{u_{1}}{I}}' = u_{1} $ and $\compile{\readback{u_{2}}{I}}' = u_{2}$, we can conclude $u_{1} = u_{2}$. Hence, we prove confluence. 
 \end{proof}
 
 \section{Preservation of Strong Normalisation}
