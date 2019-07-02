@@ -853,7 +853,7 @@ The interpretation $\readbackwmap{-}{-}{-} : \FALC \times (V \rightarrow \Lambda
 %\end{proof}
 
 \begin{lemma}
-\label{lem:preservedenotation}
+\label{lem:preservedenotationsim}
 For $s, t \in \FALC$, if $s \sim t$ then $\trans{s} = \trans{t}$ 
 \end{lemma}
 
@@ -2355,6 +2355,133 @@ Now that we have proven is works for closed terms, we can show the statement $\c
 $\composeweak{\compile{N}} =  \composeweak{\compile{N \frac{n_{1}}{x_{1}} \dots \frac{n_{k}}{x_{k}}}' \share{}{x^{1}_{1}, \dots, x^{n_{1}}_{1}}{x_{1}} \dots \share{}{x^{1}_{k}, \dots, x^{n_{k}}_{k}}{x_{k}} }$
 \newline
 $\byprop{prop \ref{prop:suboutcommweak}} \composeweak{\compile{N \frac{n_{1}}{x_{1}} \dots \frac{n_{k}}{x_{k}}}' } \sub{}{x_{i}}{x^{j}_{i}}_{1 \leq i \leq k, 1 \leq j \leq n_{i}} = \compweak{N \frac{n_{1}}{x_{1}} \dots \frac{n_{k}}{x_{k}}}\sub{}{x_{i}}{x^{j}_{i}}_{1 \leq i \leq k, 1 \leq j \leq n_{i}} = \compweak{N}$
+\end{proof}
+
+We also discuss the proofs for Lemma \ref{lem:sharepreservebeta} and Lemma \ref{theo:sharepreserve}.
+
+\begin{proof}
+$\composeweak{\app{(\fake{x}{x}{t})}{s}} = \app{(\abs{x}{T})}{S} = \sub{T}{S}{x} = \composeweak{\sub{t}{s}{x}}$
+
+\noindent where $T = \composeweak{t}$ and $S = \composeweak{s}$.
+\newline
+\newline
+We prove this is true case-by-case, which is an extension of the proof for Lemma \ref{lem:preservesdenotation}. Therefore, we only show the interesting cases.
+\newline
+\newline
+Case: (\ref{red:appweak})
+$$\share{u}{}{\app{s}{t}} \rightsquigarrow_{R} \share{\share{u}{}{s}}{}{t} $$
+$\readweakwmap{\share{u}{}{\app{s}{t}}}{\sigma}{\gamma} = \share{\readweakwmap{u}{\sigma}{\gamma}}{}{\app{\readweakwmap{s}{\sigma}{\gamma}}{\readweakwmap{t}{\sigma}{\gamma}}} $
+\newline
+$\rightarrow_{\weaksymbol} \readweakwmap{u}{\sigma}{\gamma} \share{}{}{\readweakwmap{s}{\sigma}{\gamma}} \share{}{}{\readweakwmap{t}{\sigma}{\gamma}} = \readweakwmap{\share{\share{u}{}{s}}{}{t}}{\sigma}{\gamma}$
+\newline
+\newline
+%%%%%%%%%%%%%%%%%%%
+Case: (\ref{red:absweak})
+$$\share{u}{}{\fake{c}{\vec{x}}{t}} \rightsquigarrow_{R} \dist{u}{}{\share{}{}{t}}{c}{\vec{x}}$$
+$\readweakwmap{\share{u}{}{\fake{c}{\vec{x}}{t}}}{\sigma}{\gamma}$
+\newline
+\indent SubCase: $\vec{x} = c$
+\newline
+\indent $\readweakwmap{\share{u}{}{\fake{c}{c}{t}}}{\sigma}{\gamma} = \readweakwmap{u}{\sigma}{\gamma} \share{}{}{\abs{c}{\readweakwmap{t}{\sigma}{\gamma}}} \rightarrow_{\weaksymbol} \readweakwmap{u}{\sigma}{\gamma}\share{}{}{\readweakwmap{t}{\sigma}{\gamma} \sub{}{\bullet}{c}} $
+\newline
+\indent $\byprop{prop \ref{prop:suboutcommweak}} \readweakwmap{u \share{}{}{t}}{\sigma'}{\gamma} = \readweakwmap{ \dist{u}{}{\share{}{}{t}}{c}{c}}{\sigma}{\gamma}$
+\newline
+\indent where $\sigma' = \sigma \cup \set{c \mapsto \bullet}$
+\newline
+\newline
+\indent SubCase: $\vec{x} = x_{1}, \dots, x_{n}$
+\newline
+\indent $\readweakwmap{\share{u}{}{\fake{c}{x_{1}, \dots, x_{n}}{t}}}{\sigma}{\gamma} = \readweakwmap{u}{\sigma}{\gamma} \share{}{}{\readweakwmap{\fake{c}{x_{1}, \dots, x_{n}}{t}}{\sigma}{\gamma}}$
+\newline
+\indent $\readweakwmap{u}{\sigma}{\gamma} \share{}{}{\abs{c}{\readweakwmap{t}{\sigma'}{\gamma}}} \rightarrow_{\weaksymbol} \readweakwmap{u}{\sigma}{\gamma} \share{}{}{\readweakwmap{t}{\sigma'}{\gamma} \sub{}{\bullet}{c}}$
+\newline
+\indent $\byprop{prop \ref{prop:suboutcommweak}} \readweakwmap{u \share{}{}{t}}{\sigma''}{\gamma} = \readweakwmap{ \dist{u}{}{\share{}{}{t}}{c}{x_{1}, \dots, x_{n}}}{\sigma}{\gamma}$
+\newline
+\newline
+%%%%%%%%%%%%%%%%%%%
+Case (\ref{red:distweak})
+$$\dist{u}{}{\share{}{}{c}}{c}{c} \rightsquigarrow_{R} u$$
+$\readweakwmap{\dist{u}{}{\share{}{}{c}}{c}{c}}{\sigma}{\gamma} = \readweakwmap{u \share{}{}{c}}{\sigma'}{\gamma} = \readweakwmap{u}{\sigma'}{\gamma} \share{}{}{\bullet}$
+\newline
+$= \readweakwmap{u}{\sigma}{\gamma} \share{}{}{\bullet} \rightarrow_{\weaksymbol} \readweakwmap{u}{\sigma}{\gamma}$
+%%%%%%%%%%%%%%%%%%%%%%
+\newline
+\newline
+Case (\ref{red:compshare})
+$$\share{u}{x}{t} \rightsquigarrow_{C} \sub{u}{t}{x}$$
+$\readweakwmap{\share{u}{x}{t}}{\sigma}{\gamma} = \readweakwmap{u}{\sigma'}{\gamma} \byprop{prop \ref{prop:weaktranssubcomm}} \readweakwmap{\sub{u}{t}{x}}{\sigma}{\gamma} $\
+\newline
+where
+\newline
+$\sigma' = \sigma \cup \set{ x \mapsto \readweakwmap{t}{\sigma}{\gamma} }$
+%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newline
+\newline
+\newline
+For the remaining cases, we only show the cases for  $\readweakwmap{u \share{}{}{t}}{\sigma}{\gamma} = \share{\readweakwmap{u}{\sigma}{\gamma}}{}{\readweakwmap{t}{\sigma}{\gamma}}$. The other cases are similar to those in the proof for Lemma \ref{lem:preservedenotation}.
+\newline
+\newline
+%%%%%%%%%%%%%%%%%%%%%%%%%%
+Case: (\ref{red:liftappleft})
+$$\app{s \share{}{}{t}}{u} \rightsquigarrow_{L} (\app{s}{u}) \share{}{}{t}  $$
+$\readweakwmap{\app{s \share{}{}{t}}{u}}{\sigma}{\gamma} = \app{\readweakwmap{s}{\sigma}{\gamma} \share{}{}{\readweakwmap{t}{\sigma}{\gamma}}}{\readweakwmap{u}{\sigma}{\gamma}} \rightarrow_{\weaksymbol} (\app{\readweakwmap{s}{\sigma}{\gamma}}{\readweakwmap{u}{\sigma}{\gamma}})  \share{}{}{\readweakwmap{t}{\sigma}{\gamma}} $ 
+\newline
+$\readweakwmap{(\app{s}{u}) \share{}{}{t}}{\sigma}{\gamma}$
+\newline
+\newline
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newline
+The proofs for lifting past application (right) (\ref{red:liftappright}) and sharing (\ref{red:liftshare}) follow a similar argument so we choose to omit these cases
+\newline
+\newline
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+Case: (\ref{red:liftabs})
+$$\fake{d}{\vec{x}}{u  \share{}{}{t}} \rightsquigarrow_{L} (\fake{d}{\vec{x}}{u})  \share{}{}{t} \text{ iff $\vec{x} \not\in \fv{t}$}$$
+\indent SubCase: $\vec{x} = d$
+\newline
+$\readweakwmap{\fake{d}{d}{u  \share{}{}{t}}}{\sigma}{\gamma} = \abs{d}{( \readweakwmap{u}{\sigma}{\gamma} \share{}{}{\readweakwmap{t}{\sigma}{\gamma}})} \rightarrow_{\weaksymbol} \abs{d}{ \readweakwmap{u}{\sigma}{\gamma}} \share{}{}{\readweakwmap{t}{\sigma}{\gamma}}$
+\newline
+$= \readweakwmap{(\fake{d}{\vec{x}}{u})  \share{}{}{t}}{\sigma}{\gamma}$
+\newline
+\newline
+\indent SubCase: $\vec{x} = x_{1}, \dots, x_{n}$
+\newline
+$\readweakwmap{\fake{d}{x_{1}, \dots, x_{n}}{u  \share{}{}{t}}}{\sigma}{\gamma} = \abs{d}{( \readweakwmap{u}{\sigma'}{\gamma} \share{}{}{\readweakwmap{t}{\sigma'}{\gamma}} )}$
+\newline
+$\rightarrow_{\weaksymbol} \abs{d}{ \readweakwmap{u}{\sigma'}{\gamma}} \share{}{}{\readweakwmap{t}{\sigma'}{\gamma}} = \readweakwmap{(\fake{d}{x_{1}, \dots, x_{n}}{u}) \share{}{}{t}}{\sigma}{\gamma}$
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newline
+\newline
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+Case: (\ref{red:distshare}) and (\ref{red:distdist})
+$$\dist{u}{\fakedist{e_{1}}{\vec{w_{1}}} \dots \fakedist{e_{n}}{\vec{w_{n}}}}{\overline{[\Gamma]} \share{}{}{t}}{c}{\vec{x}} \rightsquigarrow_{L}$$ 
+$$\dist{u}{\fakedist{e_{1}}{\vec{w_{1}}} \dots \fakedist{e_{n}}{\vec{w_{n}}}}{\overline{[\Gamma]}}{c}{\vec{x}} \share{}{}{t}$$
+iff all $\vec{x} \not\in \fv{t}$
+\newline
+\newline
+$\readweakwmap{\dist{u}{\fakedist{e_{1}}{\vec{w_{1}}} \dots \fakedist{e_{n}}{\vec{w_{n}}}}{\overline{[\Gamma]} \share{}{}{t}}{c}{\vec{x}}}{\sigma}{\gamma}$
+\newline
+\indent Case: $\vec{x} = c$
+\newline
+$= \readweakwmap{u \overline{[\Gamma] \share{}{}{t}}}{\sigma}{\gamma'} = \readweakwmap{u \overline{[\Gamma]}}{\sigma}{\gamma'} \share{}{}{\readweakwmap{t}{\sigma}{\gamma'}}$
+\newline
+$= \readweakwmap{\dist{u}{\fakedist{e_{1}}{\vec{w_{1}}} \dots \fakedist{e_{n}}{\vec{w_{n}}}}{\overline{[\Gamma]}}{c}{c}}{\sigma}{\gamma} \share{}{}{\readweakwmap{t}{\sigma}{\gamma'}}$
+\newline
+$= \readweakwmap{\dist{u}{\fakedist{e_{1}}{\vec{w_{1}}} \dots \fakedist{e_{n}}{\vec{w_{n}}}}{\overline{[\Gamma]}}{c}{c}}{\sigma}{\gamma} \share{}{}{\readweakwmap{t}{\sigma}{\gamma}}$
+\newline
+$= \readweakwmap{\dist{u}{\fakedist{e_{1}}{\vec{w_{1}}} \dots \fakedist{e_{n}}{\vec{w_{n}}}}{\overline{[\Gamma]}}{c}{c} \share{}{}{t}}{\sigma}{\gamma}$
+\newline
+\newline
+\indent Case: $\vec{x} = x_{1}, \dots, x_{n}$
+\newline
+$= \readweakwmap{u \overline{[\Gamma] \share{}{}{t}}}{\sigma'}{\gamma'} = \readweakwmap{u \overline{[\Gamma]}}{\sigma'}{\gamma'} \share{}{}{\readweakwmap{t}{\sigma'}{\gamma'}}$
+\newline
+$= \readweakwmap{\dist{u}{\fakedist{e_{1}}{\vec{w_{1}}} \dots \fakedist{e_{n}}{\vec{w_{n}}}}{\overline{[\Gamma]}}{c}{x_{1}, \dots, x_{n}}}{\sigma}{\gamma} \share{}{}{\readweakwmap{t}{\sigma'}{\gamma'}}$
+\newline
+$= \readweakwmap{\dist{u}{\fakedist{e_{1}}{\vec{w_{1}}} \dots \fakedist{e_{n}}{\vec{w_{n}}}}{\overline{[\Gamma]}}{c}{x_{1}, \dots, x_{n}}}{\sigma}{\gamma} \share{}{}{\readweakwmap{t}{\sigma}{\gamma}}$
+\newline
+$= \readweakwmap{\dist{u}{\fakedist{e_{1}}{\vec{w_{1}}} \dots \fakedist{e_{n}}{\vec{w_{n}}}}{\overline{[\Gamma]}}{c}{x_{1}, \dots, x_{n}} \share{}{}{t}}{\sigma}{\gamma}$
 \end{proof}
 
 \end{document}
