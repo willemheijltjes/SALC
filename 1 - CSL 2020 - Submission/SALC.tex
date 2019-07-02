@@ -1206,6 +1206,7 @@ If $t \rightsquigarrow_{(L, C)} u$ then $\weight{i}{t} = \weight{i}{u}$
 The last measure we consider is the number of closures in the term, where is can be easily observed that the rewrite rules \ref{red:mergeshare} and \ref{red:compshare} strictly decrease this measure, and that the $\rightsquigarrow_{L}$ rules do not alter the number of closures. We then use this along with height and weight to define a \emph{sharing measure} on terms.
 
 \begin{definition}
+\label{def:sharingmeasure}
 The \emph{sharing measure} of a $\FALC$-term $t$ is a triple ($\weight{}{t}$, $C$, $\height{}{t}$) where $C$ is the number of closures in $t$. We can compare two different sharing measures by considering the lexicographical preferences according to weight $>$ number of closures $>$ height.
 \end{definition}
 
@@ -1224,7 +1225,7 @@ From Lemma \ref{theo:decreaseweight}, Lemma \ref{theo:liftingweight}, and Lemma 
 The sharing reduction relation $\rightsquigarrow_{(R, D, L, C)}$ is confluent 
 \end{theorem}
 \begin{proof}
- Lemma \ref{lem:preservedenotation} tells us that the preservation is preserved under reduction i.e.\ for $s \rightsquigarrow_{(R, D, L, C)} t$, $\readback{s}{} = \readback{t}{}$. Therefore given $t \rightsquigarrow^{*}_{(R, D, L, C)} s_{1}$ and $t \rightsquigarrow^{*}_{(R, D, L, C)} s_{2}$, $\readback{t}{} = \readback{s_{1}}{} = \readback{s_{2}}{}$. Since we know that sharing reductions are strongly normalising, we know there exists terms $u_{1}$ and $u_{2}$ in sharing normal form such that $s_{1} \rightsquigarrow^{*}_{(R, D, L, C)} u_{1}$ and $s_{2} \rightsquigarrow^{*}_{(R, D, L, C)} u_{2}$. Lemma \ref{lem:preserve1to1correspondance} tells us that terms in closed terms in sharing normal form are in correspondence with their denotations i.e.\ $ \compile{\readback{t}{I}}' = t $. Since by Lemma \ref{lem:preservedenotation} we know $\readback{u_{1}}{} = \readback{s_{1}}{} = \readback{s_{2}}{} = \readback{u_{2}}{}$, and by Lemma \ref{lem:preserve1to1correspondance} $ \compile{\readback{u_{1}}{I}}' = u_{1} $ and $\compile{\readback{u_{2}}{I}}' = u_{2}$, we can conclude $u_{1} = u_{2}$. Hence, we prove confluence. 
+ Lemma \ref{lem:preservesdenotation} tells us that the preservation is preserved under reduction i.e.\ for $s \rightsquigarrow_{(R, D, L, C)} t$, $\readback{s}{} = \readback{t}{}$. Therefore given $t \rightsquigarrow^{*}_{(R, D, L, C)} s_{1}$ and $t \rightsquigarrow^{*}_{(R, D, L, C)} s_{2}$, $\readback{t}{} = \readback{s_{1}}{} = \readback{s_{2}}{}$. Since we know that sharing reductions are strongly normalising, we know there exists terms $u_{1}$ and $u_{2}$ in sharing normal form such that $s_{1} \rightsquigarrow^{*}_{(R, D, L, C)} u_{1}$ and $s_{2} \rightsquigarrow^{*}_{(R, D, L, C)} u_{2}$. Lemma \ref{lem:preserve1to1correspondance} tells us that terms in closed terms in sharing normal form are in correspondence with their denotations i.e.\ $ \compile{\readback{t}{I}}' = t $. Since by Lemma \ref{lem:preservedenotation} we know $\readback{u_{1}}{} = \readback{s_{1}}{} = \readback{s_{2}}{} = \readback{u_{2}}{}$, and by Lemma \ref{lem:preserve1to1correspondance} $ \compile{\readback{u_{1}}{I}}' = u_{1} $ and $\compile{\readback{u_{2}}{I}}' = u_{2}$, we can conclude $u_{1} = u_{2}$. Hence, we prove confluence. 
 \end{proof}
 
 \section{Preservation of Strong Normalisation}
@@ -1861,6 +1862,40 @@ $= \readbackwmap{\dist{u \psub{}{\vec{z_{1}}}{e_{1}} \dots \psub{}{\vec{z_{n}}}{
 Inductive Case: Application $t \rightsquigarrow_{(C, D, L)} t'$
 \newline
 $\readbackwmap{\app{t}{s}}{\sigma}{\gamma} = \app{\readbackwmap{t}{\sigma}{\gamma}}{\readbackwmap{s}{\sigma}{\gamma}} \IH \app{\readbackwmap{t'}{\sigma}{\gamma}}{\readbackwmap{s}{\sigma}{\gamma}} = \readbackwmap{\app{t'}{s}}{\sigma}{\gamma}$
+\newline
+\newline
+Inductive Case: Application $s \rightsquigarrow_{(C, D, L)} s'$
+\newline
+$\readbackwmap{\app{t}{s}}{\sigma}{\gamma} = \app{\readbackwmap{t}{\sigma}{\gamma}}{\readbackwmap{s}{\sigma}{\gamma}} \IH \app{\readbackwmap{t}{\sigma}{\gamma}}{\readbackwmap{s'}{\sigma}{\gamma}} = \readbackwmap{\app{t}{s'}}{\sigma}{\gamma}$
+\newline
+\newline
+Inductive Case: Abstraction $t \rightsquigarrow_{(C, D, L)} t'$
+\newline
+$\readbackwmap{\fake{x}{x}{t}}{\sigma}{\gamma} = \abs{x}{\readbackwmap{t}{\sigma[x \mapsto x]}{\gamma}} \IH \abs{x}{\readbackwmap{t'}{\sigma[x \mapsto x]}{\gamma}} = \readbackwmap{\fake{x}{x}{t'}}{\sigma}{\gamma}$
+\newline
+\newline
+Inductive Case: Phantom-Abstraction $t \rightsquigarrow_{(C, D, L)} t'$
+\newline
+$\readbackwmap{\fake{c}{\vec{x}}{t}}{\sigma}{\gamma} = \abs{c}{\readbackwmap{t}{\sigma'}{\gamma}} \IH \abs{c}{\readbackwmap{t'}{\sigma'}{\gamma}} = \readbackwmap{\fake{c}{\vec{x}}{t'}}{\sigma}{\gamma}$
+\newline
+\newline
+Inductive Case: Sharing $t \rightsquigarrow_{(C, D, L)} t'$
+\newline
+$\readbackwmap{\share{u}{x_{1}, \dots, x_{n}}{t}}{\sigma}{\gamma} = \readbackwmap{u}{\sigma[x_{i} \mapsto \readbackwmap{t}{\sigma}{\gamma}]_{i \in [n]}}{\gamma}$
+\newline
+$\IH \readbackwmap{u}{\sigma[x_{i} \mapsto \readbackwmap{t'}{\sigma}{\gamma}]_{i \in [n]}}{\gamma} = \readbackwmap{\share{u}{x_{1}, \dots, x_{n}}{t'}}{\sigma}{\gamma}$
+\newline
+\newline
+Inductive Case: Sharing $u \rightsquigarrow_{(C, D, L)} u'$
+\newline
+$\readbackwmap{\share{u}{x_{1}, \dots, x_{n}}{t}}{\sigma}{\gamma} = \readbackwmap{u}{\sigma[x_{i} \mapsto \readbackwmap{t}{\sigma}{\gamma}]_{i \in [n]}}{\gamma}$
+\newline
+$\IH \readbackwmap{u'}{\sigma[x_{i} \mapsto \readbackwmap{t}{\sigma}{\gamma}]_{i \in [n]}}{\gamma} = \readbackwmap{\share{u'}{x_{1}, \dots, x_{n}}{t}}{\sigma}{\gamma}$
+\newline
+\newline
+Inductive Case: Distributor $\dist{u}{\vecdist{e}{\vec{x}}}{\overline{[\Gamma]}}{c}{c} \rightsquigarrow_{(C, D, L)} \dist{u'}{\vecdist{e}{\vec{x'}}}{\overline{[\Gamma']}}{c}{c}$
+\newline
+$\readbackwmap{\dist{u}{\vecdist{e}{\vec{x}}}{\overline{[\Gamma]}}{c}{c}}{\sigma}{\gamma} = \readbackwmap{u \overline{[\Gamma]}}{\sigma}{\gamma'} \IH \readbackwmap{u' \overline{[\Gamma']}}{\sigma}{\gamma'} = \readbackwmap{\dist{u'}{\vecdist{e}{\vec{x'}}}{\overline{[\Gamma']}}{c}{c}}{\sigma}{\gamma}$
 \end{proof}
 
 \newpage
@@ -2357,9 +2392,11 @@ $\composeweak{\compile{N}} =  \composeweak{\compile{N \frac{n_{1}}{x_{1}} \dots 
 $\byprop{prop \ref{prop:suboutcommweak}} \composeweak{\compile{N \frac{n_{1}}{x_{1}} \dots \frac{n_{k}}{x_{k}}}' } \sub{}{x_{i}}{x^{j}_{i}}_{1 \leq i \leq k, 1 \leq j \leq n_{i}} = \compweak{N \frac{n_{1}}{x_{1}} \dots \frac{n_{k}}{x_{k}}}\sub{}{x_{i}}{x^{j}_{i}}_{1 \leq i \leq k, 1 \leq j \leq n_{i}} = \compweak{N}$
 \end{proof}
 
-We also discuss the proofs for Lemma \ref{lem:sharepreservebeta} and Lemma \ref{theo:sharepreserve}.
+We also discuss the proofs for Lemma \ref{lem:sharepreservebeta} and Lemma \ref{theo:sharepreserve}. These are:
+	Given $t \rightsquigarrow_{\beta} u$ then $$\composeweak{t} \rightarrow^{\plus}_{\beta} \composeweak{u}$$
+and given $t \rightsquigarrow_{(C, D, L)} u$ and for any $x \in \bv{t} \cup \fp{t}$ and for all $z$, $x \not\in \fv{\sigma(z)}$.  $$\readweakwmap{t}{\sigma}{\gamma} \rightarrow^{*}_{\weaksymbol} \readweakwmap{u}{\sigma}{\gamma}$$
 
-\begin{proof}
+\begin{proof} We prove this by induction. We first discuss all the case bases.
 $\composeweak{\app{(\fake{x}{x}{t})}{s}} = \app{(\abs{x}{T})}{S} = \sub{T}{S}{x} = \composeweak{\sub{t}{s}{x}}$
 
 \noindent where $T = \composeweak{t}$ and $S = \composeweak{s}$.
@@ -2368,7 +2405,7 @@ $\composeweak{\app{(\fake{x}{x}{t})}{s}} = \app{(\abs{x}{T})}{S} = \sub{T}{S}{x}
 We prove this is true case-by-case, which is an extension of the proof for Lemma \ref{lem:preservesdenotation}. Therefore, we only show the interesting cases.
 \newline
 \newline
-Case: (\ref{red:appweak})
+Case: (\ref{red:appdup})
 $$\share{u}{}{\app{s}{t}} \rightsquigarrow_{R} \share{\share{u}{}{s}}{}{t} $$
 $\readweakwmap{\share{u}{}{\app{s}{t}}}{\sigma}{\gamma} = \share{\readweakwmap{u}{\sigma}{\gamma}}{}{\app{\readweakwmap{s}{\sigma}{\gamma}}{\readweakwmap{t}{\sigma}{\gamma}}} $
 \newline
@@ -2376,7 +2413,7 @@ $\rightarrow_{\weaksymbol} \readweakwmap{u}{\sigma}{\gamma} \share{}{}{\readweak
 \newline
 \newline
 %%%%%%%%%%%%%%%%%%%
-Case: (\ref{red:absweak})
+Case: (\ref{red:absdup})
 $$\share{u}{}{\fake{c}{\vec{x}}{t}} \rightsquigarrow_{R} \dist{u}{}{\share{}{}{t}}{c}{\vec{x}}$$
 $\readweakwmap{\share{u}{}{\fake{c}{\vec{x}}{t}}}{\sigma}{\gamma}$
 \newline
@@ -2386,7 +2423,7 @@ $\readweakwmap{\share{u}{}{\fake{c}{\vec{x}}{t}}}{\sigma}{\gamma}$
 \newline
 \indent $\byprop{prop \ref{prop:suboutcommweak}} \readweakwmap{u \share{}{}{t}}{\sigma'}{\gamma} = \readweakwmap{ \dist{u}{}{\share{}{}{t}}{c}{c}}{\sigma}{\gamma}$
 \newline
-\indent where $\sigma' = \sigma \cup \set{c \mapsto \bullet}$
+\indent where $\sigma' = \sigma [c \mapsto \bullet]$
 \newline
 \newline
 \indent SubCase: $\vec{x} = x_{1}, \dots, x_{n}$
@@ -2399,7 +2436,7 @@ $\readweakwmap{\share{u}{}{\fake{c}{\vec{x}}{t}}}{\sigma}{\gamma}$
 \newline
 \newline
 %%%%%%%%%%%%%%%%%%%
-Case (\ref{red:distweak})
+Case: (\ref{red:distelim})
 $$\dist{u}{}{\share{}{}{c}}{c}{c} \rightsquigarrow_{R} u$$
 $\readweakwmap{\dist{u}{}{\share{}{}{c}}{c}{c}}{\sigma}{\gamma} = \readweakwmap{u \share{}{}{c}}{\sigma'}{\gamma} = \readweakwmap{u}{\sigma'}{\gamma} \share{}{}{\bullet}$
 \newline
@@ -2409,17 +2446,17 @@ $= \readweakwmap{u}{\sigma}{\gamma} \share{}{}{\bullet} \rightarrow_{\weaksymbol
 \newline
 Case (\ref{red:compshare})
 $$\share{u}{x}{t} \rightsquigarrow_{C} \sub{u}{t}{x}$$
-$\readweakwmap{\share{u}{x}{t}}{\sigma}{\gamma} = \readweakwmap{u}{\sigma'}{\gamma} \byprop{prop \ref{prop:weaktranssubcomm}} \readweakwmap{\sub{u}{t}{x}}{\sigma}{\gamma} $\
+$\readweakwmap{\share{u}{x}{t}}{\sigma}{\gamma} = \readweakwmap{u}{\sigma'}{\gamma} = \readweakwmap{\sub{u}{t}{x}}{\sigma}{\gamma} $\
 \newline
 where
 \newline
-$\sigma' = \sigma \cup \set{ x \mapsto \readweakwmap{t}{\sigma}{\gamma} }$
+$\sigma' = \sigma [x \mapsto \readweakwmap{t}{\sigma}{\gamma}]$
 %%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \newline
 \newline
 \newline
-For the remaining cases, we only show the cases for  $\readweakwmap{u \share{}{}{t}}{\sigma}{\gamma} = \share{\readweakwmap{u}{\sigma}{\gamma}}{}{\readweakwmap{t}{\sigma}{\gamma}}$. The other cases are similar to those in the proof for Lemma \ref{lem:preservedenotation}.
+For the remaining cases, we only show the cases for  $\readweakwmap{u \share{}{}{t}}{\sigma}{\gamma} = \share{\readweakwmap{u}{\sigma}{\gamma}}{}{\readweakwmap{t}{\sigma}{\gamma}}$. The other cases are similar to those in the proof for Lemma \ref{lem:preservesdenotation}.
 \newline
 \newline
 %%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -2454,7 +2491,7 @@ $\rightarrow_{\weaksymbol} \abs{d}{ \readweakwmap{u}{\sigma'}{\gamma}} \share{}{
 \newline
 \newline
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-Case: (\ref{red:distshare}) and (\ref{red:distdist})
+Case: (\ref{red:distshare})
 $$\dist{u}{\fakedist{e_{1}}{\vec{w_{1}}} \dots \fakedist{e_{n}}{\vec{w_{n}}}}{\overline{[\Gamma]} \share{}{}{t}}{c}{\vec{x}} \rightsquigarrow_{L}$$ 
 $$\dist{u}{\fakedist{e_{1}}{\vec{w_{1}}} \dots \fakedist{e_{n}}{\vec{w_{n}}}}{\overline{[\Gamma]}}{c}{\vec{x}} \share{}{}{t}$$
 iff all $\vec{x} \not\in \fv{t}$
@@ -2483,5 +2520,9 @@ $= \readweakwmap{\dist{u}{\fakedist{e_{1}}{\vec{w_{1}}} \dots \fakedist{e_{n}}{\
 \newline
 $= \readweakwmap{\dist{u}{\fakedist{e_{1}}{\vec{w_{1}}} \dots \fakedist{e_{n}}{\vec{w_{n}}}}{\overline{[\Gamma]}}{c}{x_{1}, \dots, x_{n}} \share{}{}{t}}{\sigma}{\gamma}$
 \end{proof}
+
+\subsection{Sharing Measure}
+
+Here we discuss the sharing measure given in Definition \ref{def:sharingmeasure}.
 
 \end{document}
