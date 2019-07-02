@@ -88,7 +88,7 @@
 
 \author{Michel Parigot}{Laboratoire PPS, UMR 7126, CNRS \& Universit\'{e} Paris 7 (France)}{michel.parigot@gmail.com}{}{}
 
-\author{David R. Sherratt}{Friedrich-Schiller University Jena, Germany}{david.rhys.sherratt@uni-jena.de
+\author{David Rhys Sherratt}{Friedrich-Schiller University Jena, Germany}{david.rhys.sherratt@uni-jena.de
 }{}{}
 
 \authorrunning{Gundersen at al}%TODO mandatory. First: Use abbreviated first/middle names. Second (only in severe cases): Use first author plus 'et al.'
@@ -1222,10 +1222,10 @@ From Lemma \ref{theo:decreaseweight}, Lemma \ref{theo:liftingweight}, and Lemma 
 
 \begin{theorem}
 \label{theo:strongnormal}
-The sharing reduction relation $\rightsquigarrow_{(R, D, L, C)}$ is confluent 
+The sharing reduction relation $\rightsquigarrow_{(D, L, C)}$ is confluent 
 \end{theorem}
 \begin{proof}
- Lemma \ref{lem:preservesdenotation} tells us that the preservation is preserved under reduction i.e.\ for $s \rightsquigarrow_{(R, D, L, C)} t$, $\readback{s}{} = \readback{t}{}$. Therefore given $t \rightsquigarrow^{*}_{(R, D, L, C)} s_{1}$ and $t \rightsquigarrow^{*}_{(R, D, L, C)} s_{2}$, $\readback{t}{} = \readback{s_{1}}{} = \readback{s_{2}}{}$. Since we know that sharing reductions are strongly normalising, we know there exists terms $u_{1}$ and $u_{2}$ in sharing normal form such that $s_{1} \rightsquigarrow^{*}_{(R, D, L, C)} u_{1}$ and $s_{2} \rightsquigarrow^{*}_{(R, D, L, C)} u_{2}$. Lemma \ref{lem:preserve1to1correspondance} tells us that terms in closed terms in sharing normal form are in correspondence with their denotations i.e.\ $ \compile{\readback{t}{I}}' = t $. Since by Lemma \ref{lem:preservedenotation} we know $\readback{u_{1}}{} = \readback{s_{1}}{} = \readback{s_{2}}{} = \readback{u_{2}}{}$, and by Lemma \ref{lem:preserve1to1correspondance} $ \compile{\readback{u_{1}}{I}}' = u_{1} $ and $\compile{\readback{u_{2}}{I}}' = u_{2}$, we can conclude $u_{1} = u_{2}$. Hence, we prove confluence. 
+ Lemma \ref{lem:preservesdenotation} tells us that the preservation is preserved under reduction i.e.\ for $s \rightsquigarrow_{(R, D, L, C)} t$, $\readback{s}{} = \readback{t}{}$. Therefore given $t \rightsquigarrow^{*}_{(D, L, C)} s_{1}$ and $t \rightsquigarrow^{*}_{(D, L, C)} s_{2}$, $\readback{t}{} = \readback{s_{1}}{} = \readback{s_{2}}{}$. Since we know that sharing reductions are strongly normalising, we know there exists terms $u_{1}$ and $u_{2}$ in sharing normal form such that $s_{1} \rightsquigarrow^{*}_{(D, L, C)} u_{1}$ and $s_{2} \rightsquigarrow^{*}_{(D, L, C)} u_{2}$. Lemma \ref{lem:preserve1to1correspondance} tells us that terms in closed terms in sharing normal form are in correspondence with their denotations i.e.\ $ \compile{\readback{t}{I}}' = t $. Since by Lemma \ref{lem:preservesdenotation} we know $\readback{u_{1}}{} = \readback{s_{1}}{} = \readback{s_{2}}{} = \readback{u_{2}}{}$, and by Lemma \ref{lem:preserve1to1correspondance} $ \compile{\readback{u_{1}}{I}}' = u_{1} $ and $\compile{\readback{u_{2}}{I}}' = u_{2}$, we can conclude $u_{1} = u_{2}$. Hence, we prove confluence. 
 \end{proof}
 
 \section{Preservation of Strong Normalisation}
@@ -2523,6 +2523,583 @@ $= \readweakwmap{\dist{u}{\fakedist{e_{1}}{\vec{w_{1}}} \dots \fakedist{e_{n}}{\
 
 \subsection{Sharing Measure}
 
-Here we discuss the sharing measure given in Definition \ref{def:sharingmeasure}.
+We prove strong normalisation of sharing reductions through the use of \emph{multisets}. Intuitively, a multiset can be interpreted as a set where elements can be repeated, or equivalently as lists that are considered equal up to the permutation of elements. We use multisets to measure aspects of a term, and show that these aspects strictly decrease via $\rightsquigarrow_{(R, D, L)}$ reduction. 
+
+\begin{definition}[Multisets]
+\label{def:multisets}
+A \emph{multiset} $m$ is a pair $(A, f)$ where $A$ is a set and $f : A \rightarrow \mathcal{N}$ is a function that maps elements of $A$ to a natural number. 
+\end{definition}
+
+The formal definition of multisets in Definition \ref{def:multisets} follows intuition when we consider the function $f$ to tell us the number of occurrences of an element $x \in A$ in the multiset $m$. 
+
+\begin{example}
+Let $m = (\set{x, y, z}, f)$ and $f(x) = 2$, $f(y) = 1$ and $f(z) = 3$. Then this multiset can also be written as $\set{x, x, y, z, z, z}$ or equivalently as $\set{x^{2}, y^{1}, z^{3}}$
+\end{example}
+
+\begin{remark}
+The empty multiset is written as $\set{}$
+\end{remark}
+
+We will need to be able to reason about multisets in order to use them as part of our reasoning for strong normalisation. First we discuss the union of multisets, which will be needed when measuring a term recursively, e.g.\ in an application $\app{s}{t}$ we will need to measure aspects of $s$ and unionise them with the multiset corresponding to the measure of the same of $t$, to obtain the overall measure of the application.
+
+\begin{definition}[Union of Multisets] The \emph{union} (or \emph{sum}) of two multisets $m = (A, f)$ and $n = (B, g)$ is the multiset $m \cupdot n = (A \cup B, h)$ such that for all $x \in A \cup B$, $h (x) = f(x) + g(x)$.
+\end{definition}
+
+\begin{example}
+Let $m = \set{a^{1}, b^{3}, c^{2}}$ and $n = \set{c^{3}, d^{1}}$, then $m \cupdot n = \set{a^{1}, b^{3}, c^{5}, d^{1}}$ 
+\end{example}
+
+\begin{remark}
+The notion $A \cup B$ is the union of the sets and \emph{not} a disjoint union.
+\end{remark}
+
+To show strong normalisation of sharing reductions, we need to show that aspects of terms that can be represented as multisets strictly decrease during reduction. In order to show this, we need to be able determine when a multiset is larger/smaller than another i.e.\ we need to be able to apply an ordering.
+
+\begin{definition}[Ordering of Multisets] Given a totally ordered set $A$ and two multisets $m = (A, f)$ and $n = (A, g)$, we say $m$ is strictly larger than $n$, $m > n$, if the following conditions hold
+\begin{align*}
+	\bullet & m \neq n \\
+	\bullet & \forall x \in A. (g(x) > f(x) \rightarrow \exists y \in A.[ (y > x) \wedge (f(y) > g(y))] )
+\end{align*}
+\end{definition}
+
+\begin{example}
+$\set{1^{5}, 2^{2}, 3^{1}} < \set{1^{3}, 2^{4}, 3^{3}}$
+\end{example}
+
+The \emph{height} of a term is intuitively a multiset of integers that record the scope of each sharing. The scope is measured by the number of constructors from the sharing node to the root of the term in its graphical notation. The formal definition of the height is given in Definition \ref{def:sharingmeasure}. First we prove Lemma \ref{theo:liftingheight} on a case-by-case basis.
+
+If $t \rightsquigarrow_{(L)} u$ then $\height{i}{t} > \height{i}{u}$
+
+\begin{proof}
+$$\app{s[\Gamma]}{t} \rightsquigarrow_{L} (\app{s}{t})[\Gamma] $$
+$\height{i}{\app{(s[\Gamma])}{t}} = \height{i + 1}{s[\Gamma]} \cupdot \height{i + 1}{t} = \height{i + 1}{s} \cupdot \height{i + 1}{t} \cupdot  \height{i + 1}{[\Gamma]} \cupdot \set{i+1}$
+\newline
+$\height{i}{(\app{s}{t})[\Gamma]} = \height{i}{\app{s}{t}} \cupdot \height{i}{[\Gamma]} = \height{i+ 1}{s} \cupdot \height{i + 1}{t} \cupdot  \height{i}{[\Gamma]} \cupdot \set{i}$
+\newline
+$$\app{s}{t[\Gamma]} \rightsquigarrow_{L} (\app{s}{t})[\Gamma] $$
+This case is similar to the one above and we omit it.
+\newline
+$$\fake{d}{\vec{x}}{t[\Gamma]} \rightsquigarrow_{L} (\fake{d}{\vec{x}}{t})[\Gamma] \text{ iff all $\vec{x} \in \fv{t}$}$$
+$\height{i}{\fake{c}{\vec{x}}{t[\Gamma]}} = \height{i+1}{t[\Gamma]} = \height{i + 1}{t} \cupdot \height{i + 1}{[\Gamma]} \cupdot \set{i + 1}$
+\newline
+$\height{i}{(\fake{c}{\vec{x}}{t})[\Gamma]} = \height{i}{\fake{c}{\vec{x}}{t}} \cupdot \height{i}{[\Gamma]} \cupdot \set{i} = \height{i + 1}{t} \cupdot \height{i}{[\Gamma]} \cupdot \set{i}$
+\newline
+$$\share{u}{\vec{x}}{t[\Gamma]} \rightsquigarrow_{L} \share{u}{\vec{x}}{t}[\Gamma] $$
+$\height{i}{\share{u}{\vec{x}}{t[\Gamma]}} = \height{i}{u} \cupdot \height{i}{\share{}{\vec{x}}{t[\Gamma]}} \cupdot \set{i} = \height{i}{u} \cupdot \height{i + 1}{t} \cupdot \height{i + 1}{[\Gamma]} \cupdot \set{i, i + 1}$
+\newline
+$\height{i}{\share{u}{\vec{x}}{t}[\Gamma]} = \height{i}{\share{u}{\vec{x}}{t}} \cupdot \height{i}{[\Gamma]} \cupdot \set{i} = \height{i}{u} \cupdot \height{i + 1}{t} \cupdot \height{i + 1}{[\Gamma]} \cupdot \set{i, i}$
+\newline
+$$\dist{u}{\fakedist{e_{1}}{\vec{w_{1}}} \dots \fakedist{e_{n}}{\vec{w_{n}}}}{\overline{[\Gamma]} \share{}{\vec{y}}{t}}{c}{\vec{x}} \rightsquigarrow_{L}$$ 
+$$\dist{\psub{ \psub{u}{(\vec{w_{1}} / \vec{y})}{e_{1}} \dots}{(\vec{w_{n}} / \vec{y})}{e_{n}}}{\fakedist{e_{1}}{\vec{w_{1}} / \vec{y}} \dots \fakedist{e_{n}}{\vec{w_{n}} / \vec{y}}}{\overline{[\Gamma]}}{c}{\vec{x}} \share{}{\vec{y}}{t}$$
+iff all $\vec{x} \not\in \fv{t}$
+\newline
+$\height{i}{\dist{u}{\fakedist{e_{1}}{\vec{w_{1}}} \dots \fakedist{e_{n}}{\vec{w_{n}}}}{\overline{[\Gamma]} \share{}{\vec{y}}{t}}{c}{\vec{x}}}$ 
+\newline
+$= \height{i}{u} \cupdot \height{i}{\dist{}{\fakedist{e_{1}}{\vec{w_{1}}} \dots \fakedist{e_{n}}{\vec{w_{n}}}}{\overline{[\Gamma]} \share{}{\vec{y}}{t}}{c}{\vec{x}}} \cupdot \set{i}$
+\newline
+$= \height{i}{u} \cupdot \height{i + 1}{\overline{[\Gamma]}} \cupdot \height{i + 1}{\share{}{\vec{y}}{t}} \cupdot \set{i, (i + 1)^{n + 1}}$
+\newline
+where $n$ is the number of closures in the environment $\overline{[\Gamma]}$
+\newline
+$= \height{i}{u} \cupdot \height{i + 1}{\overline{[\Gamma]}} \cupdot \height{i + 2}{t} \cupdot \set{i, (i + 1)^{n + 1}}$
+\newline
+$\height{i}{\dist{\psub{ \psub{u}{(\vec{w_{1}} / \vec{y})}{e_{1}} \dots}{(\vec{w_{n}} / \vec{y})}{e_{n}}}{\fakedist{e_{1}}{\vec{w_{1}} / \vec{y}} \dots \fakedist{e_{n}}{\vec{w_{n}} / \vec{y}}}{\overline{[\Gamma]}}{c}{\vec{x}} \share{}{\vec{y}}{t}}$
+\newline
+$= \height{i}{\dist{\psub{ \psub{u}{(\vec{w_{1}} / \vec{y})}{e_{1}} \dots}{(\vec{w_{n}} / \vec{y})}{e_{n}}}{\fakedist{e_{1}}{\vec{w_{1}} / \vec{y}} \dots \fakedist{e_{n}}{\vec{w_{n}} / \vec{y}}}{\overline{[\Gamma]}}{c}{\vec{x}}} \cupdot \height{i + 1}{t} \cupdot \set{i}$
+\newline
+$= \height{i}{\psub{ \psub{u}{(\vec{w_{1}} / \vec{y})}{e_{1}} \dots}{(\vec{w_{n}} / \vec{y})}{e_{n}}} \cupdot \height{i + 1}{\overline{[\Gamma]}} \cupdot \height{i + 1}{t} \cupdot \set{i^{2}, (i + 1)^{n}}$
+\newline
+$= \height{i}{u} \cupdot \height{i + 1}{\overline{[\Gamma]}} \cupdot \height{i + 1}{t} \cupdot \set{i^{2}, (i + 1)^{n}}$
+\newline
+\newline
+$$\dist{u}{\fakedist{e_{1}}{\vec{w_{1}}} \dots \fakedist{e_{n}}{\vec{w_{n}}}}{\overline{[\Gamma]}\dist{}{\vecdist{f}{\vec{z}}}{\overline{[\Gamma']}}
+{d}{\vec{a}}}{c}{\vec{x}} \rightsquigarrow_{L}$$ 
+$$\dist{\psub{ \psub{u}{(\vec{w_{1}} / \vec{z})}{e_{1}} \dots}{(\vec{w_{n}} / \vec{z})}{e_{n}}}{\fakedist{e_{1}}{\vec{w_{1}} / \vec{z}} \dots \fakedist{e_{n}}{\vec{w_{n}} / \vec{z}}}{\overline{[\Gamma]}}{c}{\vec{x}}  \dist{}{\vecdist{f}{\vec{z}}}{\overline{[\Gamma']}}{d}{\vec{a}}$$
+iff all $\vec{x} \in \fv{\dist{u}{\fakedist{e_{1}}{\vec{w_{1}}} \dots \fakedist{e_{n}}{\vec{w_{n}}}}{\overline{[\Gamma]}}{c}{\vec{x}}}$
+\newline
+$\height{i}{\dist{u}{\fakedist{e_{1}}{\vec{w_{1}}} \dots \fakedist{e_{n}}{\vec{w_{n}}}}{\overline{[\Gamma]}\dist{}{\vecdist{f}{\vec{z}}}{\overline{[\Gamma']}}
+{d}{\vec{a}}}{c}{\vec{x}}}$
+\newline
+$= \height{i}{u} \cupdot \height{i+1}{\overline{[\Gamma]}} \cupdot \height{i+1}{\dist{}{\vecdist{f}{\vec{z}}}{\overline{[\Gamma']}}{d}{\vec{a}}} \cupdot \set{i, (i + 1)^{n + 1}}$ 
+\newline
+where $n$ is the number of closures in $\overline{[\Gamma]}$
+\newline
+$= \height{i}{u} \cupdot \height{i+1}{\overline{[\Gamma]}} \cupdot \height{i + 2}{\overline{[\Gamma']}} \cupdot \set{i, (i + 1)^{n + 1}, (i + 2)^{m}}$
+\newline
+where $m$ is the number of closures in $\overline{[\Gamma']}$ 
+\newline
+$\height{i}{\dist{\psub{ \psub{u}{(\vec{w_{1}} / \vec{z})}{e_{1}} \dots}{(\vec{w_{n}} / \vec{z})}{e_{n}}}{\fakedist{e_{1}}{\vec{w_{1}} / \vec{z}} \dots \fakedist{e_{n}}{\vec{w_{n}} / \vec{z}}}{\overline{[\Gamma]}}{c}{\vec{x}}  \dist{}{\vecdist{f}{\vec{z}}}{\overline{[\Gamma']}}{d}{\vec{a}}}$
+\newline
+$\height{i}{\dist{\psub{ \psub{u}{(\vec{w_{1}} / \vec{z})}{e_{1}} \dots}{(\vec{w_{n}} / \vec{z})}{e_{n}}}{\fakedist{e_{1}}{\vec{w_{1}} / \vec{z}} \dots \fakedist{e_{n}}{\vec{w_{n}} / \vec{z}}}{\overline{[\Gamma]}}{c}{\vec{x}}}$
+\newline
+\indent $ \cupdot \height{i + 1}{\overline{[\Gamma']}} \cupdot \set{i, (i + 1)^{m}}$
+\newline
+$= \height{i}{\psub{ \psub{u}{(\vec{w_{1}} / \vec{z})}{e_{1}} \dots}{(\vec{w_{n}} / \vec{z})}{e_{n}}} \cupdot \height{i + 1}{\overline{[\Gamma]}} \cupdot \height{i + 1}{\overline{[\Gamma']}} \cupdot \set{i, (i + 1)^{n + m}}$
+\newline
+$= \height{i}{u} \cupdot \height{i + 1}{\overline{[\Gamma]}} \cupdot \height{i + 1}{\overline{[\Gamma']}} \cupdot \set{i, (i + 1)^{n + m}}$
+\end{proof}
+
+The \emph{weight} of a term is intuitively the number or copies each constructor (abstraction, application and variable) will exist after duplication. Figure \ref{fig:weightexample} illustrates this, by showing a side-by-side comparison of the term $$\fake{x}{x}{\app{\fake{c_{1}}{w_{1}}{w_{1}}}{(\app{(\fake{c_{2}}{w_{2}}{w_{2}})}{x})}}$$ $$\dist{}{\fakedist{c_{1}}{w_{1}} \fakedist{c_{2}}{w_{2}}}{\share{}{w_{1}, w_{2}}{\fake{z}{z}{\app{z_{1}}{(\app{z_{2}}{y})}  \share{}{z_{1}, z_{2}}{z} }}}{y}{y}$$ and its equivalent in the $\WEAK$-calculus obtained by $\composeweak{-}$. Each red line shows the connection between the abstraction and application constructors in both calculi. The weight of a constructor is then the number of red lines associated with it, e.g.\ the weight of the example is the multiset $\set{1^{6}, 2^{4}, 4^{1}}$.
+
+\begin{figure}[h]
+\centering
+\begin{tikzpicture}[scale = 0.8]
+	\filldraw[fill = yellow!30, draw = yellow!70, rounded corners] (-0.75, 0.25) rectangle (2.25, -3.75);
+	\filldraw[fill = green!30, draw = green!70, rounded corners] (-0.5, -3) rectangle (0.5, -2.25);
+	\filldraw[fill = green!30, draw = green!70, rounded corners] (1, -3.5) rectangle (2, -2.75);
+	\filldraw[fill = black!20, draw = black!70, rounded corners, thick] (-0.25, -4) rectangle (4.25, -9.5);
+	\filldraw[fill = yellow!30, draw = yellow!70, rounded corners] (0.25, -5.25) rectangle (3, -9.25);
+	%%%%%%%%%%%%%%%%%%%%%%%
+	\ALnodeL{0, 0}a;
+	\ALnodeA{0, -1}b;
+	\draw [->] (0, 0.5) -- (a_1);
+	\draw [->] (a_2) -- (b_1);
+	\ALnodeP{0, -2.5}c;
+	\draw [->] (b_2) -- (c_1);
+	\ALnodeA{1.5, -2}d;
+	\draw [->, rounded corners] (b_3) -| (d_1);
+	\ALnodeP{1.5, -3}e;
+	\draw [->] (d_2) -- (e_1);
+	\draw [->, rounded corners] (d_3) -| (2, -1.5) |- (a_3);
+	%%%%%%%%%%%%%%%%%%%%%%%
+	\ALnodeS[0.75]{0.75, -4.5}f;
+	\draw [->] (c_2) -- (f_left);
+	\draw [->] (e_2) -- (f_right);
+	\ALnodeL{0.75, -5.5}g;
+	\draw [->] (f_tip) -- (g_1);
+	\ALnodeA{0.75, -6.5}h;
+	\draw [->] (g_2) -- (h_1);
+	\ALnodeA{1.75, -7.5}i;
+	\draw [->, rounded corners] (h_3) -| (i_1);
+	\ALnodeS{1.25, -8.5}j;
+	\draw [->] (h_2) -- (j_left);
+	\draw [->] (i_2) -- (j_right);
+	\ALnodeC{3.5, -4.5}k;
+	\draw [->, rounded corners] (i_3) -| (k_tip);
+	\draw [rounded corners] (j_tip) |- (2, -9) -| (2.5, -7.55);
+	\draw [->, rounded corners] (2.5, -7.45) |- (g_3);
+	\draw [->, rounded corners] (k_left) |- (e_3);
+	\draw [rounded corners] (k_right) |- (1.55 , -2.5);
+	\draw [->] (1.45, -2.5) -- (c_3);
+	%%%%%%%%%%%%%%%%%%%%%%
+	%%% PICTURE TWO %%%%%%%%%%%%
+	%%%%%%%%%%%%%%%%%%%%
+	\begin{scope}[yshift = -1cm, xshift = -1cm]
+	\ALnodeL{8, 0}z;
+	\draw [-] (8, 0.5) -- (z_1);
+	\ALnodeA{8, -1}{z2};
+	\draw [-] (z_2) -- (z2_1);
+	\ALnodeL{8, -2}{z3};
+	\draw [-] (z2_2) -- (z3_1);
+	\ALnodeL{8, -3}{z4};
+	\draw [-] (z3_2) -- (z4_1);
+	\ALnodeA{8, -4}{z5};
+	\draw [-] (z4_2) -- (z5_1);
+	\ALnodeA{9, -5}{z6};
+	\draw [-, rounded corners] (z5_3) -| (z6_1);
+	\draw [-] (z5_2) -- (8, -7);
+	\draw [-] (z6_2) -- (9, -7);
+	\draw [-, rounded corners] (z6_3) -| (10, -7);
+	\ALnodeA{11, -2}{y};
+	\ALnodeL{11, -3}{y1};
+	\draw [-] (y_2) -- (y1_1);
+	\draw [-, rounded corners] (z2_3) -| (y_1);
+	\ALnodeL{11, -4}{y2};
+	\draw [-] (y1_2) -- (y2_1);
+	\ALnodeA{11, -5}{y3};
+	\ALnodeA{12, -6}{y4};
+	\draw [-] (y2_2) -- (y3_1);
+	\draw [-] (y3_2) -- (11, -7);
+	\draw [-, rounded corners] (y3_3) -| (y4_1);
+	\draw [-] (y4_2) -- (12, -7);
+	\draw [-, rounded corners] (y4_3) -| (13, -7);
+	\draw [-, rounded corners] (y_3) -| (14, -7);
+	%%%%%%%%%%%%%
+	\node (ale) at (8, -8) {\color{violet} $4$}; 
+	\node (bob) at (11, -8) {\color{violet} $2$}; 
+	\node (cai) at (14, -8) {\color{violet} $1$}; 
+	\draw [dotted, violet] (8, -7) to (ale);
+	\draw [dotted, violet] (9, -7) to (ale);
+	\draw [dotted, violet] (11, -7) to (ale);
+	\draw [dotted, violet] (12, -7) to (ale);
+	\draw [dotted, violet] (10, -7) to (bob);
+	\draw [dotted, violet] (13, -7) to (bob);
+	\draw [dotted, violet] (14, -7) to (cai);
+	\end{scope}
+	%%%%%%%%%%%%%%%%%%%%%%%
+	% Connect the 2 diagrams %
+	%%%%%%%%%%%%%%%%%%%
+	\draw [red, thick, bend left = 25] (a.east) to (z.west); %node [above] {1} (z.west);
+	\draw [red, thick, bend left = 25] (b.east) to (z2.west);
+	\draw [red, thick, bend left = 30] (d.east) to (y.west);
+	\draw [red, thick, bend left = 20] (c.east) to (z3.west);
+	\draw [red, thick, bend left = 30] (e.east) to (y1.west);
+	\draw [red, thick, bend left = 30] (g.east) to (z4.west);
+	\draw [red, thick, bend left = 40] (g.east) to (y2.west);
+	\draw [red, thick, bend left = 20] (h.east) to (z5.west);
+	\draw [red, thick, bend left = 20] (h.east) to (y3.west);
+	\draw [red, thick, bend left = 20] (i.east) to (z6.west);
+	\draw [red, thick, bend left = 10] (i.east) to (y4.west);
+	%%%%%%%%%%%%%%%%%%%%
+\end{tikzpicture}
+
+\caption{The weight is the multiset of incoming red arcs for each application and abstraction; here $\set{1^{5}, 2^{3}}$, together with the number of purple dotted lines for each variable; here $\set{1, 2, 4}$. Thus the overall weight is $\set{1^{6}, 2^{4}, 4}$}
+\label{fig:weightexample}
+\end{figure}
+
+\begin{proposition}
+\label{prop:bkweight}
+For $e \not\in \vec{w}$, $\weight{i}{t} = \weight{i}{\psub{t}{\vec{w}}{e}}$
+\end{proposition}
+\begin{proof}
+To prove this, first we need to prove that book-keeping does not affect the function $\weightvar{i}{t}$. We prove this by induction on $t$.
+\newline
+{\ Base Case: Variable}
+\newline
+Vacuously True
+\newline
+\newline
+{\ Base Case: Abstraction}
+\newline
+$\weightvar{i}{\fake{e}{\vec{y}}{t} \psub{}{\vec{w}}{e}} = \weightvar{i}{\fake{e}{\vec{w}}{t}} = \weightvar{i}{t} \cupdot \set{e \mapsto i} = \weightvar{i}{\fake{e}{\vec{y}}{t}}$
+\newline
+\newline
+{ Base Case: Distributor}
+\newline
+$\weightvar{i}{\dist{u}{\vecdist{f}{\vec{z}}}{\overline{[\Gamma]}}{e}{\vec{y}} \psub{}{\vec{w}}{e}} = \weightvar{i}{\dist{u}{\vecdist{f}{\vec{z}}}{\overline{[\Gamma]}}{e}{\vec{w}}}$
+\newline
+$ = \weightvar{i}{u\overline{[\Gamma]}} \ \set{\vec{e}} = \weightvar{i}{\dist{u}{\vecdist{f}{\vec{z}}}{\overline{[\Gamma]}}{e}{\vec{y}}}$
+\newline
+\newline
+{ Inductive Case: Application}
+\newline
+$\weightvar{i}{\app{s}{t} \psub{}{\vec{w}}{e}} = \weightvar{i}{\app{(s \psub{}{\vec{w}}{e})}{t \psub{}{\vec{w}}{e}}} = \weightvar{i}{s \psub{}{\vec{w}}{e}} \cupdot \weightvar{i}{t \psub{}{\vec{w}}{e}} \IH^{2} \weightvar{i}{s} \cupdot \weightvar{i}{t} = \weightvar{i}{\app{s}{t}}$
+\newline
+\newline
+{ Inductive Case: Abstraction}
+\newline
+Case 1
+\newline
+$\weightvar{i}{(\fake{c}{c}{t}) \psub{}{\vec{w}}{e}} = \weightvar{i}{\fake{c}{c}{t  \psub{}{\vec{w}}{e} }} = \weightvar{i}{t \psub{}{\vec{w}}{e}} / \set{c} \IH \weightvar{i}{t} / \set{c} = \weightvar{i}{\fake{c}{c}{t}}$
+\newline
+Case 2
+\newline
+$\weightvar{i}{(\fake{c}{\vec{x}}{t}) \psub{}{\vec{w}}{e}} = \weightvar{i}{\fake{c}{\vec{x}}{t  \psub{}{\vec{w}}{e} }} = \weightvar{i}{t \psub{}{\vec{w}}{e}} \cupdot \set{c \mapsto i} \IH \weightvar{i}{t} \cupdot \set{c \mapsto i} = \weightvar{i}{\fake{c}{\vec{x}}{t}}$
+\newline
+\newline
+{ Inductive Case: Weakening}
+\newline
+$\weightvar{i}{\share{u}{}{t} \psub{}{\vec{w}}{e}} = \weightvar{i}{\share{u \psub{}{\vec{w}}{e}}{}{t \psub{}{\vec{w}}{e}}} = \weightvar{i}{u \psub{}{\vec{w}}{e}} \cupdot \weightvar{1}{t \psub{}{\vec{w}}{e}}$
+\newline
+$ \IH^{2} \weightvar{i}{u} \cupdot \weightvar{1}{t} = \weightvar{i}{\share{u}{}{t}}$
+\newline
+\newline
+{ Inductive Case: Sharing}
+\newline
+$\weightvar{i}{\share{u}{x_{1} \dots x_{n}}{t} \psub{}{\vec{w}}{e}} = \weightvar{i}{\share{u \psub{}{\vec{w}}{e}}{x_{1} \dots x_{n}}{t \psub{}{\vec{w}}{e}}}$
+\newline
+$ = (\weightvar{i}{u \psub{}{\vec{w}}{e}} / \set{x_{1}, \dots, x_{n}}) \cupdot \weightvar{}{t \psub{j}{\vec{w}}{e}}$ where $j = \weightvar{i}{t \psub{}{\vec{w}}{e}} + \dots + \weightvar{i}{t \psub{}{\vec{w}}{e}}$
+\newline
+$\IH^{n + 2} (\weightvar{i}{u } / \set{x_{1}, \dots, x_{n}}) \cupdot \weightvar{}{t }$ where $j = \weightvar{i}{t} + \dots + \weightvar{i}{t} = \weightvar{i}{\share{u}{x_{1}, \dots, x_{n}}{t}}$
+\newline
+\newline
+{ Inductive Case: Distributor}
+\newline
+Case 1
+\newline
+$\weightvar{i}{\dist{u}{\vecdist{f}{\vec{z}}}{\overline{[\Gamma]}}{c}{c} \psub{}{\vec{w}}{e}} = \weightvar{i}{\dist{u}{\vecdist{f}{\vec{z}}}{\overline{[\Gamma]} \psub{}{\vec{w}}{e} }{c}{c}} = \weightvar{i}{u \overline{[\Gamma]} \psub{}{\vec{w}}{e}} / \set{c, \vec{f}}$
+\newline
+$\IH  \weightvar{i}{u \overline{[\Gamma]}} / \set{c, \vec{f}} = \weightvar{i}{\dist{u}{\vecdist{f}{\vec{z}}}{\overline{[\Gamma]}}{c}{c}}$
+\newline
+Case 2
+\newline
+$\weightvar{i}{\dist{u}{\vecdist{f}{\vec{z}}}{\overline{[\Gamma]}}{c}{\vec{x}} \psub{}{\vec{w}}{e}} = \weightvar{i}{\dist{u}{\vecdist{f}{\vec{z}}}{\overline{[\Gamma]} \psub{}{\vec{w}}{e} }{c}{\vec{x}}}$
+\newline
+$ = \weightvar{i}{u \overline{[\Gamma]} \psub{}{\vec{w}}{e}} / \set{\vec{f}} \cupdot \set{c \mapsto i}$
+\newline
+$\IH  \weightvar{i}{u \overline{[\Gamma]}} / \set{\vec{f}} \cupdot \set{c \mapsto i} = \weightvar{i}{\dist{u}{\vecdist{f}{\vec{z}}}{\overline{[\Gamma]}}{c}{\vec{x}}}$
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newline
+\newline
+We now prove this proposition by induction on $t$
+\newline
+{ Base Case: Variable}
+\newline
+$\weight{i}{\psub{x}{\vec{w}}{e}} = \weight{i}{x}$
+\newline
+\newline
+{ Base Case: Abstraction}
+\newline
+$\weight{i}{\fake{e}{\vec{y}}{t} \psub{}{\vec{w}}{e}} = \weight{i}{\fake{e}{\vec{w}}{t}} = \weight{i}{t} \cupdot \set{i} = \weight{i}{\fake{e}{\vec{y}}{t}}$
+\newline
+\newline
+{ Base Case: Distributor}
+\newline
+$\weight{i}{\dist{u}{\vecdist{e}{\vec{z}}}{\overline{[\Gamma]}}{e}{\vec{y}} \psub{}{\vec{w}}{e}} = \weight{i}{\dist{u}{\vecdist{e}{\vec{z}}}{\overline{[\Gamma]}}{e}{\vec{w}}} = \weight{i}{u\overline{[\Gamma]}}$
+\newline
+$ = \weight{i}{\dist{u}{\vecdist{e}{\vec{z}}}{\overline{[\Gamma]}}{e}{\vec{y}}}$
+\newline
+\newline
+{ Inductive Case: Application}
+\newline
+$\weight{i}{\app{s}{t} \psub{}{\vec{w}}{e}} = \weight{i}{\app{(s \psub{}{\vec{w}}{e})}{t \psub{}{\vec{w}}{e}}} = \weight{i}{s \psub{}{\vec{w}}{e}} \cupdot \weight{i}{t \psub{}{\vec{w}}{e}} \cupdot \set{i}$
+\newline
+$\IH^{2} \weight{i}{s} \cupdot \weight{i}{t} \cupdot \set{i} = \weight{i}{\app{s}{t}}$
+\newline
+\newline
+{ Inductive Case: Abstraction}
+\newline
+Case 1
+\newline
+$\weight{i}{(\fake{c}{c}{t}) \psub{}{\vec{w}}{e}} = \weight{i}{\fake{c}{c}{t \psub{}{\vec{w}}{e}}} = \weight{i}{t \psub{}{\vec{w}}{e}} \cupdot \set{i, \weightvar{i}{t \psub{}{\vec{w}}{e}}(c)}$
+\newline
+$\IH \weight{i}{t} \cupdot \set{i, \weightvar{i}{t}(c)} = \weight{i}{\fake{c}{c}{t}}$
+\newline
+Case 2
+\newline
+$\weight{i}{(\fake{c}{\vec{x}}{t}) \psub{}{\vec{w}}{e}} = \weight{i}{\fake{c}{\vec{x}}{t \psub{}{\vec{w}}{e}}} = \weight{i}{t \psub{}{\vec{w}}{e}} \cupdot \set{i} \IH \weight{i}{t} \cupdot \set{i}$
+\newline
+$ = \weight{i}{\fake{c}{\vec{x}}{t}}$
+\newline
+\newline
+{ Inductive Case: Weakening}
+\newline
+$\weight{i}{\share{u}{}{t} \psub{}{\vec{w}}{e}} = \weight{i}{\share{u\psub{}{\vec{w}}{e}}{}{t\psub{}{\vec{w}}{e}}} = \weight{i}{u\psub{}{\vec{w}}{e}} \cupdot \weight{1}{t \psub{}{\vec{w}}{e}}$
+\newline
+$\IH^{2} \weight{i}{u} \cupdot \weight{1}{t } = \weight{i}{\share{u}{}{t}}$
+\newline
+\newline
+{ Inductive Case: Sharing}
+\newline
+$\weight{i}{\share{u}{x_{1}, \dots, x_{n}}{t} \psub{}{\vec{w}}{e}} = \weight{i}{\share{u  \psub{}{\vec{w}}{e}}{x_{1}, \dots, x_{n}}{t  \psub{}{\vec{w}}{e}}}$
+\newline
+$ = \weight{i}{u  \psub{}{\vec{w}}{e}} \cupdot \weight{j}{t  \psub{}{\vec{w}}{e}}$ where $j = \weightvar{i}{u  \psub{}{\vec{w}}{e}}(x_{1}) + \dots + \weightvar{i}{u  \psub{}{\vec{w}}{e}}(x_{n})$
+\newline
+$\IH^{n + 2} \weight{i}{u} \cupdot \weight{j}{t}$ where $j = \weightvar{i}{u}(x_{1}) + \dots + \weightvar{i}{u}(x_{1}) = \weight{i}{\share{u}{x_{1}, \dots, x_{n}}{t}}$
+\newline
+\newline
+{ Inductive Case: Distributor}
+\newline
+Case 1
+\newline
+$\weight{i}{\dist{u}{\vecdist{f}{\vec{z}}}{\overline{[\Gamma]}}{c}{c} \psub{}{\vec{w}}{e}} = \weight{i}{\dist{u}{\vecdist{f}{\vec{z}}}{\overline{[\Gamma]} \psub{}{\vec{w}}{e} }{c}{c}}$
+\newline
+$ = \weight{i}{u \overline{[\Gamma]} \psub{}{\vec{w}}{e}} \cupdot \set{\weightvar{i}{u \overline{[\Gamma]} \psub{}{\vec{w}}{e}}(c)} \IH \weight{i}{u \overline{[\Gamma]}} \cupdot \set{\weightvar{i}{u \overline{[\Gamma]}}(c)}$
+\newline
+$ = \weight{i}{\dist{u}{\vecdist{f}{\vec{z}}}{\overline{[\Gamma]}}{c}{c}}$
+\newline
+Case 2
+\newline
+$\weight{i}{\dist{u}{\vecdist{f}{\vec{z}}}{\overline{[\Gamma]}}{c}{\vec{x}} \psub{}{\vec{w}}{e}} = \weight{i}{\dist{u}{\vecdist{f}{\vec{z}}}{\overline{[\Gamma]} \psub{}{\vec{w}}{e} }{c}{\vec{x}}}$
+\newline
+$ = \weight{i}{u \overline{[\Gamma]} \psub{}{\vec{w}}{e}} \IH \weight{i}{u \overline{[\Gamma]}} = \weight{i}{\dist{u}{\vecdist{f}{\vec{z}}}{\overline{[\Gamma]}}{c}{\vec{x}}}$
+\end{proof}
+
+We now prove Lemma \ref{theo:decreaseweight} and Lemma  \ref{theo:liftingweight} (respectively) on a case-by-case basis.
+\begin{center}
+If $t \rightsquigarrow_{D} u$ then $\weight{i}{t} > \weight{i}{u}$
+\end{center}
+
+\begin{center} 
+If $t \rightsquigarrow_{(L, C)} u$ then $\weight{i}{t} = \weight{i}{u}$
+\end{center}
+
+\begin{proof}
+Duplication Rules
+\newline
+$$\share{u^{*}}{x_{1} \dots x_{n}}{\app{s}{t}} \rightsquigarrow_{D} \share{\share{\sub{\sub{u^{*}}{\app{z_{1}}{y_{1}}}{x_{1}}\dots}{\app{z_{n}}{y_{n}}}{x_{n}}}{z_{1} \dots z_{n}}{s}}{y_{1} \dots y_{n}}{t}$$
+$\weight{i}{\share{u^{*}}{x_{1} \dots x_{n}}{\app{s}{t}}} = \weight{i}{u} \cupdot \weight{j}{\app{s}{t}}
+= \weight{i}{u} \cupdot \weight{j}{s} \cupdot \weight{j}{s} \cupdot \set{j}$
+\newline
+where $j = \weightvar{i}{u}(x_{1}) + \dots + \weightvar{i}{u}(x_{n})$
+\newline
+$\weight{i}{\share{\share{\sub{\sub{u^{*}}{\app{z_{1}}{y_{1}}}{x_{1}}\dots}{\app{z_{n}}{y_{n}}}{x_{n}}}{z_{1} \dots z_{n}}{s}}{y_{1} \dots y_{n}}{t}}$
+\newline
+$= \weight{i}{\share{\sub{\sub{u^{*}}{\app{z_{1}}{y_{1}}}{x_{1}}\dots}{\app{z_{n}}{y_{n}}}{x_{n}}}{z_{1} \dots z_{n}}{s}} \cupdot \weight{k}{t}$
+\newline
+$= \weight{i}{\sub{\sub{u^{*}}{\app{z_{1}}{y_{1}}}{x_{1}}\dots}{\app{z_{n}}{y_{n}}}{x_{n}}} \cupdot \weight{l}{s} \cupdot \weight{k}{t}$
+\newline
+where $k = \weightvar{i}{\share{\sub{\sub{u^{*}}{\app{z_{1}}{y_{1}}}{x_{1}}\dots}{\app{z_{n}}{y_{n}}}{x_{n}}}{z_{1} \dots z_{n}}{s}}(y_{1}) + \dots$
+\newline
+\indent $\dots + \weightvar{i}{\share{\sub{\sub{u^{*}}{\app{z_{1}}{y_{1}}}{x_{1}}\dots}{\app{z_{n}}{y_{n}}}{x_{n}}}{z_{1} \dots z_{n}}{s}}(y_{n})$
+\newline
+$= \weightvar{i}{\sub{\sub{u^{*}}{\app{z_{1}}{y_{1}}}{x_{1}}\dots}{\app{z_{n}}{y_{n}}}{x_{n}}}(y_{1}) + \dots + \weightvar{i}{\sub{\sub{u^{*}}{\app{z_{1}}{y_{1}}}{x_{1}}\dots}{\app{z_{n}}{y_{n}}}{x_{n}}}(y_{n})$
+\newline
+$= \weightvar{i}{u}(x_{1}) + \dots + \weightvar{i}{u}(x_{n}) = j$
+\newline
+and where $l = \weightvar{i}{\sub{\sub{u^{*}}{\app{z_{1}}{y_{1}}}{x_{1}}\dots}{\app{z_{n}}{y_{n}}}{x_{n}}}(z_{1}) + \dots$
+\newline
+\indent $\dots + \weightvar{i}{\sub{\sub{u^{*}}{\app{z_{1}}{y_{1}}}{x_{1}}\dots}{\app{z_{n}}{y_{n}}}{x_{n}}}(z_{n})$
+\newline
+$= \weightvar{i}{u}(x_{1}) + \dots + \weightvar{i}{u}(x_{n}) = j$
+\newline
+Therefore
+\newline
+$= \weight{i}{\sub{\sub{u^{*}}{\app{z_{1}}{y_{1}}}{x_{1}}\dots}{\app{z_{n}}{y_{n}}}{x_{n}}} \cupdot \weight{j}{s} \cupdot \weight{j}{t}$
+\newline
+$= \weight{i}{u} \cupdot \weight{j}{s} \cupdot \weight{j}{t} \cupdot \set{\weightvar{i}{u}(x_{1}) , \dots , \weightvar{i}{u}(x_{n})}$
+\newline
+$$\share{u}{x_{1}, \dots, x_{n}}{\fake{c}{\vec{y}}{t}} \rightsquigarrow_{D}$$
+$$\sub{u}{\fake{e_{i}}{w^{i}_{1}}{w^{i}_{1}}}{x_{i}}_{1 \leq i \leq n} \dist{}{\fakedist{e_{1}}{w^{1}_{1}} \dots \fakedist{e_{n}}{w^{n}_{1}}}{\share{}{w^{1}_{1}, \dots, w^{n}_{1}}{t}}{c}{\vec{y}}$$
+Case 1:
+\newline
+$\weight{i}{\share{u}{x_{1}, \dots, x_{n}}{\fake{c}{c}{t}}} = \weight{i}{u} \cupdot \weight{j}{\fake{c}{c}{t}} =  \weight{i}{u} \cupdot \weight{j}{t} \cupdot \set{j, \weightvar{j}{t}(c)}$
+\newline
+where $j = \weightvar{i}{u}(x_{1}) + \dots + \weightvar{i}{u}(x_{n}) $
+\newline
+$\weight{i}{\sub{u}{\fake{e_{i}}{w^{i}_{1}}{w^{i}_{1}}}{x_{i}}_{1 \leq i \leq n} \dist{}{\fakedist{e_{1}}{w^{1}_{1}} \dots \fakedist{e_{n}}{w^{n}_{1}}}{\share{}{w^{1}_{1}, \dots, w^{n}_{1}}{t}}{c}{c}}$
+\newline
+$= \weight{i}{\sub{u}{\fake{e_{i}}{w^{i}_{1}}{w^{i}_{1}}}{x_{i}}_{1 \leq i \leq n} \share{}{w^{1}_{1}, \dots, w^{n}_{1}}{t}} \cupdot $
+\newline
+\indent $\weightvar{i}{\sub{u}{\fake{e_{i}}{w^{i}_{1}}{w^{i}_{1}}}{x_{i}}_{1 \leq i \leq n} \share{}{w^{1}_{1}, \dots, w^{n}_{1}}{t}}(c)$
+\newline
+$\weightvar{i}{\sub{u}{\fake{e_{i}}{w^{i}_{1}}{w^{i}_{1}}}{x_{i}}_{1 \leq i \leq n} \share{}{w^{1}_{1}, \dots, w^{n}_{1}}{t}}(c) = \weightvar{k}{t}(c) = \weightvar{j}{t}(c)$
+\newline
+where $k = \weightvar{i}{\sub{u}{\fake{e_{i}}{w^{i}_{1}}{w^{i}_{1}}}{x_{i}}_{1 \leq i \leq n} \share{}{w^{1}_{1}, \dots, w^{n}_{1}}{t}}(w^{1}_{1}) + \dots$
+\newline
+\indent $\dots + \weightvar{i}{\sub{u}{\fake{e_{i}}{w^{i}_{1}}{w^{i}_{1}}}{x_{i}}_{1 \leq i \leq n} \share{}{w^{1}_{1}, \dots, w^{n}_{1}}{t}}(w^{n}_{1}) = j$
+\newline
+$=  \weight{i}{\sub{u}{\fake{e_{i}}{w^{i}_{1}}{w^{i}_{1}}}{x_{i}}_{1 \leq i \leq n} \share{}{w^{1}_{1}, \dots, w^{n}_{1}}{t}} \cupdot  \weightvar{j}{t}(c)$
+\newline
+$= \weight{i}{\sub{u}{\fake{e_{i}}{w^{i}_{1}}{w^{i}_{1}}}{x_{i}}_{1 \leq i \leq n}} \cupdot \weight{k}{t} \cupdot  \set{\weightvar{j}{t}(c)}$
+\newline
+$= \weight{i}{u} \cupdot \weight{j}{t} \cupdot \set{\weightvar{i}{u}(x_{1}), \dots, \weightvar{i}{u}(x_{n}),  \weightvar{j}{t}(c)}$
+\newline
+Case: 2
+\newline
+$\weight{i}{\share{u}{x_{1}, \dots, x_{n}}{\fake{c}{\vec{y}}{t}}} = \weight{i}{u} \cupdot \weight{j}{\fake{c}{\vec{y}}{t}} = \weight{i}{u} \cupdot \weight{j}{t} \cupdot \set{j}$
+\newline
+where $j = \weightvar{i}{u}(x_{1}) + \dots + \weightvar{i}{u}(x_{n})$
+\newline
+$\weight{i}{\sub{u}{\fake{e_{i}}{w^{i}_{1}}{w^{i}_{1}}}{x_{i}}_{1 \leq i \leq n} \dist{}{\fakedist{e_{1}}{w^{1}_{1}} \dots \fakedist{e_{n}}{w^{n}_{1}}}{\share{}{w^{1}_{1}, \dots, w^{n}_{1}}{t}}{c}{\vec{y}}}$
+\newline
+$= \weight{i}{\sub{u}{\fake{e_{i}}{w^{i}_{1}}{w^{i}_{1}}}{x_{i}}_{1 \leq i \leq n} \share{}{w^{1}_{1}, \dots, w^{n}_{1}}{t}}$
+\newline
+$= \weight{i}{\sub{u}{\fake{e_{i}}{w^{i}_{1}}{w^{i}_{1}}}{x_{i}}_{1 \leq i \leq n} } \cupdot \weight{k}{t}$
+\newline
+where $k = \weightvar{i}{\sub{u}{\fake{e_{i}}{w^{i}_{1}}{w^{i}_{1}}}{x_{i}}_{1 \leq i \leq n}}(w^{1}_{1}) + \dots + \weightvar{i}{\sub{u}{\fake{e_{i}}{w^{i}_{1}}{w^{i}_{1}}}{x_{i}}_{1 \leq i \leq n}}(w^{n}_{1}) = j$
+\newline
+$= \weight{i}{\sub{u}{\fake{e_{i}}{w^{i}_{1}}{w^{i}_{1}}}{x_{i}}_{1 \leq i \leq n} } \cupdot \weight{j}{t}$
+\newline
+$= \weight{i}{u} \cupdot \weight{j}{t} \cupdot \set{\weightvar{i}{u}(x_{1}), \dots, \weightvar{i}{u}(x_{n})}$
+\newline
+$$\dist{u}{\fakedist{e_{1}}{\vec{w_{1}}} \dots \fakedist{e_{n}}{\vec{w_{n}}}}{\share{}{\vec{w_{1}}, \dots, \vec{w_{n}}}{c}}{c}{c} \rightsquigarrow_{D} \exor{\exor{u}{e_{1}}{\vec{w_{1}}} \dots}{e_{n}}{\vec{w_{n}}}$$
+$\weight{i}{\dist{u}{\fakedist{e_{1}}{\vec{w_{1}}} \dots \fakedist{e_{n}}{\vec{w_{n}}}}{\share{}{\vec{w_{1}}, \dots, \vec{w_{n}}}{c}}{c}{c}}$
+\newline
+$= \weight{i}{u \share{}{\vec{w_{1}}, \dots, \vec{w_{n}}}{c}} \cupdot \set{\weightvar{i}{u \share{}{\vec{w_{1}}, \dots, \vec{w_{n}}}{c}(c)}}$
+\newline
+$= \weight{i}{u} \cupdot \set{} \cupdot \set{j}$
+\newline
+where $j = \weightvar{i}{u}(\vec{w_{1}}) + \dots + \weightvar{i}{u}(\vec{w_{n}})$
+\newline
+$\weight{i}{\exor{\exor{u}{e_{1}}{\vec{w_{1}}} \dots}{e_{n}}{\vec{w_{n}}}} = \weight{i}{u} \cupdot \set{\weightvar{i}{u}(\vec{w_{1}}), \dots , \weightvar{i}{u}(\vec{w_{n}})}$
+\newline
+where $\weightvar{i}{u}(\vec{w}) = \weightvar{i}{u}(w_{1}) + \dots + \weightvar{i}{u}(w_{n})$ and $\vec{w} = \set{w_{1}, \dots, w_{n}}$
+\newline
+\newline
+Lifting and Compound
+$$\share{\share{u}{\vec{w}}{y}}{\vec{x} \cdot y}{t} \rightsquigarrow_{C} \share{u}{\vec{x} \cdot \vec{w}}{t}$$
+$\weight{i}{\share{\share{u}{\vec{w}}{y}}{\vec{x} \cdot y}{t}} = \weight{i}{\share{u}{\vec{w}}{y}} \cupdot \weight{j}{t}$
+\newline
+where $j = \weightvar{i}{\share{u}{\vec{w}}{y}}(\vec{x}) + \weightvar{i}{\share{u}{\vec{w}}{y}}(y) = \weightvar{i}{\share{u}{\vec{w}}{y}}(\vec{x}) + \weightvar{i}{u}(\vec{w})$
+\newline
+$= \weight{i}{u} \cupdot \weight{j}{t} = \weight{i}{\share{u}{\vec{x} \cdot \vec{w}}{t}}$
+\newline
+\newline
+$$\share{u}{x}{t} \rightsquigarrow_{C} \sub{u}{t}{x} $$
+$\weight{i}{\share{u}{x}{t}} = \weight{i}{u} \cupdot \weight{j}{t}$
+\newline
+where $j = \weightvar{i}{u}(x)$
+\newline
+$\weight{i}{ \sub{u}{t}{x}} = \weight{i}{u} \cupdot \weight{\weightvar{i}{u}(x)}{t}$
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newline
+\newline
+For the other lifting rules, we show that $\weightvar{i}{u[\Gamma]}$ outputs the same integers before and after lifting for each variable bounded by $[\Gamma]$. Then we can know it produces some multiset $M$. 
+
+$$\app{(s[\Gamma])}{t} \rightsquigarrow_{L} (\app{s}{t})[\Gamma]$$
+$\weight{i}{\app{(s[\Gamma])}{t}} = \weight{i}{s[\Gamma]} \cupdot \weight{i}{t} = \weight{i}{s} \cupdot \weight{i}{t} \cupdot M_{1}$
+\newline
+$\weight{i}{ (\app{s}{t})[\Gamma]} = \weight{i}{\app{s}{t}} \cupdot M_{2} = \weight{i}{s} \cupdot \weight{i}{t} \cupdot M_{2}$ 
+\newline
+$M_{1} = M_{2}$ since $\weightvar{i}{s}(x) = \weightvar{i}{\app{s}{t}}(x)$ for $x \in \fv{s}$ and $[\Gamma]$ only binds variables in $s$.
+\newline
+$$\app{s}{t[\Gamma]} \rightsquigarrow_{L} (\app{s}{t})[\Gamma]$$
+This case is very similar to the one above and we omit it.
+\newline
+$$\fake{d}{\vec{x}}{t[\Gamma]} \rightsquigarrow_{L} (\fake{d}{\vec{x}}{t})[\Gamma] \text{ iff all $\vec{x} \in \fv{t}$}$$
+Case 1:
+\newline
+$\weight{i}{\fake{d}{d}{(t[\Gamma])}} = \weight{i}{t[\Gamma]} \cupdot \set{i, \weightvar{i}{t[\Gamma]}(d)} = \weight{i}{t} \cupdot M_{1} \cupdot \set{i, \weightvar{i}{t}(d)}$
+\newline
+$\weight{i}{(\fake{d}{d}{t})[\Gamma]} = \weight{i}{\fake{d}{d}{t}} \cupdot M_{2} =  \weight{i}{t} \cupdot M_{2} \cupdot \set{i, \weightvar{i}{t}(d)}$
+\newline
+$M_{1} = M_{2}$ since $\weightvar{i}{t}(x) = \weight{i}{\fake{d}{d}{t}}(x)$ where $x \neq d$ and $d$ is not bound by $[\Gamma]$
+\newline
+Case 2:
+\newline
+$\weight{i}{\fake{d}{\vec{x}}{(t[\sigma])}} = \weight{i}{t[\sigma]} \cupdot \set{i} = \weight{i}{t} \cupdot M_{1} \cupdot \set{i}$
+\newline
+$\weight{i}{(\fake{d}{\vec{x}}{t})[\sigma]} = \weight{i}{\fake{d}{\vec{x}}{t}} \cupdot M_{2} =  \weight{i}{t} \cupdot M_{2} \cupdot \set{i}$
+\newline
+$M_{1} = M_{2}$ since $\weightvar{i}{t}(x) = \weight{i}{\fake{d}{\vec{x}}{t}}(x)$ where $x \neq d$ and $d$ is not bound by $[\Gamma]$
+\newline
+$$\share{u}{\vec{x}}{t[\Gamma]} \rightsquigarrow_{L} \share{u}{\vec{x}}{t}[\Gamma]$$
+Case 1:
+\newline
+$\weight{i}{\share{u}{\vec{x}}{t[\Gamma]}} = \weight{i}{u} \cupdot \weight{j}{t[\Gamma]} = \weight{i}{u} \cupdot \weight{j}{t} \cupdot M_{1}$
+\newline
+where $j = \weightvar{i}{u}(x_{1}) + \dots +  \weightvar{i}{u}(x_{n})$
+\newline
+$\weight{i}{\share{u}{\vec{x}}{t}[\Gamma]} = \weight{i}{\share{u}{\vec{x}}{t}} \cupdot M_{2} = \weight{i}{u} \cupdot \weight{j}{t} \cupdot M_{2}$
+\newline
+$M_{1} = M_{2}$ since $\weightvar{j}{t}(x) = \weightvar{i}{\share{u}{\vec{x}}{t}}(x)$ for $x \in \fv{t}$ and $[\Gamma]$ only binds variables in $t$
+\newline
+Case 2:
+\newline
+$\weight{i}{\share{u}{}{t[\Gamma]}} = \weight{i}{u} \cupdot \weight{1}{t[\Gamma]} = \weight{i}{u} \cupdot \weight{1}{t} \cupdot M_{1}$
+\newline
+$\weight{i}{\share{u}{}{t}[\Gamma]} = \weight{i}{\share{u}{}{t}} \cupdot M_{2} = \weight{i}{u} \cupdot \weight{1}{t} \cupdot M_{2}$
+\newline
+$M_{1} = M_{2}$ since $\weightvar{1}{t}(x) = \weightvar{i}{\share{u}{}{t}}(x)$ for $x \in \fv{t}$ and  $[\Gamma]$ only binds variables in $t$
+\newline
+$$\dist{u}{\fakedist{e_{1}}{\vec{w_{1}}} \dots \fakedist{e_{n}}{\vec{w_{n}}}}{\overline{[\Gamma]} \share{}{\vec{y}}{t}}{c}{\vec{x}} \rightsquigarrow_{L}$$ 
+$$\dist{\psub{ \psub{u}{(\vec{w_{1}} / \vec{y})}{e_{1}} \dots}{(\vec{w_{n}} / \vec{y})}{e_{n}}}{\fakedist{e_{1}}{\vec{w_{1}} / \vec{y}} \dots \fakedist{e_{n}}{\vec{w_{n}} / \vec{y}}}{\overline{[\Gamma]}}{c}{\vec{x}} \share{}{\vec{y}}{t}$$
+\newline
+$$\dist{u}{\fakedist{e_{1}}{\vec{w_{1}}} \dots \fakedist{e_{n}}{\vec{w_{n}}}}{\overline{[\Gamma]} \dist{}{\vecdist{f}{\vec{z}}}{\overline{[\Gamma']}}
+{d}{\vec{a}}}{c}{\vec{x}} \rightsquigarrow_{L}$$ 
+$$\dist{\psub{ \psub{u}{(\vec{w_{1}} / \vec{z})}{e_{1}} \dots}{(\vec{w_{n}} / \vec{z})}{e_{n}}}{\fakedist{e_{1}}{\vec{w_{1}} / \vec{z}} \dots \fakedist{e_{n}}{\vec{w_{n}} / \vec{z}}}{\overline{[\Gamma]}}{c}{\vec{x}}  \dist{}{\vecdist{f}{\vec{z}}}{\overline{[\Gamma']}}{d}{\vec{a}}$$
+Since book-keeping operations do not affect the weight of a term (Proposition \ref{prop:bkweight}), we simplify these two rules into one, where $u'$ is $u$ with some book-keepings applied.
+\newline
+\emph{Note}: Proposition \ref{prop:bkweight} is relevant here since the book-keepings produced by this rule cannot be of the form $\psub{}{e}{e}$ without breaking linearity.
+$$\dist{u}{\fakedist{e_{1}}{\vec{w_{1}}} \dots \fakedist{e_{n}}{\vec{w_{n}}}}{\overline{[\Gamma]} [\Gamma]}{c}{\vec{x}} \rightsquigarrow_{L}\dist{u'}{\fakedist{e_{1}}{\vec{z_{1}}} \dots \fakedist{e_{n}}{\vec{z_{1}}}}{\overline{[\Gamma]}}{c}{\vec{x}}[\Gamma]$$
+Case 1:
+\newline
+$\weight{i}{\dist{u}{\fakedist{e_{1}}{\vec{w_{1}}} \dots \fakedist{e_{n}}{\vec{w_{n}}}}{\overline{[\Gamma]} [\Gamma]}{c}{c}} = \weight{i}{u \overline{[\Gamma]}[\Gamma]} \cupdot \set{\weightvar{i}{u\overline{[\Gamma]}[\Gamma](c)}}$
+\newline
+$= \weight{i}{u\overline{[\Gamma]}} \cupdot M_{1} \cupdot  \set{\weightvar{i}{u\overline{[\Gamma]}[\Gamma](c)}}$
+\newline
+$\weight{i}{\dist{u'}{\fakedist{e_{1}}{\vec{z_{1}}} \dots \fakedist{e_{n}}{\vec{z_{1}}}}{\overline{[\Gamma]}}{c}{c}[\Gamma]} = \weight{i}{\dist{u'}{\fakedist{e_{1}}{\vec{z_{1}}} \dots \fakedist{e_{n}}{\vec{z_{1}}}}{\overline{[\Gamma]}}{c}{c}} \cupdot M_{2}$
+\newline
+$= \weight{i}{u'[\Gamma]} \cupdot M_{2} \cupdot \set{\weightvar{i}{u[\Gamma]}(c)}$
+\newline
+$M_{1} = M_{2}$ since $\weightvar{i}{u \overline{[\Gamma]}}(x) = \weightvar{i}{\dist{u'}{\fakedist{e_{1}}{\vec{z_{1}}} \dots \fakedist{e_{n}}{\vec{z_{1}}}}{\overline{[\Gamma]}}{c}{c}}(x)$ 
+\newline
+for $x \in \fv{u \overline{[\Gamma]} / \set{c, e_{1}, \dots, e_{n}}}$ and the variables $c, e_{1}, \dots, e_{n}$ are not bound by $[\Gamma]$ 
+\newline
+$\set{\weightvar{i}{u\overline{[\Gamma]}[\Gamma]}(c)} =  \set{\weightvar{i}{u\overline{[\Gamma]}}(c)}$ since $c \in \fv{\overline{[\Gamma]}}$ and $\weightvar{i}{u\overline{[\Gamma]}[\Gamma]} = \weightvar{i}{u\overline{[\Gamma]}} \cupdot \weightvar{j}{[\Gamma]}$.
+\newline
+Case 2:
+\newline
+$\weight{i}{\dist{u}{\fakedist{e_{1}}{\vec{w_{1}}} \dots \fakedist{e_{n}}{\vec{w_{n}}}}{\overline{[\Gamma]} [\Gamma]}{c}{\vec{x}}} = \weight{i}{u\overline{[\Gamma]}[\Gamma]} = \weight{i}{u\overline{[\Gamma]}} \cupdot M_{1}$
+\newline
+$\weight{i}{\dist{u'}{\fakedist{e_{1}}{\vec{z_{1}}} \dots \fakedist{e_{n}}{\vec{z_{1}}}}{\overline{[\Gamma]}}{c}{\vec{x}}[\Gamma]} = \weight{i}{\dist{u'}{\fakedist{e_{1}}{\vec{z_{1}}} \dots \fakedist{e_{n}}{\vec{z_{1}}}}{\overline{[\Gamma]}}{c}{\vec{x}}} \cupdot M_{2}$
+\newline
+$= \weight{i}{u'\overline{[\Gamma]}} \cupdot M_{2}$
+\newline
+$M_{1} = M_{2}$ since $\weightvar{i}{u \overline{[\Gamma]}}(x) = \weightvar{i}{\dist{u'}{\fakedist{e_{1}}{\vec{z_{1}}} \dots \fakedist{e_{n}}{\vec{z_{1}}}}{ \overline{[\Gamma]}}{c}{c}}(x)$ 
+\newline
+for $x \in \fv{u \overline{[\Gamma]} / \set{c, e_{1}, \dots, e_{n}}}$ and the variables $c, e_{1}, \dots, e_{n}$ are not bound by $[\Gamma]$ 
+\end{proof}
 
 \end{document}
