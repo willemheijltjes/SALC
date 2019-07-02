@@ -1902,9 +1902,9 @@ $= \readweakwmap{u \overline{[\Gamma]} \sub{}{t}{x}}{\sigma''}{\gamma'} \IH \rea
 \newline
 where
 \newline
-$\sigma'' = \sigma \cup \set{c \mapsto \bullet}$
+$\sigma'' = \sigma[c \mapsto \bullet]$
 \newline
-$\sigma''' = \sigma \cup \set{c \mapsto \bullet} \cup \set{x \mapsto \readweakwmap{t}{\sigma''}{\gamma'}} = \sigma \cup \set{c \mapsto \bullet} \cup \set{x \mapsto \readweakwmap{t}{\sigma}{\gamma}} $
+$\sigma''' = \sigma [c \mapsto \bullet] [x \mapsto \readweakwmap{t}{\sigma''}{\gamma'}] = \sigma [c \mapsto \bullet][x \mapsto \readweakwmap{t}{\sigma}{\gamma}] $
 \newline
 \newline
 \indent SubCase: $\vec{x} = x_{1}, \dots, x_{n}$
@@ -1924,16 +1924,14 @@ $= \readweakwmap{u \overline{[\Gamma]} \sub{}{t}{x}}{\sigma''}{\gamma}$
 \newline
 where 
 \newline
-$\sigma = \sigma_{1} \cup \set{x_{1} \mapsto M_{1}, \dots, x_{n} \mapsto M_{n}, y_{1} \mapsto N_{1}, \dots, y_{m} \mapsto N_{m}}$
+$\sigma = \sigma_{1}[x_{1} \mapsto M_{1}, \dots, x_{n} \mapsto M_{n}, y_{1} \mapsto N_{1}, \dots, y_{m} \mapsto N_{m}]$
 \newline
-$\sigma'' = \sigma_{1} \cup \{ x_{1} \mapsto M_{1} \sub{}{\bullet}{\gamma(c)},$
-\newline
-\indent \indent  $\dots, x_{n} \mapsto M_{n}\sub{}{\bullet}{\gamma(c)}, y_{1} \mapsto N_{1}\sub{}{\bullet}{\gamma(c)}, \dots, y_{m} \mapsto N_{m}\sub{}{\bullet}{\gamma(c)} \} $
+$\sigma'' = \sigma_{1} [ x_{1} \mapsto M_{1} \sub{}{\bullet}{\gamma(c)}, \dots, x_{n} \mapsto M_{n}\sub{}{\bullet}{\gamma(c)}, y_{1} \mapsto N_{1}\sub{}{\bullet}{\gamma(c)}, \dots, y_{m} \mapsto N_{m}\sub{}{\bullet}{\gamma(c)} ] $
 \newline
 $\IH \readweakwmap{u \overline{[\Gamma]} }{\sigma'''}{\gamma} = \readweakwmap{\dist{u}{}{\overline{[\Gamma]}}{c}{x_{1}, \dots, x_{n}, x}}{\sigma'}{\gamma}$
 \newline
 where
-$\sigma''' = \sigma'' \cup \set{x \mapsto \readweakwmap{t}{\sigma''}{\gamma}} = \sigma'' \cup \set{x \mapsto \readweakwmap{t}{\sigma'}{\gamma} \sub{}{\bullet}{\gamma(c)}}$
+$\sigma''' = \sigma'' [x \mapsto \readweakwmap{t}{\sigma''}{\gamma}] = \sigma'' [x \mapsto \readweakwmap{t}{\sigma'}{\gamma} \sub{}{\bullet}{\gamma(c)}]$
 \newline
 since $\set{y_{1}, \dots, y_{m}} = \fv{t}$
 \newline
@@ -1944,13 +1942,256 @@ $\readweakwmap{\dist{u}{}{\overline{[\Gamma]}}{c}{x_{1}, \dots, x_{n}} \sub{}{t}
 \newline
 $\readweakwmap{u \overline{[\Gamma]} \sub{}{t}{x}}{\sigma''}{\gamma} \IH \readweakwmap{u \overline{[\Gamma]}}{\sigma'''}{\gamma} = \readweakwmap{\dist{u}{}{\overline{[\Gamma]}}{c}{x_{1}, \dots, x_{n}} }{\sigma'}{\gamma} $
 \newline
-$\sigma = \sigma_{1} \cup \set{x_{1} \mapsto M_{1}, \dots, x_{n} \mapsto M_{n}}$
+$\sigma = \sigma_{1} [x_{1} \mapsto M_{1}, \dots, x_{n} \mapsto M_{n}]$
 \newline
-$\sigma'' = \sigma_{1} \cup \set{x_{1} \mapsto M_{1} \sub{}{\bullet}{\gamma(c)}, \dots, x_{n} \mapsto M_{n} \sub{}{\bullet}{\gamma(c)}}$
+$\sigma'' = \sigma_{1} [x_{1} \mapsto M_{1} \sub{}{\bullet}{\gamma(c)}, \dots, x_{n} \mapsto M_{n} \sub{}{\bullet}{\gamma(c)}]$
 \newline
-$\sigma''' = \sigma'' \cup \set{x \mapsto \readweakwmap{t}{\sigma''}{\gamma}} = \sigma'' \cup \set{x \mapsto \readweakwmap{t}{\sigma}{\gamma}}$
+$\sigma''' = \sigma'' [x \mapsto \readweakwmap{t}{\sigma''}{\gamma}] = \sigma'' [x \mapsto \readweakwmap{t}{\sigma}{\gamma}]$
 \newline
 since $\set{x_{1}, \dots, x_{n}} \cap \fv{t} = \set{}$
+\end{proof}
+
+\begin{proposition}
+\label{prop:bkcommweak}
+Book-keeping commutes with the translation in the following way
+
+if $\fake{c}{y_{1}, \dots, y_{m}} \in \fc{u}$ such that $\set{x_{1}, \dots, x_{n}} \subset \set{y_{1}, \dots, y_{m}}$
+
+and for those $z \in \set{y_{1}, \dots, y_{m}} / \set{x_{1}, \dots, x_{n}}$, $\gamma(c) \not\in \fv{\sigma(z)}$
+
+or if simply $\set{x_{1}, \dots, x_{n}} \cap \fv{u} = \set{}$
+
+$$\readweakwmap{u \psub{}{x_{1}, \dots, x_{n}}{c}}{\sigma}{\gamma} = \readweakwmap{u}{\sigma}{\gamma}$$
+
+\end{proposition}
+
+\begin{proof}
+We prove this by induction on $u$. The argument is similar to the proof of Proposition \ref{prop:bkcomm}. We only discuss here to cases involving the three special cases defined in Definition \ref{def:transfalcweak}.
+\newline
+\newline
+Inductive Case: Weakening
+\newline
+$\readweakwmap{\share{u}{}{t} \psub{}{x_{1}, \dots, x_{n}}{c}}{\sigma}{\gamma} = \share{\readweakwmap{u \psub{}{x_{1}, \dots, x_{n}}{c}}{\sigma}{\gamma}}{}{\readweakwmap{t \psub{}{x_{1}, \dots, x_{n}}{c}}{\sigma}{\gamma}}$
+\newline
+$\IH \share{\readweakwmap{u}{\sigma}{\gamma}}{}{\readweakwmap{t}{\sigma}{\gamma}} = \readweakwmap{\share{u}{}{t}}{\sigma}{\gamma}$
+\newline
+\newline
+Base Case: Distributor
+\newline
+$\readweakwmap{\dist{u}{}{\overline{[\Gamma]}}{c}{\vec{x}} \psub{}{x_{1}, \dots, x_{n}}{c}}{\sigma}{\gamma} = \readweakwmap{\dist{u}{}{\overline{[\Gamma]}}{c}{x_{1}, \dots, x_{n}} }{\sigma}{\gamma}$
+\newline
+$\readweakwmap{u \overline{[\Gamma]}}{\sigma'}{\gamma} = \readweakwmap{\dist{u}{}{\overline{[\Gamma]}}{c}{\vec{x}}}{\sigma}{\gamma}$
+\newline
+where
+$\sigma' = \sigma [x_{1} \mapsto \sigma(x_{1})\sub{}{\bullet}{\gamma(c)}, \dots, x_{n} \mapsto \sigma(x_{n}) \sub{}{\bullet}{\gamma(c)}]$
+\newline
+and notice for $x_{i} \neq y \in \vec{x}$, $[y \mapsto N] = [y \mapsto N \sub{}{\bullet}{\gamma(c)}]$
+\newline
+\newline
+Inductive Case: Distributor
+\newline
+$\readweakwmap{\dist{u}{}{\overline{[\Gamma]}}{d}{d} \psub{}{x_{1}, \dots, x_{n}}{c}}{\sigma}{\gamma} = \readweakwmap{\dist{u}{}{\overline{[\Gamma]} \psub{}{x_{1}, \dots, x_{n}}{c}}{d}{d} }{\sigma}{\gamma}$
+\newline
+$\readweakwmap{u \overline{[\Gamma]} \psub{}{x_{1}, \dots, x_{n}}{c}}{\sigma'}{\gamma} \IH \readweakwmap{u \overline{[\Gamma]} }{\sigma'}{\gamma} = \readweakwmap{\dist{u}{}{\overline{[\Gamma]}}{d}{d}}{\sigma}{\gamma}$
+\newline
+where $\sigma' = \sigma [d \mapsto \bullet]$
+\newline
+\newline
+$\readweakwmap{\dist{u}{}{\overline{[\Gamma]}}{d}{z_{1}, \dots, z_{n}}\psub{}{x_{1}, \dots, x_{n}}{c}}{\sigma}{\gamma} = \readweakwmap{\dist{u}{}{\overline{[\Gamma]} \psub{}{x_{1}, \dots, x_{n}}{c}}{d}{z_{1}, \dots, z_{n}} }{\sigma}{\gamma}$
+\newline
+$\readweakwmap{u \overline{[\Gamma]} \psub{}{x_{1}, \dots, x_{n}}{c}}{\sigma'}{\gamma} \IH \readweakwmap{u \overline{[\Gamma]} }{\sigma'}{\gamma} = \readweakwmap{\dist{u}{}{\overline{[\Gamma]}}{d}{z_{1}, \dots, z_{n}}}{\sigma}{\gamma}$
+\newline
+where
+\newline
+$\sigma' = \sigma [z_{1} \mapsto \sigma(x_{1}) \sub{}{\bullet}{\gamma(d)}, \dots, z_{n} \mapsto \sigma(x_{n}) \sub{}{\bullet}{\gamma(d)}]$
+\end{proof}
+
+\begin{proposition}
+\label{prop:exorcommweak}
+Exorcisms commute with the translation in the following way
+
+if $\fake{c}{x_{1}, \dots, x_{n}} \in \fc{u}$ or $\set{x_{1}, \dots, x_{n}} \cap \fv{u} = \set{}$
+
+$$\readweakwmap{u \exor{}{c}{x_{1}, \dots, x_{n}}}{\sigma}{\gamma} = \readweakwmap{u}{\sigma'}{\gamma}$$
+
+where
+
+$\sigma' = \sigma \cup \set{x_{1} \mapsto c, \dots , x_{n} \mapsto c}$
+\end{proposition}
+
+\begin{proof}
+We prove this by induction on $u$. The argument is similar to the proof of Proposition \ref{prop:exorcomm}. We only discuss here to cases involving the three special cases defined in Definition \ref{def:transfalcweak}.
+\newline
+\newline
+Inductive Case: Weakening
+\newline
+$\readweakwmap{\share{u}{}{t} \exor{}{c}{x_{1}, \dots, x_{n}}}{\sigma}{\gamma} = \share{\readweakwmap{u \exor{}{c}{x_{1}, \dots, x_{n}}}{\sigma}{\gamma}}{}{\readweakwmap{t \exor{}{c}{x_{1}, \dots, x_{n}}}{\sigma}{\gamma}}$
+\newline
+$\IH \share{\readweakwmap{u}{\sigma'}{\gamma}}{}{\readweakwmap{t}{\sigma'}{\gamma}} = \readweakwmap{\share{u}{}{t}}{\sigma'}{\gamma}$
+\newline
+\newline
+Base Case: Distributor
+\newline
+$\readweakwmap{\dist{u}{}{\overline{[\Gamma]}}{c}{x_{1}, \dots, x_{n}} \exor{}{c}{x_{1}, \dots, x_{n}} }{\sigma}{\gamma} = \readweakwmap{\dist{u}{}{\overline{[\Gamma]} \share{}{x_{1}, \dots, x_{n}}{c}}{c}{c}  }{\sigma}{\gamma}$
+\newline
+$= \readweakwmap{u \overline{[\Gamma]}  \share{}{x_{1}, \dots, x_{n}}{c} }{\sigma''}{\gamma} = \readweakwmap{u \overline{[\Gamma]}}{\sigma'''}{\gamma} = \readweakwmap{\dist{u}{}{\overline{[\Gamma]}}{c}{x_{1}, \dots, x_{n}}}{\sigma'}{\gamma}$
+\newline
+where 
+\newline
+$\sigma'' = \sigma [c \mapsto \bullet]$
+\newline
+$\sigma''' = \sigma [x_{1} \mapsto \bullet, \dots, x_{n} \mapsto \bullet]$
+\newline
+\newline
+Inductive Case: Distributor
+\newline
+$\readweakwmap{\dist{u}{}{\overline{[\Gamma]}}{d}{d} \exor{}{c}{x_{1}, \dots, x_{n}} }{\sigma}{\gamma} = \readweakwmap{\dist{u}{}{\overline{[\Gamma]}  \exor{}{c}{x_{1}, \dots, x_{n}} }{d}{d} }{\sigma}{\gamma}$
+\newline
+$= \readweakwmap{u \overline{[\Gamma]}  \exor{}{c}{x_{1}, \dots, x_{n}} }{\sigma''}{\gamma} \IH \readweakwmap{u \overline{[\Gamma]} }{\sigma'''}{\gamma} = \readweakwmap{\dist{u}{}{\overline{[\Gamma]}}{d}{d} }{\sigma'}{\gamma} $
+\newline
+where
+\newline
+$\sigma'' = \sigma [d \mapsto \bullet]$
+\newline
+$\sigma''' = \sigma'' [x_{1} \mapsto c, \dots , x_{n} \mapsto c]$
+\newline
+\newline
+$\readweakwmap{\dist{u}{}{\overline{[\Gamma]}}{d}{z_{1}, \dots, z_{m}} \exor{}{c}{x_{1}, \dots, x_{n}} }{\sigma}{\gamma}$
+\newline
+$ = \readweakwmap{\dist{u}{}{\overline{[\Gamma]}  \exor{}{c}{x_{1}, \dots, x_{n}} }{d}{z_{1}, \dots, z_{m}} }{\sigma}{\gamma}$
+\newline
+$= \readweakwmap{u \overline{[\Gamma]}  \exor{}{c}{x_{1}, \dots, x_{n}} }{\sigma''}{\gamma} \IH \readweakwmap{u \overline{[\Gamma]} }{\sigma'''}{\gamma} = \readweakwmap{\dist{u}{}{\overline{[\Gamma]}}{d}{d} }{\sigma'}{\gamma} $
+\newline
+where
+\newline
+$\sigma'' = \sigma[z_{1} \mapsto  \sigma(z_{1})  \sub{}{\bullet}{\gamma(d)}, \dots, z_{m} \mapsto \sigma(z_{m}) \sub{}{\bullet}{\gamma(d)}]$
+\newline
+$\sigma''' = \sigma'' [x_{1} \mapsto c, \dots , x_{n} \mapsto c]$
+\end{proof}
+
+Some of our proofs in the future also extract substitutions out of the map $\sigma$ and apply them to the resulting term. We use the following proposition to demonstrate how we do this. We use $\sigma \sub{}{M}{x}$ to denote for all variables $z$, $\sigma \sub{}{M}{x} (z) = \sigma(z) \sub{}{M}{x}$.
+
+\begin{proposition}
+\label{prop:suboutcommweak}
+Given $M \in \WEAK$ such that for all $v \in V$, $\gamma(v) \not\in \fv{M}$  and $\sigma(x) = x$
+
+$$\readbackwmap{u}{\sigma'}{\gamma} = \readbackwmap{u}{\sigma}{\gamma} \sub{}{M}{x}$$
+
+where  $\sigma' = (\sigma \sub{}{M}{x}) [x \mapsto M]$
+\end{proposition}
+
+\begin{proof}
+We prove this by induction on $u$
+\newline
+\newline
+Base Case: Variable
+\newline
+$\readbackwmap{x}{\sigma}{\gamma} \sub{}{M}{x} = x \sub{}{M}{x} = M = \readbackwmap{x}{\sigma'}{\gamma}$
+\newline
+\newline
+$\readbackwmap{y}{\sigma}{\gamma} \sub{}{M}{x} = N \sub{}{M}{x} = \readbackwmap{y}{\sigma'}{\gamma}$
+\newline
+\newline
+Inductive Case: Application
+\newline
+$\readbackwmap{\app{s}{t}}{\sigma}{\gamma} \sub{}{M}{x} = \app{\readbackwmap{s}{\sigma}{\gamma} \sub{}{M}{x}}{\readbackwmap{t}{\sigma}{\gamma} \sub{}{M}{x}} \IH \app{\readbackwmap{s}{\sigma}{\gamma}}{\readbackwmap{t}{\sigma'}{\gamma}} = \readbackwmap{\app{s}{t}}{\sigma'}{\gamma}$
+\newline
+\newline
+Inductive Case: Abstraction
+\newline
+$\readbackwmap{\fake{c}{c}{t}}{\sigma}{\gamma} \sub{}{M}{x} = \abs{c}{\readbackwmap{t}{\sigma}{\gamma} \sub{}{M}{x}} \IH \abs{c}{\readbackwmap{t}{\sigma'}{\gamma}} = \readbackwmap{\fake{c}{c}{t}}{\sigma'}{\gamma}$
+\newline
+\newline
+Inductive Case: Phantom-Abstraction
+\newline
+$\readbackwmap{\fake{c}{x_{1}, \dots, x_{n}}{t}}{\sigma}{\gamma} \sub{}{M}{x} = (\abs{c}{\readbackwmap{t}{\sigma''}{\gamma}}) \sub{}{M}{x} = \abs{c}{\readbackwmap{t}{\sigma''}{\gamma} \sub{}{M}{x}} \IH \abs{c}{\readbackwmap{t}{\sigma'''}{\gamma}}$
+\newline
+$= \readbackwmap{\fake{c}{x_{1}, \dots, x_{n}}{t}}{\sigma'}{\gamma}$
+\newline
+where
+\newline
+$\sigma'' = \sigma [x_{1} \mapsto \sigma(x_{1}) \sub{}{c}{d} , \dots , x_{n} \mapsto \sigma(x_{n}) \sub{}{c}{d}]$
+\newline
+$\sigma''' = \sigma'' \sub{}{M}{x} [x \mapsto M]$
+\newline
+$\sigma''' =  \sigma\sub{}{M}{x} [x_{1} \mapsto \sigma(x_{1}) \sub{}{M}{x} \sub{}{c}{d} , \dots , x_{n} \mapsto \sigma(x_{n}) \sub{}{M}{x} \sub{}{c}{d} , x \mapsto M]$
+\newline
+\newline
+Inductive Case: Sharing
+\newline
+$\readbackwmap{\share{u}{z_{1}, \dots, z_{n}}{t}}{\sigma}{\gamma} \sub{}{M}{x} = \readbackwmap{u}{\sigma''}{\gamma} \sub{}{M}{x} \IH \readbackwmap{u}{\sigma'''}{\gamma} = \readbackwmap{\share{u}{z_{1}, \dots, z_{n}}{t}}{\sigma'}{\gamma}$
+\newline
+where
+\newline
+$\sigma'' = \sigma [z_{i} \mapsto \readbackwmap{t}{\sigma}{\gamma}]_{i \in [n]}$
+\newline
+$\sigma''' = \sigma \sub{}{M}{x} [z_{i} \mapsto \readbackwmap{t}{\sigma \sub{}{x}{M} [x \mapsto M]}{\gamma} , x \mapsto M]_{i \in [n]}$
+\newline
+\newline
+Inductive Case: Distributor 1
+\newline
+$\readbackwmap{\dist{u}{\fakedist{e_{1}}{\vec{w_{1}}}, \dots, \fakedist{e_{n}}{\vec{w_{n}}}}{\overline{[\Gamma]}}{c}{c}}{\sigma}{\gamma} \sub{}{M}{x}$
+\newline
+$= \readbackwmap{u \overline{[\Gamma]}}{\sigma}{\gamma'} \sub{}{M}{x} \IH \readbackwmap{u \overline{[\Gamma]}}{\sigma'}{\gamma'}$
+\newline
+$= \readbackwmap{\dist{u}{\fakedist{e_{1}}{\vec{w_{1}}}, \dots, \fakedist{e_{n}}{\vec{w_{n}}}}{\overline{[\Gamma]}}{c}{c}}{\sigma'}{\gamma}$
+\newline
+where
+\newline
+$\gamma' = \gamma [e_{1} \mapsto c, \dots, e_{n} \mapsto c]$
+\newline
+\newline
+Inductive Case: Distributor 2
+\newline
+$\readbackwmap{\dist{u}{\fakedist{e_{1}}{\vec{w_{1}}}, \dots, \fakedist{e_{n}}{\vec{w_{n}}}}{\overline{[\Gamma]}}{c}{\vec{x}}}{\sigma}{\gamma} \sub{}{M}{x}$
+\newline
+$= \readbackwmap{u \overline{[\Gamma]}}{\sigma''}{\gamma'} \sub{}{M}{x} \IH \readbackwmap{u \overline{[\Gamma]}}{\sigma'''}{\gamma'}$
+\newline
+$= \readbackwmap{\dist{u}{\fakedist{e_{1}}{\vec{w_{1}}}, \dots, \fakedist{e_{n}}{\vec{w_{n}}}}{\overline{[\Gamma]}}{c}{\vec{x}}}{\sigma'}{\gamma}$
+\newline
+where
+\newline
+$\gamma' = \gamma [e_{1} \mapsto c, \dots, e_{n} \mapsto c]$
+\newline
+\newline
+Inductive Case: Weakening
+\newline
+$\readweakwmap{\share{u}{}{t}}{\sigma'}{\gamma} = \share{\readbackwmap{u}{\sigma'}{\gamma}}{}{\readbackwmap{t}{\sigma'}{\gamma}} \IH \share{\readbackwmap{u}{\sigma}{\gamma} \sub{}{M}{x}}{}{\readbackwmap{t}{\sigma}{\gamma} \sub{}{M}{x}} $
+\newline
+$= \share{\readbackwmap{u}{\sigma}{\gamma}}{}{\readbackwmap{t}{\sigma}{\gamma}}  \sub{}{M}{x} = \readweakwmap{\share{u}{}{t}}{\sigma}{\gamma} \sub{}{M}{x}$
+\newline
+\newline
+Inductive Case: Distributor
+\newline
+$\readweakwmap{\dist{u}{}{\overline{[\Gamma]}}{c}{\vec{x}}}{\sigma'}{\gamma}$
+\newline
+\newline
+\indent SubCase: $\vec{x} = c$
+\newline
+$\readweakwmap{\dist{u}{}{\overline{[\Gamma]}}{c}{c}}{\sigma'}{\gamma} = \readweakwmap{u \overline{[\Gamma]}}{\sigma''}{\gamma} \IH \readweakwmap{u \overline{[\Gamma]}}{\sigma'''}{\gamma} \sub{}{M}{x}$
+\newline
+$ = \readweakwmap{\dist{u}{}{\overline{[\Gamma]}}{c}{c}}{\sigma}{\gamma}  \sub{}{M}{x}$
+\newline
+where
+\newline
+$\sigma''' = \sigma [c \mapsto \bullet]$
+\newline
+$\sigma'' = \sigma' [c \mapsto \bullet]$
+\newline
+\newline
+\indent SubCase $\vec{x} = x_{1}, \dots, x_{n}$
+\newline
+$\readweakwmap{\dist{u}{}{\overline{[\Gamma]}}{c}{x_{1}, \dots, x_{n}}}{\sigma'}{\gamma} = \readweakwmap{u \overline{[\Gamma]}}{\sigma''}{\gamma} \IH \readweakwmap{u \overline{[\Gamma]}}{\sigma'''}{\gamma} \sub{}{M}{x}$
+\newline
+$ = \readweakwmap{\dist{u}{}{\overline{[\Gamma]}}{c}{c}}{\sigma}{\gamma}  \sub{}{M}{x}$
+\newline
+where
+\newline
+$\sigma' = \sigma_{1}\sub{}{M}{x} [x_{1} \mapsto M_{1}\sub{}{M}{x}, \dots, x_{n} \mapsto M_{n}\sub{}{M}{x}] [x \mapsto M]$
+\newline
+$\sigma'' = \sigma_{1}\sub{}{M}{x} [x_{1} \mapsto M_{1}\sub{}{M}{x} \sub{}{\bullet}{\gamma(c)}, \dots, x_{n} \mapsto M_{n} \sub{}{M}{x} \sub{}{\bullet}{\gamma(c)}] [x \mapsto M]$
+\newline
+$\sigma''' = \sigma_{1} [x_{1} \mapsto M_{1} \sub{}{\bullet}{\gamma(c)}, \dots, x_{n} \mapsto M_{n} \sub{}{\bullet}{\gamma(c)}]$
 \end{proof}
 
 Below we repeat Proposition \ref{prop:equalterms}.
