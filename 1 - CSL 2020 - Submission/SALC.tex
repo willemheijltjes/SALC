@@ -94,7 +94,7 @@
 \author{David Rhys Sherratt}{Friedrich-Schiller University Jena, Germany}{david.rhys.sherratt@uni-jena.de
 }{}{}
 
-\authorrunning{Gundersen at al}%TODO mandatory. First: Use abbreviated first/middle names. Second (only in severe cases): Use first author plus 'et al.'
+\authorrunning{Gundersen et al}%TODO mandatory. First: Use abbreviated first/middle names. Second (only in severe cases): Use first author plus 'et al.'
 
 \Copyright{Gundersen, Heijltjes, Parigot, and Sherratt}%TODO mandatory, please use full first names. LIPIcs license is "CC-BY";  http://creativecommons.org/licenses/by/3.0/
 
@@ -257,9 +257,9 @@ We present the spinal atomic lambda-calculus, a lambda-calculus with explicit sh
 
 \section{Introduction}
 
-In the lambda-calculus, a main source of efficiency is \emph{sharing}: multiple use of a single subterm, commonly expressed through graph reduction~\cite{} or explicit substitution~\cite{}. This work, and the \emph{atomic lambda-calculus}~\cite{} on which it builds, is an investigation into sharing as it occurs naturally in intuitionistic \emph{deep-inference} proof theory~\cite{}.
+In the lambda-calculus, a main source of efficiency is \emph{sharing}: multiple use of a single subterm, commonly expressed through graph reduction~\cite{} or explicit substitution~\cite{levy1991}. This work, and the \emph{atomic lambda-calculus}~\cite{gundersen2013atomic} on which it builds, is an investigation into sharing as it occurs naturally in intuitionistic \emph{deep-inference} proof theory~\cite{Tiu:06:A-System:ai, Guglielm07}.
 
-The atomic lambda-calculus arose as a Curry--Howard interpretation of a deep-inference proof system, in particular of the \emph{distribution} rule below left, a variant of the characteristic \emph{medial} rule~\cite{}. In the term calculus, the corresponding \emph{distributor} construct enables duplication to proceed \emph{atomically}, on individual constructors, in the style of sharing graphs \cite{}. As a consequence, the natural reduction strategy in the atomic lambda-calculus is \emph{fully lazy}~\cite{Wadsworth,Balabonski}: it duplicates only the minimal part of a term, the \emph{skeleton}, that can be obtained by lifting out subterms as explicit substitutions.%
+The atomic lambda-calculus arose as a Curry--Howard interpretation of a deep-inference proof system, in particular of the \emph{distribution} rule below left, a variant of the characteristic \emph{medial} rule~\cite{bruntiu01}. In the term calculus, the corresponding \emph{distributor} construct enables duplication to proceed \emph{atomically}, on individual constructors, in the style of sharing graphs \cite{}. As a consequence, the natural reduction strategy in the atomic lambda-calculus is \emph{fully lazy}~\cite{Wadsworth,Balabonski}: it duplicates only the minimal part of a term, the \emph{skeleton}, that can be obtained by lifting out subterms as explicit substitutions.%
 \footnote{While duplication is atomic \emph{locally}, a duplicated abstraction does not form a redex until also its bound variables have been duplicated; hence duplication becomes fully lazy \emph{globally}.}
 \[
 	\text{\small Distribution:}
@@ -268,7 +268,7 @@ The atomic lambda-calculus arose as a Curry--Howard interpretation of a deep-inf
 \qquad\qquad
 	\text{\small Switch:}
 \quad
-	\drv{(A\rightarrow B)\wedge C);-[s];A\rightarrow(B\wedge C)}
+	\drv{(A\rightarrow B)\wedge C;-[s];A\rightarrow(B\wedge C)}
 \]
 In this work, we investigate the computational interpretation of another characteristic deep-inference proof rule: the \emph{switch} rule above right~\cite{}. Our result is the \emph{spinal atomic lambda-calculus}, a term calculus in which the natural strategy is a refined form of full laziness, \emph{spine duplication}. This strategy duplicates only the \emph{spine} of an abstraction: the paths to its bound variables in the syntax tree of the term.
 
@@ -370,6 +370,7 @@ Our investigation is then focused on the interaction of switch and medial. Based
 
 
 
+\noindent In Section \ref{sec:typingacalculus} introduces a simple sharing calculus that we expand on in Section \ref{chap:salc}, where we introduce the syntax and semantics of the spinal atomic $\lambda$-calculus, and its typing system. In Section \ref{chap:snosr} we further study the reduction rules that allow for spinal duplication, and prove natural properties of these rules such as termination and confluence. In Section \ref{chap:posn} we extend these results to include beta reduction, and show preservation of strong normalisation with respect to the $\lambda$-calculus. We conclude in Section \ref{chap:conc}.
 
 %\subsection{Alternative Introduction}
 %
@@ -381,9 +382,8 @@ Spine duplication has been implemented by Blanc et al.\ in \cite{blanc2007sharin
 
 End-of-scope markers in the $\lambda$-calculus have been seen throughout literature. \emph{Berkling's lambda bar} \cite{berkling1976symmetric} has shown to remove the need for variable names while maintaining correctness; improving efficiency by removing the need for alpha conversion \cite{BERKLING198289}. This result was generalized by \emph{Adbmal} (invert of ``Lambda'') \cite{hendriks2003lambda}. It was shown by using multiple variables, scopes can be sequenced rather than nested which correspond closely to the boxes in MELL proof nets of linear logic \cite{Lafont94fromproof-nets}. This approach was studied further in \cite{van2004lambdascope} as graph reduction that satisfies optimality \cite{levy1980optimal}. Although these approaches could identify the skeleton of a term, none however identify the spine of a term, which meant the scopes explicitly displayed may be larger than necessary from the perspective of performing substitution. This problem was solved by \emph{director strings}, introduced by Kennaway and Sleep in \cite{kennaway1988director} for combinator reduction and then generalized for any strategy by Fern\'{a}ndez et al.\ in \cite{fernandez2005lambda}. Director strings are an annotation on terms detailing the location of variable occurrences. An apt annotation on the body of an abstraction will consequently identify the spine of it. Despite being implementations that use director strings \cite{sinot2003efficient, fernandez2005lambda, fernandez2005closed}, an implementation with sharing techniques allowing for duplicating solely the spine could not be found.
 
-{\color{red} Introduce the rest of the paper.}
-
 \section{Typing a $\lambda$-calculus in open deduction}
+\label{sec:typingacalculus}
 
 A \emph{derivation} from a \emph{premise} formula $X$ to a \emph{conclusion} formula $Z$ is constructed inductively as in Figure \ref{fig:derivations}, with from left to right: a propositional atom $a$, where $X = Z = a$; \emph{horizontal composition} with a connective $*$, where $X = X_{1} * X_{2}$ and $Z = Z_{1} * Z_{2}$; and \emph{rule composition}, where $r$ is an inference rule from $Y_{1}$ to $Y_{2}$. The boxes serve as parentheses (since derivations extend in two dimensions) and may be omitted. Derivations are considered up to associativity of rule composition. One may consider formulas as derivations that omit rule composition; and the binary $*$ may be generalised to $0$-ary, unary, and $n$-ary operators. \emph{Vertical composition} of a derivation from $X$ to $Y$ and one from $Y$ to $Z$, depicted by a dashed line, is a defined operation, given in Figure \ref{fig:vertical}.
 
@@ -633,6 +633,7 @@ $\share{t}{\vec{x}}{s} :$ {\small \drv{\Gamma \wedge \drv[yellow]{\Delta ; |[s] 
 
 
 \section{The Spinal Atomic $\lambda$-Calculus}
+\label{chap:salc}
 
 %We extend the basic calculus with a new construct, based of the medial inference rule.  In classical logic, the medial rule is the key to reducing contractions to their atomic case during proof normalisation \cite{BrunTiu:01:A-Local-:mz}. This result also translates into intuitionistic logic, and is the key factor to allowing atomic reduction. The medial rule studied in \cite{gundersen2013atomic} uses disjunction, and to avoid introducing disjunction into the typing system the authors instead use the following \emph{distribution rule}, which combines the medial with a co-contraction rule (the reversed contraction rule that works with disjunction rather than conjunction).
 %\begin{center}
@@ -1114,7 +1115,9 @@ The atomic steps for duplicating are given in the third and final set of rewrite
 \drv{\drv{ ; -[\lamrule] ; A \rightarrow A} \wedge \drv{ ; -[\lamrule] ; A \rightarrow A}}
 \end{center}
 
-\noindent Each rewrite rule preserves the conclusion of the derivation, and thus the following proposition is easy to observe.
+\noindent As an example, observe $\share{u}{z_{1}, z_{2}}{\abs{x}{\app{(\abs{z}{z})}{\abs{y}{\app{(\app{y}{y})}{x}}}}}$ (note $\abs{x}{t} \equiv \fake{x}{x}{t}$). By (\ref{red:absdup}) we obtain $\dist{u'}{\fakedist{e_{1}}{z_{1}}, \fakedist{e_{2}}{z_{2}}}{\share{}{z_{1}, z_{2}}{\app{(\abs{z}{z})}{\abs{y}{\app{(\app{y}{y})}{x}}}}}{x}{x}$ where $u' = u\sub{}{\fake{e_{i}}{z_{i}}{z_{i}}}{z_{i}}_{i \in [2]}$. Then by reductions (\ref{red:appdup}, \ref{red:distshare}), we obtain the distributor $\dist{u''}{\fakedist{e_{1}}{z_{1}}, \fakedist{e_{2}}{z_{2}}}{\share{}{z_{1}, z_{2}}{\abs{y}{\app{(\app{y}{y})}{x}}}}{x}{x}$ where $u'' = u\sub{}{\fake{e_{i}}{z_{i}}{\app{a_{i}}{z_{i}}}}{z_{i}}_{i \in [2]}$. Then by (\ref{red:absdup}, \ref{red:appdup}, \ref{red:distshare}, \ref{red:distshare}) we obtain the distributor $\dist{u'''}{\fakedist{e_{1}}{z_{1}}, \fakedist{e_{2}}{z_{2}}}{\share{}{z_{1}, z_{2}}{x}}{x}{x}$ which can be eliminated by (\ref{red:distelim}). A full example can be found in the Appendix. 
+
+Each rewrite rule preserves the conclusion of the derivation, and thus the following proposition is easy to observe.
 
 \begin{proposition}
 If $s \rightsquigarrow_{L, C, D, \beta} t$ and $s : C$, then $t : C$
@@ -1128,6 +1131,7 @@ If $s \rightsquigarrow_{L, C, D, \beta} t$ and $s : C$, then $t : C$
 \end{lemma}
 
 \section{Strong Normalisation of Sharing Reductions}
+\label{chap:snosr}
 
 In order to show our calculus is strongly normalising, we first show that the sharing reduction rules are strongly normalising. To do this, we make use of an `intermediate calculus' called the weakening calculus. Following the approaches of \cite{gundersen2013atomic}, we indite a measure on terms based on its connection with the weakening calculus. We show that this measure strictly decreases as sharing reduction progresses. Additionally, similar ideas and results can be found elsewhere, i.e.\ with memory in \cite{klop1980thesis}, the $\lambda$-$I$ calculus in \cite{barendregt1984lambda}, the $\lambda$-void calculus \cite{kesneraccattoli12}, and the weakening $\lambda\mu$-calculus \cite{he2018atomic}.
 
@@ -1363,6 +1367,7 @@ The sharing reduction relation $\rightsquigarrow_{(D, L, C)}$ is confluent
 \end{proof}
 
 \section{Preservation of Strong Normalisation}
+\label{chap:posn}
 
 Here we show how $\FALC$ preserves strong normalisation with respect to the $\lambda$-calculus. Recall that by Proposition \ref{prop:equalterms} that for all $N \in \Lambda$, $\composeweak{\compile{N}} = \compweak{N}$, and that Proposition \ref{prop:willemresult} states if a term $N \in \Lambda$ is strongly normalising then so is $\compweak{N}$. Observe that the statement `if term $M$ has an infinite reduction sequence then term $N$ has an infinite reduction sequence' is equivalent to `if term $N$ is strongly normalising then term $M$ is strongly normalising' by contraposition. Therefore, given a strongly normalising term $N \in \Lambda$, we know that its corresponding weakening term is also strongly normalising. Furthermore, since $\composeweak{\compile{N}} = \compweak{N}$, we know that $\composeweak{\compile{N}}$ is also strongly normalising.
 
@@ -1421,10 +1426,15 @@ For a given $N \in \Lambda$ that is strongly normalising, we know by Lemma \ref{
 \end{proof}
 
 \section{Conclusion and Further Remarks}
+\label{chap:conc}
 
+We have studied the computational interpretation of the switch rule and discovered its correspondence with scope in the $\lambda$-calculus. We have studied the interaction between the switch and the medial rule, the two characteristic inference rules of deep inference. We interpret a calculus based on this interaction called the spinal atomic $\lambda$-calculus, which not only has the ability to duplicate terms atomically but can also duplicate solely the spine of an abstraction such that beta reduction can be applied on the duplicates. 
 
+In the future we would like to have a full Curry-Howard correspondence rather than just an interpretation, i.e.\ where each inference rule in the typing system corresponds with a construct in the term calculus. Additionally, we are interested in studying the computational interpretation of the same rules with different connectives.
 
-%Once we fully duplicate the abstraction, the phantom-abstractions will convert to abstractions. %and thus will use a switch rule will depict the scope oas depicted in Figure \ref{fig:typebasic}.
+Additionally, we aim to translate the result of Blanc, L\'{e}vy, and Maranget \cite{blanc2007sharing} into our calculus. There they provide an algorithm proven by Balabonski in \cite{Balabonski12} to implement optimal reduction for Wadsworth's \emph{weak $\lambda$-calculus} \cite{wadsworth1971semantics} (further studied in \cite{CAGMAN1998239}. By showing their result in our formalism, we develop a logical framework that follows an optimal reduction strategy.
+
+%Lastly, and a long-term goal, would be to develop a complete logical framework for optimal reduction. The algorithms for optimal reduction us graph rewriting techniques, and nodes that specify enclosures and scopes. Furthermore, the implementations do not share terms like in either of the atomic $\lambda$-calculi, but they share contexts i.e.\ terms with holes that can be `filled' with distinct terms. Thus it is clear that they use a notion of sharing more than the one demonstrated here.
 
 
 
@@ -1538,6 +1548,129 @@ The proof for $\exists_{ M \in \Lambda} . t = \compile{M}'$ is the same as in \c
 \end{proof}
 
 \subsection{Rewrite Rules}
+
+Here we will give more concrete definitions of substitution, book-keeping and exorcisms respectively. 
+
+\begin{definition}[Substitution] The operation \emph{substitution} is defined as
+\label{def:sub}
+\begingroup
+\allowdisplaybreaks
+	\begin{align*}
+		\sub{x}{s}{x}	&=	s \\
+		\sub{y}{s}{x} 	&= 	y \\
+		\sub{(\app{u}{t})}{s}{x} &= \app{(\sub{u}{s}{x})}{\sub{t}{s}{x}} \\
+		\sub{(\fake{c}{\vec{y}}{t})}{s}{x} &= \fake{c}{\vec{y}}{\sub{t}{s}{x}} \\
+		\sub{(\fake{c}{\vec{y} \cdot x}{t})}{s}{x} &= \fake{c}{\vec{y} \cdot \vec{z}}{\sub{t}{s}{x}} \\
+		\sub{\share{u}{\vec{y}}{t}}{s}{x} &= \share{\sub{u}{s}{x}}{\vec{y}}{\sub{t}{s}{x}} \\
+		\sub{\dist{u}{\vecdist{e}{\vec{w}}}{\overline{[\Gamma]}}{c}{\vec{y}}}{s}{x} &= \dist{u}{\vecdist{e}{\vec{w}}}{\overline{[\Gamma]} \sub{}{s}{x}}{c}{\vec{y}} \\
+		\sub{\dist{u}{\vecdist{e}{\vec{w}}}{\overline{[\Gamma]}}{c}{\vec{y} \cdot x}}{s}{x} &= \dist{u}{\vecdist{e}{\vec{w}}}{\overline{[\Gamma]}\sub{}{s}{x}}{c}{\vec{y} \cdot \vec{z}} \\
+		\dist{u}{\vecdist{e}{\vec{w}}}{\sub{}{s}{x}\overline{[\Gamma]}}{c}{\vec{y}} &= \dist{\sub{u}{s}{x}}{\vecdist{e}{\vec{w}}}{\overline{[\Gamma]}}{c}{\vec{y}} \\
+		\dist{u}{e \{ \fakedist{e_{i}}{\vec{w} \cdot x }\}}{\sub{}{s}{x} \overline{[\Gamma]}}{c}{\vec{y}} &= \dist{\sub{u}{s}{x}}{e\{ \fakedist{e_{i}}{ \vec{w} \cdot \vec{z}} \}}{\overline{[\Gamma]}}{c}{\vec{y}} \\
+	\end{align*}
+\vspace{-1cm}
+\newline
+\noindent Where $\vec{z} = \fv{s}$
+\endgroup
+\end{definition}
+
+Although substitution performs some book-keeping on phantom-abstractions, we define an explicit notion that updates the variables stored in a free-cover i.e.\ for a term $t$, $\fakedist{e}{\vec{x}} \in \fc{t}$ then $\fakedist{e}{\vec{y}} \in \fc{\psub{t}{\vec{y}}{e}}$.
+
+\begin{definition}[Book-Keeping] The operation \emph{book-keeping} is defined as
+\label{def:bk}
+\begingroup
+\allowdisplaybreaks
+	\begin{align*}
+		\psub{x}{\vec{w}}{e} &= x \\
+		\psub{\app{s}{t}}{\vec{w}}{e} &= \app{(\psub{s}{\vec{w}}{e})}{\psub{t}{\vec{w}}{e}} \\
+		\psub{\fake{e}{\vec{z}}{t}}{\vec{w}}{e} &= \fake{e}{\vec{w}}{t} \\
+		\psub{(\fake{c}{\vec{z}}{t})}{\vec{w}}{e} &= \fake{c}{\vec{z}}{\psub{t}{\vec{w}}{e}} \\
+		\psub{\share{u}{\vec{z}}{t}}{\vec{w}}{e} &= \share{\psub{u}{\vec{w}}{e}}{\vec{z}}{\psub{t}{\vec{w}}{e}} \\
+		\psub{\dist{u}{\vecdist{f}{\vec{y}}}{\overline{[\Gamma]}}{e}{\vec{z}}}{\vec{w}}{e} &= \dist{u}{\vecdist{f}{\vec{y}}}{\overline{[\Gamma]}}{e}{\vec{w}} \\
+		\psub{\dist{u}{\vecdist{f}{\vec{y}}}{\overline{[\Gamma]}}{c}{\vec{z}}}{\vec{w}}{e} &= \dist{u}{\vecdist{f}{\vec{y}}}{\overline{[\Gamma]} \psub{}{\vec{w}}{e}}{c}{\vec{z}} \\
+		\dist{u}{\vecdist{f}{\vec{y}}}{\psub{}{\vec{w}}{e}\overline{[\Gamma]}}{c}{\vec{z}} &= \dist{\psub{u}{\vec{w}}{e}}{\vecdist{f}{\vec{y}}}{\overline{[\Gamma]}}{c}{\vec{z}}
+	\end{align*}
+\endgroup
+\end{definition}
+
+\begin{definition}[Exorcism] The operation \emph{exorcism} is defined as
+\label{def:exor}
+\begingroup
+\allowdisplaybreaks
+	\begin{align*}
+		\exor{y}{c}{\vec{x}} 	&= y \\
+		\exor{\app{s}{t}}{c}{\vec{x}} &= \app{(\exor{s}{c}{\vec{x}})}{\exor{t}{c}{\vec{x}}} \\
+		\exor{\fake{c}{\vec{x}}{t}}{c}{\vec{x}} &= \fake{c}{c}{\share{t}{\vec{x}}{c}} \\
+		\exor{\fake{d}{\vec{y}}{t}}{c}{\vec{x}} &= \fake{d}{\vec{y}}{\exor{t}{c}{\vec{x}}}\\
+		\exor{\share{u}{\vec{y}}{t}}{c}{\vec{x}} &= \share{\exor{u}{c}{\vec{x}}}{\vec{y}}{\exor{t}{c}{\vec{x}}} \\
+		\exor{\dist{u}{\vecdist{e}{\vec{w}}}{\overline{[\Gamma]}}{c}{\vec{x}}}{c}{\vec{x}} &= \dist{u}{\vecdist{e}{\vec{w}}}{\overline{[\Gamma]} \share{}{\vec{x}}{c}}{c}{c} \\
+		\exor{\dist{u}{\vecdist{e}{\vec{w}}}{\overline{[\Gamma]}}{d}{\vec{y}}}{c}{\vec{x}} &= \dist{u}{\vecdist{e}{\vec{w}}}{\exor{\overline{[\Gamma]}}{c}{\vec{x}}}{d}{\vec{y}} \\
+		\dist{u}{\vecdist{e}{\vec{w}}}{ \exor{}{c}{\vec{x}} \overline{[\Gamma]}}{d}{\vec{y}} &= \dist{\exor{u}{c}{\vec{w}}}{\vecdist{e}{\vec{w}}}{\overline{[\Gamma]}}{d}{\vec{y}}
+	\end{align*}
+\endgroup
+\end{definition}
+
+First, observe the following example that demonstrates the rewrite rules. 
+
+\begin{example}
+Take the $\lambda$-term $M = \app{(\abs{f}{\abs{x}{\app{f}{(\app{f}{x})}}})}{\abs{g}{\abs{y}{\app{g}{(\app{g}{y})}}}}$. 
+
+Then $\compile{M} = \app{(\fake{f}{f}{\fake{x}{x}{\share{\app{f_{1}}{(\app{f_{2}}{x})}}{f_{1}, f_{2}}{f}}})}{(\fake{g}{g}{\fake{y}{y}{\share{\app{g_{1}}{(\app{g_{2}}{y})}}{g_{1}, g_{2}}{g}}})}$. 
+
+We then may have the following reduction sequence.
+\begingroup
+\allowdisplaybreaks
+\begin{align*}
+	 & & & \app{(\fake{f}{f}{\fake{x}{x}{\share{\app{f_{1}}{(\app{f_{2}}{x})}}{f_{1}, f_{2}}{f}}})}{(\fake{g}{g}{\fake{y}{y}{\share{\app{g_{1}}{(\app{g_{2}}{y})}}{g_{1}, g_{2}}{g}}})}&  \\
+	  \rightsquigarrow_{\beta} & & & \fake{x}{x}{\share{\app{f_{1}}{(\app{f_{2}}{x})}}{f_{1}, f_{2}}{\fake{g}{g}{\fake{y}{y}{\share{\app{g_{1}}{(\app{g_{2}}{y})}}{g_{1}, g_{2}}{g}}}}} &  \text{(\ref{red:beta})} \displaybreak[0] \\ 
+	%%%%%%%%
+	\rightsquigarrow_{D}& & & \fake{x}{x}{(\app{\fake{f_{1}}{w_{1}}{w_{1}}}{(\app{(\fake{f_{2}}{w_{2}}{w_{2}})}{x})})} & \\
+	& & & \indent \dist{}{\fakedist{f_{1}}{w_{1}}, \fakedist{f_{2}}{w_{2}}}{\share{}{w_{1}, w_{2}}{\fake{y}{y}{\share{\app{g_{1}}{(\app{g_{2}}{y})}}{g_{1}, g_{2}}{g}}}}{g}{g} & \text{(\ref{red:absdup})} \displaybreak[0] \\
+	%%%%%%%%
+	\rightsquigarrow_{D} & & & \fake{x}{x}{(\app{\fake{f_{1}}{z_{1}}{\fake{y_{1}}{z_{1}}{z_{1}}}}{(\app{(\fake{f_{2}}{z_{2}}{\fake{y_{2}}{z_{2}}{z_{2}}})}{x})})} & \\
+	& & & \indent [ \fakedist{f_{1}}{z_{1}}, \fakedist{f_{2}}{z_{2}} \, \vert \, \fakedist{g}{g} [ \fakedist{y_{1}}{z_{1}}, \fakedist{y_{2}}{z_{2}} \, \vert \, \fakedist{y}{y} & \\
+	& & & \indent \indent \share{}{z_{1}, z_{2}}{\share{\app{g_{1}}{(\app{g_{2}}{y})}}{g_{1}, g_{2}}{g}} ] ]   &  \text{(\ref{red:absdup})} \displaybreak[0] \\
+	%%%%%%%%
+	\rightsquigarrow_{L} & & & \fake{x}{x}{(\app{\fake{f_{1}}{z_{1}}{\fake{y_{1}}{z_{1}}{z_{1}}}}{(\app{(\fake{f_{2}}{z_{2}}{\fake{y_{2}}{z_{2}}{z_{2}}})}{x})})} & \\
+	& & & \indent [ \fakedist{f_{1}}{z_{1}}, \fakedist{f_{2}}{z_{2}} \, \vert \, \fakedist{g}{g} [ \fakedist{y_{1}}{z_{1}}, \fakedist{y_{2}}{z_{2}} \, \vert \, \fakedist{y}{y} & \\
+	& & & \indent \indent \share{}{z_{1}, z_{2}}{\app{g_{1}}{(\app{g_{2}}{y})}} \share{}{g_{1}, g_{2}}{g} ] ]   &  \text{(\ref{red:liftshare})} \displaybreak[0] \\
+	%%%%%%%%
+	\rightsquigarrow_{D} & & &  \fake{x}{x}{(\app{(\fake{f_{1}}{a_{1}, b_{1}}{\fake{y_{1}}{a_{1}, b_{1}}{\app{a_{1}}{b_{1}}}})}{(\app{(\fake{f_{2}}{a_{2}, b_{2}}{\fake{y_{2}}{a_{2}, b_{2}}{\app{a_{2}}{b_{2}}}})}{x})})} & \\
+	& & & \indent [ \fakedist{f_{1}}{a_{1}, b_{1}}, \fakedist{f_{2}}{a_{2}, b_{2}} \, \vert \, \fakedist{g}{g} [ \fakedist{y_{1}}{a_{1}, b_{1}}, \fakedist{y_{2}}{a_{2}, b_{2}} \, \vert \, \fakedist{y}{y} & \\
+	& & & \indent \indent \share{}{a_{1}, a_{2}}{g_{1}} \share{}{b_{1}, b_{2}}{\app{g_{2}}{y}} \share{}{g_{1}, g_{2}}{g} ] ]   &  \text{(\ref{red:appdup})} \displaybreak[0] \\
+	%%%%%%%%
+	\rightsquigarrow_{C} & & &  \fake{x}{x}{(\app{(\fake{f_{1}}{a_{1}, b_{1}}{\fake{y_{1}}{a_{1}, b_{1}}{\app{a_{1}}{b_{1}}}})}{(\app{(\fake{f_{2}}{a_{2}, b_{2}}{\fake{y_{2}}{a_{2}, b_{2}}{\app{a_{2}}{b_{2}}}})}{x})})} & \\
+	& & & \indent [ \fakedist{f_{1}}{a_{1}, b_{1}}, \fakedist{f_{2}}{a_{2}, b_{2}} \, \vert \, \fakedist{g}{g} [ \fakedist{y_{1}}{a_{1}, b_{1}}, \fakedist{y_{2}}{a_{2}, b_{2}} \, \vert \, \fakedist{y}{y} & \\
+	& & & \indent \indent \share{}{b_{1}, b_{2}}{\app{g_{2}}{y}} \share{}{a_{1}, a_{2}, g_{2}}{g} ] ]   &  \text{(\ref{red:mergeshare})} \displaybreak[0] \\
+	%%%%%%%%%
+	\rightsquigarrow_{D} & & &  \fake{x}{x}{}((\fake{f_{1}}{a_{1}, b_{1}, c_{1}}{\fake{y_{1}}{a_{1}, b_{1}, c_{1}}{\app{a_{1}}{(\app{b_{1}}{c_{1}})}}}) & \\
+	& & & \indent (\app{(\fake{f_{2}}{a_{2}, b_{2}, c_{2}}{\fake{y_{2}}{a_{2}, b_{2}, c_{2}}{\app{a_{2}}{(\app{b_{2}}{c_{2}})}}})}{x}) & \\
+	& & & \indent \indent [ \fakedist{f_{1}}{a_{1}, b_{1}, c_{1}}, \fakedist{f_{2}}{a_{2}, b_{2}, c_{2}} \, \vert \, \fakedist{g}{g} [ \fakedist{y_{1}}{a_{1}, b_{1}, c_{1}}, \fakedist{y_{2}}{a_{2}, b_{2}, c_{2}} \, \vert \, \fakedist{y}{y} & \\
+	& & & \indent \indent \indent \share{}{b_{1}, b_{2}}{g_{2}} \share{}{c_{1}, c_{2}}{y} \share{}{a_{1}, a_{2}, g_{2}}{g} ] ]   &  \text{(\ref{red:appdup})} \displaybreak[0]  \\
+	%%%%%%%%
+	\rightsquigarrow_{C} & & &  \fake{x}{x}{}((\fake{f_{1}}{a_{1}, b_{1}, c_{1}}{\fake{y_{1}}{a_{1}, b_{1}, c_{1}}{\app{a_{1}}{(\app{b_{1}}{c_{1}})}}}) & \\
+	& & & \indent (\app{(\fake{f_{2}}{a_{2}, b_{2}, c_{2}}{\fake{y_{2}}{a_{2}, b_{2}, c_{2}}{\app{a_{2}}{(\app{b_{2}}{c_{2}})}}})}{x}) & \\
+	& & & \indent \indent [ \fakedist{f_{1}}{a_{1}, b_{1}, c_{1}}, \fakedist{f_{2}}{a_{2}, b_{2}, c_{2}} \, \vert \, \fakedist{g}{g} [ \fakedist{y_{1}}{a_{1}, b_{1}, c_{1}}, \fakedist{y_{2}}{a_{2}, b_{2}, c_{2}} \, \vert \, \fakedist{y}{y} & \\
+	& & & \indent \indent \indent \share{}{c_{1}, c_{2}}{y} \share{}{a_{1}, b_{1},  a_{2}, b_{2}}{g} ] ]   &  \text{(\ref{red:mergeshare})} \displaybreak[0]  \\
+	%%%%%%%%
+	\rightsquigarrow_{L} & & &  \fake{x}{x}{}((\fake{f_{1}}{a_{1}, b_{1}, c_{1}}{\fake{y_{1}}{c_{1}}{\app{a_{1}}{(\app{b_{1}}{c_{1}})}}}) & \\
+	& & & \indent (\app{(\fake{f_{2}}{a_{2}, b_{2}, c_{2}}{\fake{y_{2}}{c_{2}}{\app{a_{2}}{(\app{b_{2}}{c_{2}})}}})}{x}) & \\
+	& & & \indent \indent [ \fakedist{f_{1}}{a_{1}, b_{1}, c_{1}}, \fakedist{f_{2}}{a_{2}, b_{2}, c_{2}} \, \vert \, \fakedist{g}{g} [ \fakedist{y_{1}}{c_{1}}, \fakedist{y_{2}}{c_{2}} \, \vert \, \fakedist{y}{y} & \\
+	& & & \indent \indent \indent \share{}{c_{1}, c_{2}}{y} ] \share{}{a_{1}, b_{1},  a_{2}, b_{2}}{g} ]   &  \text{(\ref{red:distshare})} \displaybreak[0]  \\
+	%%%%%%%
+	\rightsquigarrow_{L} & & & \fake{x}{x}{(\app{(\fake{f_{1}}{a_{1}, b_{1}}{\fake{y_{1}}{c_{1}}{\app{a_{1}}{(\app{b_{1}}{c_{1}})}}})}{(\app{(\fake{f_{2}}{a_{2}, b_{2}}{\fake{y_{2}}{c_{2}}{\app{a_{2}}{(\app{b_{2}}{c_{2}})}}})}{x})})} & \\   		
+	& & & \indent \dist{}{\fakedist{f_{1}}{a_{1}, b_{1}}, \fakedist{f_{2}}{a_{2}, b_{2}}}{\share{}{a_{1}, b_{1}, a_{2}, b_{2}}{g}}{g}{g} & \\
+	& & & \indent \indent \dist{}{\fakedist{y_{1}}{c_{1}}, \fakedist{y_{2}}{c_{2}}}{\share{}{c_{1}, c_{2}}{y}}{y}{y} & \text{(\ref{red:distshare})} \displaybreak[0]  \\
+	%%%%%%%
+	\rightsquigarrow_{D} & & & \fake{x}{x}{}((\fake{f_{1}}{f_{1}}{\share{\fake{y_{1}}{c_{1}}{\app{a_{1}}{(\app{b_{1}}{c_{1}})}}}{a_{1}, b_{1}}{f_{1}}}) & \\
+	& & & \indent (\app{(\fake{f_{2}}{f_{2}}{\share{\fake{y_{2}}{c_{2}}{\app{a_{2}}{(\app{b_{2}}{c_{2}})}}}{a_{2}, b_{2}}{f_{2}}})}{x}) & \\  	
+	& & & \indent \indent \dist{}{\fakedist{y_{1}}{c_{1}}, \fakedist{y_{2}}{c_{2}}}{\share{}{c_{1}, c_{2}}{y}}{y}{y} & \text{(\ref{red:distelim})} \displaybreak[0]  \\
+	%%%%%%%
+	\rightsquigarrow_{D} & & & \fake{x}{x}{}((\fake{f_{1}}{f_{1}}{\share{\fake{y_{1}}{y_{1}}{\app{a_{1}}{(\app{b_{1}}{y_{1}})}}}{a_{1}, b_{1}}{f_{1}}}) & \\
+	& & & \indent (\app{(\fake{f_{2}}{f_{2}}{\share{\fake{y_{2}}{y_{2}}{\app{a_{2}}{(\app{b_{2}}{y_{2}})}}}{a_{2}, b_{2}}{f_{2}}})}{x}) & \text{(\ref{red:distelim})} \displaybreak[0]  \\
+\end{align*}
+\endgroup
+
+\end{example}
 
 In this section we provide the proof for Proposition \ref{prop:suboutcomm}: Given $M \in \Lambda$ such that for all $v \in V$, $\gamma(v) \not\in \fv{M}$  and $\sigma(x) = x$, the translation $\readbackwmap{u}{\sigma}{\gamma}$ commutes with substitution $\sub{}{M}{x}$ in the following way
 
@@ -2038,7 +2171,7 @@ $\readbackwmap{\dist{u}{\vecdist{e}{\vec{x}}}{\overline{[\Gamma]}}{c}{c}}{\sigma
 
 The weakening calculus is used to show preservation of strong normalisation with respect to the $\lambda$-calculus. A $\beta$-step in our calculus may occur within a weakening, and therefore is simulated by zero $\beta$-steps in the $\lambda$-calculus. Therefore if there is an infinite reduction path located inside a weakening in $\FALC$, then the reduction path is not preserved in the corresponding $\lambda$-term as there are no weakenings. To deal with this, just as done in \cite{kesneraccattoli12, gundersen2013atomic, he2018atomic}, we make use of the weakening calculus. A $\beta$-step is non-deleteing precisely because of the weakening construct. If a $\beta$-step would be deleting in the $\lambda$-calculus, then the weakening calculus would instead keep the deleted term around as `garbage', which can continue to reduce unless explicitly `garbage-collected' by extra (non-$\beta$) reduction steps. The weakening calculus has already been shown to preserve strong normalisation through the use of a perpetual strategy in \cite{gundersen2013atomic}. A part of proving PSN is then using the weakening calculus to prove that if $t \in \FALC$ has a infinite reduction path, then its translation into the weakening calculus also has an infinite reduction path.
 
-First we demonstrate that our readback translation (Definition \ref{def:transfalcweak}) is truly an extention of the translation into the $\lambda$-calculus (Definition \ref{def:readback}). We therefore demonstrate that our operations (substitution, book-keeping, and exorcisms) commute with the two translation functions in the same way.
+\noindent We demonstrate that our readback translation (Definition \ref{def:transfalcweak}) is truly an extention of the translation into the $\lambda$-calculus (Definition \ref{def:readback}). We therefore demonstrate that our operations (substitution, book-keeping, and exorcisms) commute with the two translation functions in the same way.
 
 \begin{proposition}
 \label{prop:suboutcomm}
