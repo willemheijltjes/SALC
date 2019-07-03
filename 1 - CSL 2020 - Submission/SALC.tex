@@ -418,6 +418,7 @@ A \emph{derivation} from a \emph{premise} formula $X$ to a \emph{conclusion} for
 Our starting point is the \emph{sharing calculus} ($\SLC$), a calculus with an explicit sharing construct, similar to explicit substitution \cite{levy1991}.
 
 \begin{definition}
+\label{def:sharingcalsyntax}
 The \emph{pre-terms} $r, s, t$ and \emph{sharings} $[\Gamma]$ of the $\SLC$ are defined by:
 
 $$s, t \quad {:}{:}{=} \quad x \quad \vert \quad \abs{x}{t} \quad \vert \quad \app{s}{t} \quad \vert \quad u[\Gamma] \quad \quad [\Gamma] \quad {:}{:}{=} \quad \share{}{x_{1}, \dots, x_{n}}{s}$$
@@ -434,9 +435,22 @@ $$\readbackclose{x} = x \quad \readbackclose{\abs{x}{t}} = \abs{x}{\readbackclos
 The \emph{translation} $\compile{N}$ of a $\lambda$-term $N$ is the unique sharing-normal term $t$ such that $N = \readbackclose{t}$.
 \end{definition}
 
-A term $t$ will be typed by a derivation with restricted types, as shown below, where the \emph{context type} $\Gamma = A_{1} \wedge \dots \wedge A_{n}$ will have an $A_{i}$ for each free variable $x_{i}$ of $t$. We connect free variables to their premises by writing $A^{x}$ and $\Gamma^{\vec{x}}$. The $\SLC$ is then typed as follows.
+A term $t$ will be typed by a derivation with restricted types, as shown below, where the \emph{context type} $\Gamma = A_{1} \wedge \dots \wedge A_{n}$ will have an $A_{i}$ for each free variable $x_{i}$ of $t$. We connect free variables to their premises by writing $A^{x}$ and $\Gamma^{\vec{x}}$. The $\SLC$ is then typed as in Figure \ref{fig:SLCT}.
 
-\newpage
+\begin{figure}[h]
+\begin{center}
+Basic Types: $A, B, C \quad {:}{=} \quad a \, \, \, \vert \, \, \, A \rightarrow B$ \hspace{1cm} Context Types: $\Gamma, \Delta \quad {:}{=} \quad A \, \, \, \vert \, \, \, \top \, \, \, \vert \, \, \, \Gamma \wedge \Delta$
+\end{center}
+$x :$ {\small \drv{A^{x}}}
+\hfill
+$\app{t}{s} :$ {\small \drv{\drv[yellow]{\Gamma ; _[t] ; A \rightarrow B} \wedge \drv[yellow]{\Delta ; _[s] ; A} ; -[\apprule] ; B}}
+\hfill
+$\abs{x}{t} :$ {\small \drv{\Gamma ; -[\lamrule] ; A \rightarrow \drv[yellow]{\Gamma \wedge A^{x} ; _[t] ; B}}}
+\hfill
+$\share{t}{\vec{x}}{s} :$ {\small \drv{\Gamma \wedge \drv[yellow]{\Delta ; _[s] ; A ; -[\sharerule] ; A \wedge \dots \wedge A} ; . ; \Gamma \wedge (A \wedge \dots \wedge A)^{\vec{x}} ; _[t] ; B}}
+\caption{Typing System for $\SLC$}
+\label{fig:SLCT}
+\end{figure}
 
 %Deep inference is a methodology for designing proof systems. Inference rules in deep inference, such as switch and medial, can be applied `deeply' i.e.\ there is no concept of the main connective of a formula. The \emph{open deduction} formalism \cite{opendeduction10} is designed around this principle, where logical connectives can be applied at the level of derivations as well as formulae. A derivation from premise $A$ to conclusion $C$ (over the connectives conjunction and implication) is constructed as follows,
 %\begin{definition}
@@ -646,25 +660,23 @@ A term $t$ will be typed by a derivation with restricted types, as shown below, 
 %
 %To implement reductions of this kind, we extend the basic calculus (Definition \ref{def:basiccalc}) with two new constructs, the \emph{distributor} that corresponds to the distribution inference and \emph{phantom-abstractions} that correspond to the partially duplicated abstractions.
 
-We now formally introduce the syntax of the spinal atomic $\lambda$-calculus ($\FALC$).
+We now formally introduce the syntax of the spinal atomic $\lambda$-calculus ($\FALC$), by extending the definition of the sharing calculus in Definition \ref{def:sharingcalsyntax} with a \emph{distributor} construct that allows for atomic duplication of terms. 
 
-\begin{definition}[Pre-Terms] The \emph{pre-terms} $t \in \FALC$ are defined by the following syntax
+\begin{definition}[Pre-Terms] The \emph{pre-terms} $r, s, t$, \emph{closures} $[\Gamma]$, and \emph{environments} $\overline{[\Gamma]}$ of the $\FALC$ are defined by:
 
 \begin{center}
-$t \quad {:}{:}{=} \quad x \quad \vert \quad \app{t}{t} \quad \vert \quad \fake{x}{\vec{y}}{t} \quad \vert \quad t[\Gamma]$ 
+$t \quad {:}{:}{=} \quad x \quad \vert \quad \app{s}{t} \quad \vert \quad \fake{x}{\vec{y}}{t} \quad \vert \quad t[\Gamma]$ 
 %\end{center}
 %\begin{center}
 \\[0.2cm]
-$[\Gamma] \quad {:}{:}{=} \quad  [\vec{x} \leftarrow t] \quad \vert \quad \dist{}{\fakedist{e_{1}}{\vec{x_{1}}} \dots \fakedist{e_{n}}{\vec{x_{n}}}}{\overline{[\Gamma]}}{d}{\vec{y}}$  
-%\end{center}
-%\begin{center}
-\\[0.2cm]
-$\overline{[\Gamma]} \quad {:}{:}{=} \quad [\Gamma] \quad \vert \quad \overline{[\Gamma]}[\Gamma]$
+$[\Gamma] \quad {:}{:}{=} \quad  [\vec{x} \leftarrow t] \quad \vert \quad \dist{}{\fakedist{e_{1}}{\vec{x_{1}}} \dots \fakedist{e_{n}}{\vec{x_{n}}}}{\overline{[\Gamma]}}{d}{\vec{y}}$  \quad \quad $\overline{[\Gamma]} \quad {:}{:}{=} \quad [\Gamma] \quad \vert \quad \overline{[\Gamma]}[\Gamma]$
 \end{center}
 
 \end{definition}
 
-We write $\vec{x}$ for a sequence of variables $x_{1}, \dots, x_{n}$ for $n \geq 0$. An abstraction $\fake{x}{x}{t}$ and a phantom-abstraction $\fake{x}{\vec{y}}{t}$ are two instances of the same construct. We call the variables inside the brackets the \emph{cover} of the abstraction. If the cover is the same as the preceeding variable, then we consider it to be an abstraction, otherwise it is a phantom-abstraction and we call the preceeding variable a \emph{phantom-variable}. The distributor  $\dist{u}{\fakedist{e_{1}}{\vec{x_{1}}} \dots \fakedist{e_{n}}{\vec{x_{n}}}}{\overline{[\Gamma]}}{d}{\vec{y}}$ captures the phantom-variables $e_{1}, \dots, e_{n}$ in $u$ and the covers associated with those phantom-variables are captured by the environment $\overline{[\Gamma]}$, which is a collection of closures $[\Gamma]$. We sometimes write the distributor as $\dist{u}{\vecdist{e}{x}}{\overline{[\Gamma]}}{d}{\vec{y}}$ when we are not concerned about the binding of phantom-variables. Terms are then pre-terms with sensible and correct bindings. To define terms, we first define \emph{free} and \emph{bound} variables and phantom variables.
+First note that we denote abstractions such that $\abs{x}{t} \equiv \fake{x}{x}{t}$. We introduce a new notion of abstraction called \emph{phantom-abstraction}, which can be intuitively be thought of as a partially duplicated abstraction. An abstraction $\fake{x}{x}{t}$ and a phantom-abstraction $\fake{x}{\vec{y}}{t}$ are two instances of the same construct. We call the variables inside the brackets the \emph{cover} of the abstraction. If the cover is the same as the preceeding variable, then it is an abstraction, otherwise it is a phantom-abstraction and we call the preceeding variable a \emph{phantom-variable}. 
+
+The distributor $\dist{u}{\fakedist{e_{1}}{\vec{x_{1}}} \dots \fakedist{e_{n}}{\vec{x_{n}}}}{\overline{[\Gamma]}}{d}{\vec{y}}$ captures the phantom-variables $e_{1}, \dots, e_{n}$ in $u$ and the covers associated with those phantom-variables are captured by the environment $\overline{[\Gamma]}$. We sometimes write the distributor as $\dist{u}{\vecdist{e}{x}}{\overline{[\Gamma]}}{d}{\vec{y}}$ when we are not concerned about the binding of phantom-variables. Terms are then pre-terms with sensible and correct bindings. To define terms, we first define \emph{free} and \emph{bound} variables and phantom variables.
 
 \begin{definition}[Free and Bound Variables] 
 \label{def:freeboundvar} The free variables $\fv{-}$ and bound variables $\bv{-}$ of a pre-term $t$ is defined as follows
@@ -746,30 +758,31 @@ A \emph{term} $t \in \FALC$ is a pre-term with the following constraints
 %\end{itemize}
 %\end{itemize}
 
-We consider terms equal up to the congruence induced by the exchange of closures. Consider the term $t[\Gamma_{1}][\Gamma_{2}]$ where $[\Gamma_{1}]$ and $[\Gamma_{2}]$ are both closures. Then $t[\Gamma_{1}][\Gamma_{2}] \sim t[\Gamma_{2}][\Gamma_{1}]$ iff $[\Gamma_{2}]$ only binds variables and phantom-variables located in $t$. This equivalence is essential to the rewriting theory. We also consider terms equal up to symmetry of contraction. We consider the sequence of variables $xs$ modulo permutations. Let $\vec{x}$ be a list of variables and let $\vec{x_{P}}$ be a permutation of that list, then the following terms are considered equal.
+We also work modulo permutation with respect to the variables in the cover of phantom-abstractions. Let $\vec{x}$ be a list of variables and let $\vec{x_{P}}$ be a permutation of that list, then the following terms are considered equal.
+
 \begin{center}
 	$\share{u}{\vec{x}}{t} \sim \share{u}{\vec{x_{P}}}{t}$
 	\hspace{1cm}
 	$\fake{c}{\vec{x}}{t} \sim \fake{c}{\vec{x_{P}}}{t}$
 \end{center}
 
-\subsection{Typing System}
+\noindent Terms are typed with the typing system for $\SLC$ extended with the \emph{distribution} inference rule. 
+$${\small \drv{A \rightarrow (B_{1} \wedge \dots \wedge B_{n}) ; -[d] ; (A \rightarrow B_{1}) \wedge \dots \wedge  (A \rightarrow B_{n})} }$$
+This rule is the result of computationally interpreting the medial rule as done in \cite{gundersen2013atomic}. We obtain this variant of the medial rule due to the restriction for implications and to avoid introducing disjunction to the typing system. The terms of $\FALC$ are then typed as in both Figure \ref{fig:SLCT} and Figure \ref{fig:derivphandist}. Note environments are typed by the derivations of all its closures composed horizontally with the conjunction connective.
+
+%The terms typed by the derivations in Figure \ref{fig:typebasic} and Figure \ref{fig:derivphandist}. Figure \ref{fig:derivphandist} shows the derivations for the terms $\fake{d}{\vec{x}}{t}$ and $\dist{u}{\fakedist{e_{1}}{\vec{x_{1}}} \dots \fakedist{e_{n}}{\vec{x_{n}}}}{\overline{[\Gamma]}}{c}{c}$. The distributor construct is typed using the medial rule as in \cite{gundersen2013atomic}. Notice that the medial rule in Figure \ref{fig:derivphandist} does not use disjunction compared to the medial rule in the introduction. In the derivation we combine the medial rule with a co-contraction rule to form the \emph{distribution rule} ($d$). Since the formula in the ante-cedent of an implication is always a minimal formula, doing this allows us to avoid introducing disjunction into the typing system. 
+%
+%The main difference between our calculus is the bindings. We create a new class of bindings, where phantom-variables are captured by the distributor but variables are captured by the environment of the distributor. This shows in the derivations since the types of the variables ($\Sigma$ and $\Phi$) are not captured by the distribution rule. 
 
 \begin{figure}[h]
- \drv{(A \rightarrow \Gamma) \wedge \Delta ; -[\switchrule] ; A^{\color{red}d} \rightarrow \drv[yellow]{\Gamma^{\color{red} \vec{x}} \wedge \Delta ; _[{\color{red}t}] ; C}}
+$\fake{c}{\vec{x}}{t}:$ {\small \drv{(A \rightarrow \Gamma) \wedge \Delta ; -[\switchrule] ; A^{c} \rightarrow \drv[yellow]{\Gamma^{\vec{x}} \wedge \Delta ; _[t] ; C}}}
 \hspace{1cm}
-\drv{\drv[yellow]{\drv[green]{(C \rightarrow C) \wedge \Delta ; -[\switchrule] ; C^{\color{red}c} \rightarrow
-	\drv[cyan]{C^{\color{red} c} \wedge \Delta ; _[{\color{red} \overline{[\Gamma]}} ] ; \Sigma \wedge \dots \wedge \Phi} ; -[\distrule] ; (C^{\color{red}e_{1}} \rightarrow \Sigma^{\vec{\color{red}x^{1}}}) \wedge \dots \wedge  (C^{\color{red}e_{n}} \rightarrow \Phi^{\vec{\color{red}x^{n}}})}
-	\wedge \Omega} ; _[{\color{red}u}] ; E} 
+$\dist{u}{\vecdist{e}{x}}{\overline{[\Gamma]}}{c}{\vec{z}}: $ {\small \drv{\drv{\drv[yellow]{(C \rightarrow \Gamma) \wedge \Delta ; -[\switchrule] ; C^{c} \rightarrow
+	\drv[cyan]{\Gamma^{\color{black} \vec{z}} \wedge \Delta ; _[{\color{black} \overline{[\Gamma]}} ] ; \Sigma_{1} \wedge \dots \wedge \Sigma_{n}} ; -[\distrule] ; (C^{\color{black}e_{1}} \rightarrow \Sigma_{1}^{\vec{\color{black}x_{1}}}) \wedge \dots \wedge  (C^{\color{black}e_{n}} \rightarrow \Sigma_{n}^{\vec{\color{black}x_{n}}})}
+	\wedge \Omega} ; . ; (C \rightarrow \Sigma_{1}) \wedge \dots \wedge (C \rightarrow \Sigma_{n}) \wedge \Omega ; _[u] ; E} }
 \caption{Typing derivations for phantom-abstractions and distributors}
 \label{fig:derivphandist}
 \end{figure}
-
-The terms typed by the derivations in Figure \ref{fig:typebasic} and Figure \ref{fig:derivphandist}. Figure \ref{fig:derivphandist} shows the derivations for the terms $\fake{d}{\vec{x}}{t}$ and $\dist{u}{\fakedist{e_{1}}{\vec{x_{1}}} \dots \fakedist{e_{n}}{\vec{x_{n}}}}{\overline{[\Gamma]}}{c}{c}$. The distributor construct is typed using the medial rule as in \cite{gundersen2013atomic}. Notice that the medial rule in Figure \ref{fig:derivphandist} does not use disjunction compared to the medial rule in the introduction. In the derivation we combine the medial rule with a co-contraction rule to form the \emph{distribution rule} ($d$). Since the formula in the ante-cedent of an implication is always a minimal formula, doing this allows us to avoid introducing disjunction into the typing system. 
-
-The main difference between our calculus is the bindings. We create a new class of bindings, where phantom-variables are captured by the distributor but variables are captured by the environment of the distributor. This shows in the derivations since the types of the variables ($\Sigma$ and $\Phi$) are not captured by the distribution rule. 
-
-
 
 %\noindent The distributor is illustrated below; it is depicted as a box encompassing an environment and a co-contraction.
 %
@@ -936,14 +949,18 @@ The interpretation $\readbackwmap{-}{-}{-} : \FALC \times (V \rightarrow \Lambda
 %Consider $\readback{t[\Gamma_{1}][\Gamma_{2}]}{}$, the intepretation of the closure $[\Gamma_{2}]$ may generate substitutions and recapturings $\sigma_{2}$ i.e.\ $\readback{t[\Gamma_{1}][\Gamma_{2}]}{} = \readback{t[\Gamma_{1}]}{} \sigma_{2}$. Using the same reasoning we can say $\readback{t[\Gamma_{1}]}{} \sigma_{2} = \readback{t}{} \sigma_{1} \sigma_{2}$. Since the variables bound by $[\Gamma_{2}]$ are only located in $t$ and not in any term in $\sigma_{1}$, we can exchange these bundles of substitutions and recapturings i.e.\ $\readback{t}{} \sigma_{1} \sigma_{2} = \readback{t}{} \sigma_{2} \sigma_{1} = \readback{t [\Gamma_{2}] [\Gamma_{1}]}{}$
 %\end{proof}
 
-\begin{lemma}
+\noindent The following Proposition justifies working modulo permutation equivalence.
+
+\begin{proposition}
 \label{lem:preservedenotationsim}
 For $s, t \in \FALC$, if $s \sim t$ then $\trans{s} = \trans{t}$ 
-\end{lemma}
+\end{proposition}
+
+\noindent The following Lemma not only proves we have good translations, but is also important for proving confluence of $\FALC$ (Theorem \ref{theo:strongnormal}).
 
 \begin{lemma}
 \label{lem:preserve1to1correspondance}
-For a closed $t \in \FALC$, where $t$ has no distributor constructs and only variables are shared, and a closed $N \in \Lambda$. the following 
+For a closed $t \in \FALC$, in sharing normal form, and a closed $N \in \Lambda$.  
 $$\readback{\compile{N}'}{I} = N \hspace{1.5cm} \compile{\readback{t}{I}}' = t \hspace{1.5cm} \exists_{ M \in \Lambda} . t = \compile{M}'$$ 
 \end{lemma}
 
@@ -1020,9 +1037,9 @@ The proof rewrite rule corresponding with the rewrite rule \ref{red:distshare} c
 
 \begin{center}
 \begin{tabular}{c c c}
-	$\drv{(C \rightarrow \Gamma) \wedge \Delta \wedge \Omega ; -[\switchrule] ; C^{\color{red} c} \rightarrow \drv[yellow]{\drv[green]{\Gamma^{\color{red} \vec{x}} \wedge \Delta \wedge \drv[cyan]{\Omega ; _[\color{red} t] ; A \wedge \dots \wedge A}} ; _[\color{red} {[\Gamma]}] ; \Sigma_{1}^{{\color{red} \vec{w_{1}}}} \dots \Sigma_{n}^{{\color{red} \vec{w_{n}}}} } ; -[\distrule] ; (C \rightarrow \Sigma_{1}) \wedge \dots \wedge (C \rightarrow \Sigma_{n})}$
+	$\drv{(C \rightarrow \Gamma) \wedge \Delta \wedge \Omega ; -[\switchrule] ; C^{\color{red} c} \rightarrow \drv[yellow]{\drv[green]{\Gamma^{\color{red} \vec{x}} \wedge \Delta \wedge \drv[cyan]{\Omega ; _[\color{red} {[\Gamma]} ] ; A \wedge \dots \wedge A}} ; _[{\color{red} \overline{[\Gamma]}}] ; \Sigma_{1}^{{\color{red} \vec{w_{1}}}} \dots \Sigma_{n}^{{\color{red} \vec{w_{n}}}} } ; -[\distrule] ; (C \rightarrow \Sigma_{1}) \wedge \dots \wedge (C \rightarrow \Sigma_{n})}$
 	& $\rightsquigarrow_{L}$ &
-	$\drv{(C \rightarrow \Gamma) \wedge \Delta \wedge \drv[cyan]{\Omega ; _[\color{red} t] ; A \wedge \dots \wedge A} ; -[\switchrule] ; C^{\color{red} c} \rightarrow \drv[yellow]{\drv[green]{\Gamma^{\color{red} \vec{x}} \wedge \Delta \wedge A \dots A} ; _[\color{red} {[\Gamma]}] ; \Sigma_{1}^{{\color{red} \vec{w_{1}}}} \dots \Sigma_{n}^{{\color{red} \vec{w_{n}}}} } ; -[\distrule] ; (C \rightarrow \Sigma_{1}) \wedge \dots \wedge (C \rightarrow \Sigma_{n})}$
+	$\drv{(C \rightarrow \Gamma) \wedge \Delta \wedge \drv[cyan]{\Omega ; _[\color{red} {[\Gamma]}] ; A \wedge \dots \wedge A} ; -[\switchrule] ; C^{\color{red} c} \rightarrow \drv[yellow]{\drv[green]{\Gamma^{\color{red} \vec{x}} \wedge \Delta \wedge A \dots A} ; _[\color{red} { \overline{[\Gamma]}}] ; \Sigma_{1}^{{\color{red} \vec{w_{1}}}} \dots \Sigma_{n}^{{\color{red} \vec{w_{n}}}} } ; -[\distrule] ; (C \rightarrow \Sigma_{1}) \wedge \dots \wedge (C \rightarrow \Sigma_{n})}$
 \end{tabular}
 \end{center}
 The second part of the rewrite rule justifies the need for the book-keeping operation. In the rewrite below, let $A$ be the type of a variable $z$ where $z \in \vec{z}$. After lifting, we want to remove the variable from the cover as to ensure correctness since the variables in the cover denote the variables captured by the environment. Book-keeping allows us to remove these variables simultaneously. 
@@ -1040,7 +1057,7 @@ The lifting rules ($l_{i}$) are justified by the need to lift closures out of th
 \share{u}{x}{t} & \rightsquigarrow_{C} \sub{u}{t}{x} \label{red:compshare} \tag{$c_{2}$}
 \end{align}
 
-The atomic steps for duplicating are given in the third and final set of rewrite rules. The first being the atomic duplication step of an application, which is the same rule used in \cite{gundersen2013atomic}. The proof rewrite steps for each rule are also provided. For simplicity, we only show the binary case for each rule.
+The atomic steps for duplicating are given in the third and final set of rewrite rules. The first being the atomic duplication step of an application, which is the same rule used in \cite{gundersen2013atomic}. The proof rewrite steps for each rule are also provided. For simplicity, in the equivalent proof rewrite step we only show the binary case for each rule.
 \begin{equation} \label{red:appdup} \tag{$d_{1}$}
 \share{u}{x_{1} \dots x_{n}}{\app{s}{t}} \rightsquigarrow_{D} \share{\share{\sub{\sub{u}{\app{z_{1}}{y_{1}}}{x_{1}}\dots}{\app{z_{n}}{y_{n}}}{x_{n}}}{z_{1} \dots z_{n}}{s}}{y_{1} \dots y_{n}}{t}
 \end{equation}
@@ -1069,9 +1086,13 @@ The atomic steps for duplicating are given in the third and final set of rewrite
 \drv{\drv{ ; -[\lamrule] ; A \rightarrow A} \wedge \drv{ ; -[\lamrule] ; A \rightarrow A}}
 \end{center}
 
+\noindent Each rewrite rule preserves the conclusion of the derivation, and thus the following proposition is easy to observe.
+
 \begin{proposition}
-If $s \rightsquigarrow_{L, C, D} t$ and $s : C$, then $t : C$
+If $s \rightsquigarrow_{L, C, D, \beta} t$ and $s : C$, then $t : C$
 \end{proposition}
+
+\noindent The readback translation collapses the shared terms. The lifting, duplication, and compound rules are used solely for the duplication of terms. Therefore it is expected that the following Lemma be true (proven in Appendix by induction). It is also important for proving confluence of $\FALC$ (Theorem \ref{theo:strongnormal}).
 
 \begin{lemma}[Sharing reduction preserves denotation]
 \label{lem:preservesdenotation}
@@ -1104,7 +1125,7 @@ The terms are variable, abstraction, application, weakening, and a bullet. In th
 	\end{align*}
 \end{definition}
 
-\noindent We also have translations of the weakening calculus to and from the lambda calculus. Both of these translations have been provided in  \cite{gundersen2013atomic}. The interpretation $\readbackweak{-}$ from weakening terms to $\lambda$-terms discards all weakenings. The interpretation $\compweak{-} : \Lambda \rightarrow \WEAK$ is defined below.
+\noindent We also have translations of the weakening calculus to and from the lambda calculus. Both of these translations were provided in  \cite{gundersen2013atomic}. The interpretation $\readbackweak{-}$ from weakening terms to $\lambda$-terms discards all weakenings. The interpretation $\compweak{-} : \Lambda \rightarrow \WEAK$ is defined below.
 
 \begin{definition}
 \label{def:transweak}
@@ -1166,7 +1187,6 @@ For $N \in \Lambda$ and $t \in \FALC$ the following properties hold
 
 \end{proposition}
 
-\noindent Here we can take advantage that preservation of strong normalisation has been proven for this weakening calculus already in \cite{gundersen2013atomic}, providing the proof for Proposition \ref{prop:willemresult}. 
 \begin{definition}
 In the weakening calculus, $\beta$-reduction is defined as follows, where $\overline{[\Gamma]}$ are weakening constructs.
 \begin{equation}
@@ -1174,6 +1194,8 @@ In the weakening calculus, $\beta$-reduction is defined as follows, where $\over
 	\app{((\abs{x}{T}) \overline{[\Gamma]})}{U} \rightarrow_{\beta} \sub{T}{U}{x} \overline{[\Gamma]} \\
 \end{equation}
 \end{definition}
+
+\noindent Here we can take advantage that preservation of strong normalisation has been proven for this weakening calculus already in \cite{gundersen2013atomic}, providing the proof for Proposition \ref{prop:willemresult}. 
 
 \begin{proposition}
 \label{prop:willemresult}
