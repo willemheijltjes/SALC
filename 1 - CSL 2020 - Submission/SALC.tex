@@ -14,6 +14,8 @@
 \usepackage{amsmath, amssymb}
 \usepackage{stmaryrd}
 \usepackage{mathtools}
+\usepackage{caption}
+\usepackage{subcaption}
 \usepackage{MnSymbol}
 
 \newtheorem{notation}[definition]{Notation}
@@ -21,6 +23,7 @@
 %\newcommand{\lambdabar}{\mbox{\textipa{\textcrlambda}}}
 
 \newcommand{\FALC}{\Lambda^{S}_{a}}
+\newcommand{\SLC}{\Lambda^{S}}
 \newcommand{\WEAK}{\Lambda_{\weaksymbol}}
 \newcommand{\fv}[1]{(#1)_{fv}}
 \newcommand{\bv}[1]{(#1)_{bv}}
@@ -354,156 +357,237 @@ End-of-scope markers in the $\lambda$-calculus have been seen throughout literat
 
 \section{Typing a $\lambda$-calculus in open deduction}
 
-Deep inference is a methodology for designing proof systems. Inference rules in deep inference, such as switch and medial, can be applied `deeply' i.e.\ there is no concept of the main connective of a formula. The \emph{open deduction} formalism \cite{opendeduction10} is designed around this principle, where logical connectives can be applied at the level of derivations as well as formulae. A derivation from premise $A$ to conclusion $C$ (over the connectives conjunction and implication) is constructed as follows,
-\begin{definition}
-A \emph{derivation} in open deduction is defined as follows.
-\begin{center}
-\drv{A ; _ ; C}
-\hspace{0.5cm}
-::=
-\hspace{0.5cm}
-\drv{A}
-\hspace{0.2cm}
-$\vert$
-\hspace{0.2cm}
-\drv{\drv{A_{1} ; _ ; C_{1}} \wedge \drv{A_{2} ; _ ; C_{2}}}
-\hspace{0.2cm}
-$\vert$
-\hspace{0.2cm}
-\drv{\drv{C_{1} ; _ ; A_{1}} \rightarrow \drv{A_{2} ; _ ; C_{2}}}
-\hspace{0.2cm}
-$\vert$
-\hspace{0.2cm}
-\drv{A ; _ ; B_{1} ; -[r] ; B_{2} ; _ ; C}
-\end{center}
-\end{definition}
-
-\noindent where from left to right, (1) the premise and the conclusion can be the same formula i.e. $A = C$. (2) We can compose derivations horizontally with a conjunction $\wedge$, where $A = A_{1} \wedge A_{2}$ and $C = C_{1} \wedge C_{2}$. (3) We can compose derivations horizontally with an implication $\rightarrow$ where $A = A_{1} \rightarrow A_{2}$ and $C = C_{1} \rightarrow C_{2}$. Note that the derivation on the antecedent of the implication is inverted; it can be interpreted as a derivation where we treat the premise as the conclusion and the conclusion as the premise. Lastly (4) derivations can be composed vertically with an inference rule $r$ from $B_{1}$ to $B_{2}$. We work modulo symmetry, associativity, and unit laws of conjunction. Additionally the generic vertical composition of two derivations (without a mediating rule) exists as a derived operation in \cite{opendeduction10}.
-
-Open deduction was used to type the \emph{basic calculus}, which was introduced in \cite{gundersen2013atomic} as a basis for the atomic $\lambda$-calculus. We follow the same approach here; we reintroduce the basic calculus and show its typing system can be extended with the switch rule, and later expand on this to introduce the spinal atomic $\lambda$-calculus. We obtain a formulation of minimal logic together with the switch rule, from embedding its usual natural deduction system into open deduction. The rules are (respectively) called abstraction, switch, application and ($n$-ary) contraction from left to right.
-\begin{center}
-\drv{\top ; -[\lamrule] ; A \rightarrow A}
-\hspace{0.5cm}
-\drv{(A \rightarrow B) \wedge C ; -[s] ; A \rightarrow (B \wedge C)}
-\hspace{0.5cm}
-\drv{A \wedge (A \rightarrow B) ; -[\apprule] ; B}
-\hspace{0.5cm}
-\drv{A ; -[\sharerule] ; A \wedge \dots \wedge A}
-\end{center}
-These rules are used to type terms of the \emph{basic calculus}, given by the grammar
-\begin{definition}
-\label{def:basiccalc}
-\quad $s, t \quad {:}{:}{=} \quad x \quad \vert \quad \abs{x}{t} \quad \vert \quad \app{s}{t} \quad \vert \quad \share{s}{x_{1}, \dots, x_{n}}{t}$
-\end{definition}
-where the four constructors are called, from left to right, variable, abstraction, application and sharing. This is a \emph{linear} calculus, so each variable occurs at most once, and a sharing construct is used to represent multiple occurrences of a variable (or term). The variable bound by an abstraction must occur within the body of the abstraction i.e.\ in the term $\abs{x}{t}$, $x \in \fv{t}$. Lastly and similarly, each variable bound by the sharing construct must occur and become bound i.e.\ in the term $\share{s}{x_{1}, \dots, x_{n}}{t}$, each $x_{i} \in \fv{u}$ for all $1 \leq i \leq n$. 
-
-
-For a given set $\set{a, b, c, \dots}$ of \emph{atomic formulae}, the following two grammars define \emph{minimal formulae} and \emph{conjunctive formulae} respectively.
-
-\begin{center}
-$A, B, C \quad {:}{=} \quad a \, \, \, \vert \, \, \, A \rightarrow B$ \hspace{1cm} $\Gamma, \Delta \quad {:}{=} \quad A \, \, \, \vert \, \, \, \top \, \, \, \vert \, \, \, \Gamma \wedge \Delta$
-\end{center}
-
-The typing derivations in open deduction for this calculus is displayed in Figure \ref{fig:typebasic}, where the corresponding types and derivations for terms are in red. We add the boxes to aid the reader see the horizontal composition of derivations. The colour of the box has no meaning other than to help identify derivations. A variable $x$ may be typed by any minimal formula $A$, while the other constructors each correspond to inference rules, used within the context of further derivations. A term $t$ with free variables $x_{1}, \dots, x_{n}$ can be typed by a derivation from assumption $A_{1}^{{\color{red} x_{1}}} \wedge \dots \wedge A_{n}^{{\color{red} x_{n}}}$ to conclusion $C$. A \emph{typing judgement} $t : C$ then expresses that $t$ is typeable by a derivation with conclusion $C$. Note that a derivation occurring as the antecedent of an implication is always a minimal formula.
+A \emph{derivation} from a \emph{premise} formula $X$ to a \emph{conclusion} formula $Z$ is constructed inductively as in Figure \ref{fig:derivations}, with from left to right: a propositional atom $a$, where $X = Z = a$; \emph{horizontal composition} with a connective $*$, where $X = X_{1} * X_{2}$ and $Z = Z_{1} * Z_{2}$; and \emph{rule composition}, where $r$ is an inference rule from $Y_{1}$ to $Y_{2}$. The boxes serve as parentheses (since derivations extend in two dimensions) and may be omitted. Derivations are considered up to associativity of rule composition. One may consider formulas as derivations that omit rule composition; and the binary $*$ may be generalised to $0$-ary, unary, and $n$-ary operators. \emph{Vertical composition} of a derivation from $X$ to $Y$ and one from $Y$ to $Z$, depicted by a dashed line, is a defined operation, given in Figure \ref{fig:vertical}. 
 
 \begin{figure}[h]
-\begin{center}
-\begin{tabular}{c c c c}
-\drv{A^{\color{red} x}}
-\hspace{0.2cm}
-&
-\drv{ \drv[yellow]{\top ; -[\lamrule] ; A \rightarrow A} \wedge \Gamma ; -[s] ; A \rightarrow \drv[green]{A^{\color{red} x} \wedge \Gamma ; _[\color{red} t] ; B}}
-\hspace{0.2cm}
-&
-\drv{\drv[yellow]{\Gamma ; _[\color{red}s] ; A} \wedge \drv[yellow]{\Delta ; _[\color{red}t] ; A \rightarrow B} ; -[\apprule] ; B}
-\hspace{0.2cm}
-&
-\drv{\drv[yellow]{ \Delta \wedge \drv[green]{\Gamma ; _[\color{red} t] ; A ; -[\sharerule] ; A^{\color{red} x_{1}} \wedge \dots \wedge A^{\color{red} x_{n}}}} ; _[\color{red} s ] ; B}
-\end{tabular}
-\end{center}
-\caption{Typing derivations for terms in the basic calculus}
-\label{fig:typebasic}
+	\centering
+	\begin{subfigure}[b]{0.3\textwidth}
+{ \small
+\drv{X ; _ ; Z} {:}{:}{=} $a$ $\vert$ \drv{\drv[yellow]{X_{1} ; _ ; Z_{1}} * \drv[yellow]{X_{1} ; _ ; Z_{1}}} $\vert$ \drv{\drv[yellow]{X ; _ ; Y_{1}} ; -[r] ; \drv[yellow]{Y_{2} ; _ ; Z}}
+}
+	\caption{Derivations}
+	\label{fig:derivations}
+	\end{subfigure}
+	\hfill
+	\begin{subfigure}[b]{0.6\textwidth}
+{ \small
+\drv{\drv[yellow]{X ; _ ; Y} ; . ; \drv[yellow]{Y ; _ ; Z}} {:}{:}{=} \drv{X ; . ; \drv[yellow]{X ; _ ; Z}} $=$ \drv{\drv[yellow]{X ; _ ; Z} ; . ; Z} $=$ \drv{X ; _ ; Z}
+} \hfill
+{\small
+\drv{ \drv[yellow]{\drv[magenta]{X_{1} ; _ ; Y_{1}} * \drv[orange]{X_{2} ; _ ; Y_{2}}} ; . ; \drv[yellow]{\drv[cyan]{Y_{1} ; _ ; Z_{1}} * \drv[green]{Y_{2} ; _ ; Z_{2}}}} 
+=
+\drv{\drv[yellow]{ \drv[magenta]{X_{1} ; _ ; Y_{1}} ; . ; \drv[cyan]{Y_{1} ; _ ; Z_{1}}} * \drv[yellow]{ \drv[orange]{X_{2} ; _ ; Y_{2}} ; . ; \drv[green]{Y_{2} ; _ ; Z_{2}} }}
+}
+	\caption{Vertical composition}
+	\label{fig:vertical}
+	\end{subfigure}
+%\caption{Derivations and Vertical Composition}
+%\label{fig:dervandcomp}
 \end{figure}
 
-%The terms can also be interpreted graphically, as displayed below. Notice that the derivations are rotated 180 degrees compared to the graphical depictions of the terms. 
+\noindent A system for intuitionistic logic is given by the binary connectives $\rightarrow$, $\wedge$, and nullary connective $\top$, where we restrict implication to a form in Figure \ref{fig:implication}, and the inference rules in Figure \ref{fig:inference}. We work modulo associativity, symmetry, and unitality of conjunction, justifying the $n$-ary contraction, and may omit $\top$ from the axiom rule. A $0$-ary contraction, with conclusion $\top$, is a \emph{weakening}. Figure \ref{fig:abstraction}: the abstraction rule ($\lambda$) is derived from axiom and switch.
+
+\begin{figure}[h]
+	\begin{subfigure}[b]{0.2\textwidth}
+	\centering
+		{\small \drv{Y \rightarrow \drv[yellow]{X ; _ ; Z}}}
+	\caption{Implication}
+	\label{fig:implication}
+	\end{subfigure}
+	\hfill
+	\begin{subfigure}[b]{0.3\textwidth}
+		\centering
+		{\small \drv{\top ; -[a] ; X \rightarrow X}} \hspace{0.2cm}
+		{\small \drv{(X \rightarrow Y) \wedge X ; -[\apprule] ; Y}} \\[0.2cm]
+		{\small \drv{X ; -[\sharerule] ; X \wedge \dots \wedge X}} \hspace{0.1cm}
+		{\small \drv{(X \rightarrow Y) \wedge Z ; -[s] ; X \rightarrow (Y \wedge Z)}}
+	\caption{Axiom, Application, Contraction, and Switch}
+	\label{fig:inference}
+	\end{subfigure}
+	\hfill
+	\begin{subfigure}[b]{0.4\textwidth}
+	\centering
+	{\small \drv{X ; -[\lambda] ; Y \rightarrow (X \wedge Y)}} {:}{:}{=} {\small \drv{\drv[yellow]{\top ; -[a] ; Y \rightarrow Y} \wedge X ; -[s] ; Y \rightarrow (X \wedge Y)}}
+	\caption{Abstraction}
+	\label{fig:abstraction}
+	\end{subfigure}
+\end{figure}
+
+\subsection{The Sharing Calculus}
+
+Our starting point is the \emph{sharing calculus} ($\SLC$), a calculus with an explicit sharing construct, similar to explicit substitution \cite{levy1991}.
+
+\begin{definition}
+The \emph{pre-terms} $r, s, t$ and \emph{sharings} $[\Gamma]$ of the $\SLC$ are defined by:
+
+$$s, t \quad {:}{:}{=} \quad x \quad \vert \quad \abs{x}{t} \quad \vert \quad \app{s}{t} \quad \vert \quad u[\Gamma] \quad \quad [\Gamma] \quad {:}{:}{=} \quad \share{}{x_{1}, \dots, x_{n}}{s}$$
+with from left to right: a \emph{variable}; an \emph{abstraction}, where $x$ occurs free in $t$ and becomes bound; an \emph{application}, where $t$ and $s$ use distinct variable names; and a \emph{closure}; in $\share{u}{\vec{x}}{s}$ the variables in the vector $\vec{x} = x_{1}, \dots, x_{n}$ all occur in $t$ and become bound, and $t$ and $s$ use distinct variable names. \emph{Terms} are pre-terms modulo \emph{permutation} equivalence ($\sim$):
+$$\share{t}{\vec{x}}{s} \share{}{\vec{y}}{r} \sim t \share{}{\vec{y}}{r} \share{}{\vec{x}}{s} \quad \quad (\set{\vec{y}} \cap \fv{s} = \set{} )$$
+A term is in \emph{sharing normal form} if all sharings occur as $\share{}{\vec{x}}{x}$ either at the top level or directly under a binding abstraction, as $\abs{x}{\share{t}{\vec{x}}{x}}$.
+\end{definition} 
+
+\noindent Note that variables are \emph{linear}: variables occur at most once, and bound variables must occur. A vector $\vec{x}$ has length $\size{\vec{x}}$ and consist of the variables $x_{1}, \dots, x_{\size{\vec{x}}}$. An \emph{environment} is a sequence of sharings $\overline{[\Gamma]} = [\Gamma_{1}] \dots [\Gamma_{n}]$. Substitution is written $\sub{}{x}{t}$, and $\sub{}{t_{1}}{x_{1}} \dots \sub{}{t_{n}}{x_{n}}$ may be abbreviated to $\sub{}{t_{i}}{x_{i}}_{i \in [n]}$.
+
+\begin{definition}
+The \emph{interpretation} of a term $t$ to the $\lambda$-term $\readbackclose{t}$ given as follows
+$$\readbackclose{x} = x \quad \readbackclose{\abs{x}{t}} = \abs{x}{\readbackclose{t}} \quad \readbackclose{\app{s}{t}} = \app{\readbackclose{s}}{\readbackclose{t}} \quad \readbackclose{\share{t}{\vec{x}}{s}} = \readbackclose{t} \sub{}{\readbackclose{s}}{x_{i}}_{i \in [n]}$$
+The \emph{translation} $\compile{N}$ of a $\lambda$-term $N$ is the unique sharing-normal term $t$ such that $N = \readbackclose{t}$.
+\end{definition}
+
+A term $t$ will be typed by a derivation with restricted types, as shown below, where the \emph{context type} $\Gamma = A_{1} \wedge \dots \wedge A_{n}$ will have an $A_{i}$ for each free variable $x_{i}$ of $t$. We connect free variables to their premises by writing $A^{x}$ and $\Gamma^{\vec{x}}$. The $\SLC$ is then typed as follows.
+
+\newpage
+
+%Deep inference is a methodology for designing proof systems. Inference rules in deep inference, such as switch and medial, can be applied `deeply' i.e.\ there is no concept of the main connective of a formula. The \emph{open deduction} formalism \cite{opendeduction10} is designed around this principle, where logical connectives can be applied at the level of derivations as well as formulae. A derivation from premise $A$ to conclusion $C$ (over the connectives conjunction and implication) is constructed as follows,
+%\begin{definition}
+%A \emph{derivation} in open deduction is defined as follows.
+%\begin{center}
+%\drv{A ; _ ; C}
+%\hspace{0.5cm}
+%::=
+%\hspace{0.5cm}
+%\drv{A}
+%\hspace{0.2cm}
+%$\vert$
+%\hspace{0.2cm}
+%\drv{\drv{A_{1} ; _ ; C_{1}} \wedge \drv{A_{2} ; _ ; C_{2}}}
+%\hspace{0.2cm}
+%$\vert$
+%\hspace{0.2cm}
+%\drv{\drv{C_{1} ; _ ; A_{1}} \rightarrow \drv{A_{2} ; _ ; C_{2}}}
+%\hspace{0.2cm}
+%$\vert$
+%\hspace{0.2cm}
+%\drv{A ; _ ; B_{1} ; -[r] ; B_{2} ; _ ; C}
+%\end{center}
+%\end{definition}
+%
+%\noindent where from left to right, (1) the premise and the conclusion can be the same formula i.e. $A = C$. (2) We can compose derivations horizontally with a conjunction $\wedge$, where $A = A_{1} \wedge A_{2}$ and $C = C_{1} \wedge C_{2}$. (3) We can compose derivations horizontally with an implication $\rightarrow$ where $A = A_{1} \rightarrow A_{2}$ and $C = C_{1} \rightarrow C_{2}$. Note that the derivation on the antecedent of the implication is inverted; it can be interpreted as a derivation where we treat the premise as the conclusion and the conclusion as the premise. Lastly (4) derivations can be composed vertically with an inference rule $r$ from $B_{1}$ to $B_{2}$. We work modulo symmetry, associativity, and unit laws of conjunction. Additionally the generic vertical composition of two derivations (without a mediating rule) exists as a derived operation in \cite{opendeduction10}.
+%
+%Open deduction was used to type the \emph{basic calculus}, which was introduced in \cite{gundersen2013atomic} as a basis for the atomic $\lambda$-calculus. We follow the same approach here; we reintroduce the basic calculus and show its typing system can be extended with the switch rule, and later expand on this to introduce the spinal atomic $\lambda$-calculus. We obtain a formulation of minimal logic together with the switch rule, from embedding its usual natural deduction system into open deduction. The rules are (respectively) called abstraction, switch, application and ($n$-ary) contraction from left to right.
+%\begin{center}
+%\drv{\top ; -[\lamrule] ; A \rightarrow A}
+%\hspace{0.5cm}
+%\drv{(A \rightarrow B) \wedge C ; -[s] ; A \rightarrow (B \wedge C)}
+%\hspace{0.5cm}
+%\drv{A \wedge (A \rightarrow B) ; -[\apprule] ; B}
+%\hspace{0.5cm}
+%\drv{A ; -[\sharerule] ; A \wedge \dots \wedge A}
+%\end{center}
+%These rules are used to type terms of the \emph{basic calculus}, given by the grammar
+%\begin{definition}
+%\label{def:basiccalc}
+%\quad $s, t \quad {:}{:}{=} \quad x \quad \vert \quad \abs{x}{t} \quad \vert \quad \app{s}{t} \quad \vert \quad \share{s}{x_{1}, \dots, x_{n}}{t}$
+%\end{definition}
+%where the four constructors are called, from left to right, variable, abstraction, application and sharing. This is a \emph{linear} calculus, so each variable occurs at most once, and a sharing construct is used to represent multiple occurrences of a variable (or term). The variable bound by an abstraction must occur within the body of the abstraction i.e.\ in the term $\abs{x}{t}$, $x \in \fv{t}$. Lastly and similarly, each variable bound by the sharing construct must occur and become bound i.e.\ in the term $\share{s}{x_{1}, \dots, x_{n}}{t}$, each $x_{i} \in \fv{u}$ for all $1 \leq i \leq n$. 
+%
+%
+%For a given set $\set{a, b, c, \dots}$ of \emph{atomic formulae}, the following two grammars define \emph{minimal formulae} and \emph{conjunctive formulae} respectively.
+%
+%\begin{center}
+%$A, B, C \quad {:}{=} \quad a \, \, \, \vert \, \, \, A \rightarrow B$ \hspace{1cm} $\Gamma, \Delta \quad {:}{=} \quad A \, \, \, \vert \, \, \, \top \, \, \, \vert \, \, \, \Gamma \wedge \Delta$
+%\end{center}
+%
+%The typing derivations in open deduction for this calculus is displayed in Figure \ref{fig:typebasic}, where the corresponding types and derivations for terms are in red. We add the boxes to aid the reader see the horizontal composition of derivations. The colour of the box has no meaning other than to help identify derivations. A variable $x$ may be typed by any minimal formula $A$, while the other constructors each correspond to inference rules, used within the context of further derivations. A term $t$ with free variables $x_{1}, \dots, x_{n}$ can be typed by a derivation from assumption $A_{1}^{{\color{red} x_{1}}} \wedge \dots \wedge A_{n}^{{\color{red} x_{n}}}$ to conclusion $C$. A \emph{typing judgement} $t : C$ then expresses that $t$ is typeable by a derivation with conclusion $C$. Note that a derivation occurring as the antecedent of an implication is always a minimal formula.
+%
+%\begin{figure}[h]
 %\begin{center}
 %\begin{tabular}{c c c c}
-%{\begin{tikzpicture}[AL]
-% \draw [->] (0,1) -- (0,-1) ;
-%\end{tikzpicture}}
+%\drv{A^{\color{red} x}}
 %\hspace{0.2cm}
 %&
-% Lambda
-%{\begin{tikzpicture}[AL]
-% \ALnodeL{0,0}a;
-% \ALnodeT[.5]t{0,-1.5}t;
-% \draw [<-] (a_1) -- (0,1);
-% \draw [->] (a_2) -- (t_top);
-% \draw [<-,rounded corners] (a_3) -- (1,0) -- (1,-2.5) -| (0.25, -2.1);
-% \draw [->] (-0.25, -2.1) -- (-.25, -3.5);
-%\ALbar{(-.25,-2.6)};
-%\end{tikzpicture}}
+%\drv{ \drv[yellow]{\top ; -[\lamrule] ; A \rightarrow A} \wedge \Gamma ; -[s] ; A \rightarrow \drv[green]{A^{\color{red} x} \wedge \Gamma ; _[\color{red} t] ; B}}
 %\hspace{0.2cm}
 %&
-% Application
-%{\begin{tikzpicture}[AL]
-% \path (0,1) (0,-2.5);
-% \ALnodeA{0,0}a;
-% \ALnodeT[.5]s{0,-1.5}s;
-% \ALnodeT[.5]t{1.2,-1.5}t;
-% \draw [<-] (a_1) -- (0,1);
-% \draw [->] (a_2) -- (s_top);
-% \draw [->,rounded corners] (a_3) -| (t_top);
-% \draw [->] (t_bot) -- +(0pt, -10pt);
-% \ALbar{(t_bot) ++(0pt, -5pt)};
-% \draw [->] (s_bot) -- +(0pt, -10pt);
-% \ALbar{(s_bot) ++(0pt, -5pt)};
-%\end{tikzpicture}}
+%\drv{\drv[yellow]{\Gamma ; _[\color{red}s] ; A} \wedge \drv[yellow]{\Delta ; _[\color{red}t] ; A \rightarrow B} ; -[\apprule] ; B}
 %\hspace{0.2cm}
 %&
-% Sharing
-% {\begin{tikzpicture}[AL]
-% \ALnodeT[1.5]s{0,1.5}s;
-% \draw [->] (-0.7, .9) -- (-0.7, -3);
-% \ALbar{(-.7, -1)};
-% \begin{scope}[xshift = 5pt]
-% \ALnodeS{0,0}v;
-%\ALnodeT[.5]t{0,-1.5}t;
-% \draw [->] (s_bot -| v_left) -- (v_left);
-% \draw [->] (s_bot -| v_right) -- (v_right);
-% \draw [->] (v_tip) -- (t_top);
-% \ALdots{0,0.6};
-% \draw [->] (0, -2.1) -- (0, -3);
-% \ALbar{(0, -2.55)};
-%\end{scope}
-%\end{tikzpicture}}
+%\drv{\drv[yellow]{ \Delta \wedge \drv[green]{\Gamma ; _[\color{red} t] ; A ; -[\sharerule] ; A^{\color{red} x_{1}} \wedge \dots \wedge A^{\color{red} x_{n}}}} ; _[\color{red} s ] ; B}
 %\end{tabular}
 %\end{center}
-
-\noindent The semantics of the basic calculus, including the compilation and readback into the $\lambda$-calculus, can be found in \cite{gundersen2013atomic} and will not be repeated here.
-
-Although in the derivation for an abstraction in Figure \ref{fig:typebasic} we place the switch rule directly after the abstraction rule, this is not always the case. Consider the term $t = \lambda x . \lambda y . x y$, where $x : A \rightarrow B =  C$ and $y : A$. The following derivations are both typing judgements of $t : C \rightarrow A \rightarrow B$.
-\begin{center}
-\drv{\top ; -[\lamrule] ; C \rightarrow \drv[green]{C \wedge \drv[yellow]{\top ;-[\lamrule] ; A \rightarrow A} ; -[s] ; A \rightarrow \drv[magenta]{C \wedge A ; -[\apprule] ; B}}}
-\hspace{0.5cm}
-$\sim$
-\hspace{0.5cm}
-\drv{ \drv{\top ; -[\lamrule] ; C \rightarrow C} \wedge \drv[yellow]{\top ; -[\lamrule] ; A \rightarrow A} ; -[s] ; C \rightarrow \drv[green]{C \wedge (A \rightarrow A) ; -[s] ; A \rightarrow \drv[magenta]{C \wedge A ; -[\apprule] ; B}}}
-\end{center}
-
-The main difference between the two is that the first is \emph{scope-balanced} while the second is \emph{unbalanced} (terminology taken from \cite{hendriks2003lambda}). In derivations, the \emph{scope} of an abstraction is considered to be the subderivation found underneath the corresponding switch rule. In the scope-balanced derivation, the scope of the binder $\lambda x$ is the whole body of the term; any scopes of any binders underneath $\lambda x$ (such as $\lambda y$) are considered nested within the scope of $\lambda x$. The scope of an abstraction in the scope-balanced derivation corresponds to the skeleton of the term. In the unbalanced derivation, scopes are not strictly nested but can overlap. The variable $y$ (with type $A$) is now identified by the switch rule corresponding with $\lambda x$, and is not considered within the scope of $\lambda x$ in contrast to the balanced derivation where is was nested. The unbalanced scope of an abstraction corresponds with the spine of the term. Both derivations identify the application in all scope.
-
-%\begin{center}
-%{\color{red} Add a picture here highlighting the scopes? Should I be general or use the specific example}
-%\end{center}
-
-The atomic $\lambda$-calculus can be seen as using only scope-balanced derivations, and here we show that by using unbalanced derivations we can identify the spine of an abstraction, and moreover when introducing the medial rule to the typing system duplicate said spine by proof normalisation.
+%\caption{Typing derivations for terms in the basic calculus}
+%\label{fig:typebasic}
+%\end{figure}
 %
-%We iterate the point here that the switch rule corresponds to an end-of-scope marker in the $\lambda$-calculus. To understand the idea, consider a closed term $\lambda x . t$ with $n$ maximal subterms $s_{1}, \dots, s_{n}$ that do not contain $x$ as a free variable. This abstraction can then be typed with the following derivation, where the derivation of $t$ is the composition of the derivations of each subterm $s_{i}$ as well as the derivation of the spine of $t$. It is possible to use a switch rule to mark each subterm independently, resulting in a possible explicit end-of-scope marker in the term calculus, but we choose to simplify such that each abstraction rule has at most one switch rule. 
+%%The terms can also be interpreted graphically, as displayed below. Notice that the derivations are rotated 180 degrees compared to the graphical depictions of the terms. 
+%%\begin{center}
+%%\begin{tabular}{c c c c}
+%%{\begin{tikzpicture}[AL]
+%% \draw [->] (0,1) -- (0,-1) ;
+%%\end{tikzpicture}}
+%%\hspace{0.2cm}
+%%&
+%% Lambda
+%%{\begin{tikzpicture}[AL]
+%% \ALnodeL{0,0}a;
+%% \ALnodeT[.5]t{0,-1.5}t;
+%% \draw [<-] (a_1) -- (0,1);
+%% \draw [->] (a_2) -- (t_top);
+%% \draw [<-,rounded corners] (a_3) -- (1,0) -- (1,-2.5) -| (0.25, -2.1);
+%% \draw [->] (-0.25, -2.1) -- (-.25, -3.5);
+%%\ALbar{(-.25,-2.6)};
+%%\end{tikzpicture}}
+%%\hspace{0.2cm}
+%%&
+%% Application
+%%{\begin{tikzpicture}[AL]
+%% \path (0,1) (0,-2.5);
+%% \ALnodeA{0,0}a;
+%% \ALnodeT[.5]s{0,-1.5}s;
+%% \ALnodeT[.5]t{1.2,-1.5}t;
+%% \draw [<-] (a_1) -- (0,1);
+%% \draw [->] (a_2) -- (s_top);
+%% \draw [->,rounded corners] (a_3) -| (t_top);
+%% \draw [->] (t_bot) -- +(0pt, -10pt);
+%% \ALbar{(t_bot) ++(0pt, -5pt)};
+%% \draw [->] (s_bot) -- +(0pt, -10pt);
+%% \ALbar{(s_bot) ++(0pt, -5pt)};
+%%\end{tikzpicture}}
+%%\hspace{0.2cm}
+%%&
+%% Sharing
+%% {\begin{tikzpicture}[AL]
+%% \ALnodeT[1.5]s{0,1.5}s;
+%% \draw [->] (-0.7, .9) -- (-0.7, -3);
+%% \ALbar{(-.7, -1)};
+%% \begin{scope}[xshift = 5pt]
+%% \ALnodeS{0,0}v;
+%%\ALnodeT[.5]t{0,-1.5}t;
+%% \draw [->] (s_bot -| v_left) -- (v_left);
+%% \draw [->] (s_bot -| v_right) -- (v_right);
+%% \draw [->] (v_tip) -- (t_top);
+%% \ALdots{0,0.6};
+%% \draw [->] (0, -2.1) -- (0, -3);
+%% \ALbar{(0, -2.55)};
+%%\end{scope}
+%%\end{tikzpicture}}
+%%\end{tabular}
+%%\end{center}
 %
+%\noindent The semantics of the basic calculus, including the compilation and readback into the $\lambda$-calculus, can be found in \cite{gundersen2013atomic} and will not be repeated here.
+%
+%Although in the derivation for an abstraction in Figure \ref{fig:typebasic} we place the switch rule directly after the abstraction rule, this is not always the case. Consider the term $t = \lambda x . \lambda y . x y$, where $x : A \rightarrow B =  C$ and $y : A$. The following derivations are both typing judgements of $t : C \rightarrow A \rightarrow B$.
 %\begin{center}
-%\drv{\drv[yellow]{\top ; -[\lamrule] ; A \rightarrow A^{\color{red} x}} \wedge \drv{\top ; _[{\color{red} s_{1}}] ; B_{1}} \wedge \dots \wedge  \drv{\top ; _[{\color{red} s_{n}}] ; B_{n}} ; -[s] ; A \rightarrow \drv[green]{A \wedge B_{1} \wedge \dots \wedge B_{n} ; _[{\color{red} t-spine}] ; C}}
+%\drv{\top ; -[\lamrule] ; C \rightarrow \drv[green]{C \wedge \drv[yellow]{\top ;-[\lamrule] ; A \rightarrow A} ; -[s] ; A \rightarrow \drv[magenta]{C \wedge A ; -[\apprule] ; B}}}
+%\hspace{0.5cm}
+%$\sim$
+%\hspace{0.5cm}
+%\drv{ \drv{\top ; -[\lamrule] ; C \rightarrow C} \wedge \drv[yellow]{\top ; -[\lamrule] ; A \rightarrow A} ; -[s] ; C \rightarrow \drv[green]{C \wedge (A \rightarrow A) ; -[s] ; A \rightarrow \drv[magenta]{C \wedge A ; -[\apprule] ; B}}}
 %\end{center}
+%
+%The main difference between the two is that the first is \emph{scope-balanced} while the second is \emph{unbalanced} (terminology taken from \cite{hendriks2003lambda}). In derivations, the \emph{scope} of an abstraction is considered to be the subderivation found underneath the corresponding switch rule. In the scope-balanced derivation, the scope of the binder $\lambda x$ is the whole body of the term; any scopes of any binders underneath $\lambda x$ (such as $\lambda y$) are considered nested within the scope of $\lambda x$. The scope of an abstraction in the scope-balanced derivation corresponds to the skeleton of the term. In the unbalanced derivation, scopes are not strictly nested but can overlap. The variable $y$ (with type $A$) is now identified by the switch rule corresponding with $\lambda x$, and is not considered within the scope of $\lambda x$ in contrast to the balanced derivation where is was nested. The unbalanced scope of an abstraction corresponds with the spine of the term. Both derivations identify the application in all scope.
+%
+%%\begin{center}
+%%{\color{red} Add a picture here highlighting the scopes? Should I be general or use the specific example}
+%%\end{center}
+%
+%The atomic $\lambda$-calculus can be seen as using only scope-balanced derivations, and here we show that by using unbalanced derivations we can identify the spine of an abstraction, and moreover when introducing the medial rule to the typing system duplicate said spine by proof normalisation.
+%%
+%%We iterate the point here that the switch rule corresponds to an end-of-scope marker in the $\lambda$-calculus. To understand the idea, consider a closed term $\lambda x . t$ with $n$ maximal subterms $s_{1}, \dots, s_{n}$ that do not contain $x$ as a free variable. This abstraction can then be typed with the following derivation, where the derivation of $t$ is the composition of the derivations of each subterm $s_{i}$ as well as the derivation of the spine of $t$. It is possible to use a switch rule to mark each subterm independently, resulting in a possible explicit end-of-scope marker in the term calculus, but we choose to simplify such that each abstraction rule has at most one switch rule. 
+%%
+%%\begin{center}
+%%\drv{\drv[yellow]{\top ; -[\lamrule] ; A \rightarrow A^{\color{red} x}} \wedge \drv{\top ; _[{\color{red} s_{1}}] ; B_{1}} \wedge \dots \wedge  \drv{\top ; _[{\color{red} s_{n}}] ; B_{n}} ; -[s] ; A \rightarrow \drv[green]{A \wedge B_{1} \wedge \dots \wedge B_{n} ; _[{\color{red} t-spine}] ; C}}
+%%\end{center}
 
 
 \section{The Spinal Atomic $\lambda$-Calculus}
