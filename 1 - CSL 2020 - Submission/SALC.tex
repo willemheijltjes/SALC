@@ -264,15 +264,15 @@ The atomic lambda-calculus arose as a Curry--Howard interpretation of a deep-inf
 \[
 	\text{\small Distribution:}
 \quad
-	\drv{A\imp (B\con C);-[\dst];(A\imp B)\con(A\imp C)}
+	\drv{A\rightarrow (B\wedge C);-[d];(A\rightarrow B)\wedge(A\rightarrow C)}
 \qquad\qquad
 	\text{\small Switch:}
 \quad
-	\drv{(A\imp B)\con C);-[\swt];A\imp(B\con C)}
+	\drv{(A\rightarrow B)\wedge C);-[s];A\rightarrow(B\wedge C)}
 \]
 In this work, we investigate the computational interpretation of another characteristic deep-inference proof rule: the \emph{switch} rule above right~\cite{}. Our result is the \emph{spinal atomic lambda-calculus}, a term calculus in which the natural strategy is a refined form of full laziness, \emph{spine duplication}. This strategy duplicates only the \emph{spine} of an abstraction: the paths to its bound variables in the syntax tree of the term.
 
-We illustrate these notions below, for the example term $\lambda x.(\lambda z.z)(\lambda y.(yy)x)$. The \emph{scope} of the abstraction $\lambda x$ is the entire subterm, $(\lambda z.z)(\lambda y.(yy)x)$ (which may or may not be taken to include $\lambda x$ itself); the \emph{skeleton}, indicated in blue below, is the term $\lambda x.w(\lambda y.(yy)x)$ where the subterm $\lambda z.z$ is lifted out as an (explicit) substitution $[\lambda z.z/w]$; the \emph{spine} is indicated in red in the second image. The spine of a term cannot naturally be expressed with explicit substitution, though one can get an impression with \emph{capturing} substitutions: it would be $\lambda x.w(\lambda y.vx)$, with the subterm $yy$ extracted by a capturing substitution $[yy/x]$.
+We illustrate these notions below, for the example term $\lambda x.(\lambda z.z)(\lambda y.(yy)x)$. The \emph{scope} of the abstraction $\lambda x$ is the entire subterm, $(\lambda z.z)(\lambda y.(yy)x)$ (which may or may not be taken to include $\lambda x$ itself). The \emph{skeleton}, indicated in blue below, is the term $\lambda x.w(\lambda y.(yy)x)$ where the subterm $\lambda z.z$ is lifted out as an (explicit) substitution $[\lambda z.z/w]$. The \emph{spine} of a term, indicated in red in the second image, cannot naturally be expressed with explicit substitution, though one can get an impression with \emph{capturing} substitutions: it would be $\lambda x.w(\lambda y.vx)$, with the subterm $yy$ extracted by a capturing substitution $[yy/x]$.
 %
 \[
 	{\small   \begin{tikzpicture}[auto, scale = 0.75]
@@ -344,9 +344,13 @@ We illustrate these notions below, for the example term $\lambda x.(\lambda z.z)
 		\end{tikzpicture}}
 	\end{tabular}}
 \]
-
-
-
+We identify four natural duplication regimes from the literature. For a shared term $\lambda x.N$ to become available as the function of a redex:
+\begin{description}
+\item[Laziness] duplicates its \emph{scope} \cite{};
+\item[Full laziness] duplicates its \emph{skeleton} \cite{Wadsworth, Balabonski};
+\item[Spinal full laziness] duplicates its \emph{spine} \cite{Levy-Blanc-Maranget, etc.};
+\item[Optimal reduction] duplicates just the abstraction $\lambda x$ and its bound variables $x$ \cite{Lamping, etc.}.
+\end{description}
 
 
 
@@ -387,7 +391,7 @@ A \emph{derivation} from a \emph{premise} formula $X$ to a \emph{conclusion} for
 	\centering
 	\begin{subfigure}[b]{0.3\textwidth}
 { \small
-\drv{X ; _ ; Z} {:}{:}{=} $a$ $\vert$ \drv{\drv[yellow]{X_{1} ; _ ; Z_{1}} * \drv[yellow]{X_{1} ; _ ; Z_{1}}} $\vert$ \drv{\drv[yellow]{X ; _ ; Y_{1}} ; -[r] ; \drv[yellow]{Y_{2} ; _ ; Z}}
+\drv{X ; | ; Z} {:}{:}{=} $a$ $\vert$ \drv{\drv[yellow]{X_{1} ; | ; Z_{1}} * \drv[yellow]{X_{1} ; | ; Z_{1}}} $\vert$ \drv{\drv[yellow]{X ; | ; Y_{1}} ; -[r] ; \drv[yellow]{Y_{2} ; | ; Z}}
 }
 	\caption{Derivations}
 	\label{fig:derivations}
@@ -395,12 +399,12 @@ A \emph{derivation} from a \emph{premise} formula $X$ to a \emph{conclusion} for
 	\hfill
 	\begin{subfigure}[b]{0.6\textwidth}
 { \small
-\drv{\drv[yellow]{X ; _ ; Y} ; . ; \drv[yellow]{Y ; _ ; Z}} {:}{:}{=} \drv{X ; . ; \drv[yellow]{X ; _ ; Z}} $=$ \drv{\drv[yellow]{X ; _ ; Z} ; . ; Z} $=$ \drv{X ; _ ; Z}
+\drv{\drv[yellow]{X ; | ; Y} ; . ; \drv[yellow]{Y ; | ; Z}} ~{:}{=}~ \drv{X ; . ; \drv[yellow]{X ; | ; Z}} $=$ \drv{\drv[yellow]{X ; | ; Z} ; . ; Z} $=$ \drv{X ; | ; Z}
 } \hfill
 {\small
-\drv{ \drv[yellow]{\drv[magenta]{X_{1} ; _ ; Y_{1}} * \drv[orange]{X_{2} ; _ ; Y_{2}}} ; . ; \drv[yellow]{\drv[cyan]{Y_{1} ; _ ; Z_{1}} * \drv[green]{Y_{2} ; _ ; Z_{2}}}}
+\drv{ \drv[yellow]{\drv[magenta]{X_{1} ; | ; Y_{1}} * \drv[orange]{X_{2} ; | ; Y_{2}}} ; . ; \drv[yellow]{\drv[cyan]{Y_{1} ; | ; Z_{1}} * \drv[green]{Y_{2} ; | ; Z_{2}}}}
 =
-\drv{\drv[yellow]{ \drv[magenta]{X_{1} ; _ ; Y_{1}} ; . ; \drv[cyan]{Y_{1} ; _ ; Z_{1}}} * \drv[yellow]{ \drv[orange]{X_{2} ; _ ; Y_{2}} ; . ; \drv[green]{Y_{2} ; _ ; Z_{2}} }}
+\drv{\drv[yellow]{ \drv[magenta]{X_{1} ; | ; Y_{1}} ; . ; \drv[cyan]{Y_{1} ; | ; Z_{1}}} * \drv[yellow]{ \drv[orange]{X_{2} ; | ; Y_{2}} ; . ; \drv[green]{Y_{2} ; | ; Z_{2}} }}
 }
 	\caption{Vertical composition}
 	\label{fig:vertical}
@@ -414,7 +418,7 @@ A \emph{derivation} from a \emph{premise} formula $X$ to a \emph{conclusion} for
 \begin{figure}[h]
 	\begin{subfigure}[b]{0.2\textwidth}
 	\centering
-		{\small \drv{Y \rightarrow \drv[yellow]{X ; _ ; Z}}}
+		{\small \drv{Y \rightarrow \drv[yellow]{X ; | ; Z}}}
 	\caption{Implication}
 	\label{fig:implication}
 	\end{subfigure}
@@ -467,11 +471,11 @@ Basic Types: $A, B, C \quad {:}{=} \quad a \, \, \, \vert \, \, \, A \rightarrow
 \end{center}
 $x :$ {\small \drv{A^{x}}}
 \hfill
-$\app{t}{s} :$ {\small \drv{\drv[yellow]{\Gamma ; _[t] ; A \rightarrow B} \wedge \drv[yellow]{\Delta ; _[s] ; A} ; -[\apprule] ; B}}
+$\app{t}{s} :$ {\small \drv{\drv[yellow]{\Gamma ; |[t] ; A \rightarrow B} \wedge \drv[yellow]{\Delta ; |[s] ; A} ; -[\apprule] ; B}}
 \hfill
-$\abs{x}{t} :$ {\small \drv{\Gamma ; -[\lamrule] ; A \rightarrow \drv[yellow]{\Gamma \wedge A^{x} ; _[t] ; B}}}
+$\abs{x}{t} :$ {\small \drv{\Gamma ; -[\lamrule] ; A \rightarrow \drv[yellow]{\Gamma \wedge A^{x} ; |[t] ; B}}}
 \hfill
-$\share{t}{\vec{x}}{s} :$ {\small \drv{\Gamma \wedge \drv[yellow]{\Delta ; _[s] ; A ; -[\sharerule] ; A \wedge \dots \wedge A} ; . ; \Gamma \wedge (A \wedge \dots \wedge A)^{\vec{x}} ; _[t] ; B}}
+$\share{t}{\vec{x}}{s} :$ {\small \drv{\Gamma \wedge \drv[yellow]{\Delta ; |[s] ; A ; -[\sharerule] ; A \wedge \dots \wedge A} ; . ; \Gamma \wedge (A \wedge \dots \wedge A)^{\vec{x}} ; |[t] ; B}}
 \caption{Typing System for $\SLC$}
 \label{fig:SLCT}
 \end{figure}
@@ -480,7 +484,7 @@ $\share{t}{\vec{x}}{s} :$ {\small \drv{\Gamma \wedge \drv[yellow]{\Delta ; _[s] 
 %\begin{definition}
 %A \emph{derivation} in open deduction is defined as follows.
 %\begin{center}
-%\drv{A ; _ ; C}
+%\drv{A ; | ; C}
 %\hspace{0.5cm}
 %::=
 %\hspace{0.5cm}
@@ -488,15 +492,15 @@ $\share{t}{\vec{x}}{s} :$ {\small \drv{\Gamma \wedge \drv[yellow]{\Delta ; _[s] 
 %\hspace{0.2cm}
 %$\vert$
 %\hspace{0.2cm}
-%\drv{\drv{A_{1} ; _ ; C_{1}} \wedge \drv{A_{2} ; _ ; C_{2}}}
+%\drv{\drv{A_{1} ; | ; C_{1}} \wedge \drv{A_{2} ; | ; C_{2}}}
 %\hspace{0.2cm}
 %$\vert$
 %\hspace{0.2cm}
-%\drv{\drv{C_{1} ; _ ; A_{1}} \rightarrow \drv{A_{2} ; _ ; C_{2}}}
+%\drv{\drv{C_{1} ; | ; A_{1}} \rightarrow \drv{A_{2} ; | ; C_{2}}}
 %\hspace{0.2cm}
 %$\vert$
 %\hspace{0.2cm}
-%\drv{A ; _ ; B_{1} ; -[r] ; B_{2} ; _ ; C}
+%\drv{A ; | ; B_{1} ; -[r] ; B_{2} ; | ; C}
 %\end{center}
 %\end{definition}
 %
@@ -534,13 +538,13 @@ $\share{t}{\vec{x}}{s} :$ {\small \drv{\Gamma \wedge \drv[yellow]{\Delta ; _[s] 
 %\drv{A^{\color{red} x}}
 %\hspace{0.2cm}
 %&
-%\drv{ \drv[yellow]{\top ; -[\lamrule] ; A \rightarrow A} \wedge \Gamma ; -[s] ; A \rightarrow \drv[green]{A^{\color{red} x} \wedge \Gamma ; _[\color{red} t] ; B}}
+%\drv{ \drv[yellow]{\top ; -[\lamrule] ; A \rightarrow A} \wedge \Gamma ; -[s] ; A \rightarrow \drv[green]{A^{\color{red} x} \wedge \Gamma ; |[\color{red} t] ; B}}
 %\hspace{0.2cm}
 %&
-%\drv{\drv[yellow]{\Gamma ; _[\color{red}s] ; A} \wedge \drv[yellow]{\Delta ; _[\color{red}t] ; A \rightarrow B} ; -[\apprule] ; B}
+%\drv{\drv[yellow]{\Gamma ; |[\color{red}s] ; A} \wedge \drv[yellow]{\Delta ; |[\color{red}t] ; A \rightarrow B} ; -[\apprule] ; B}
 %\hspace{0.2cm}
 %&
-%\drv{\drv[yellow]{ \Delta \wedge \drv[green]{\Gamma ; _[\color{red} t] ; A ; -[\sharerule] ; A^{\color{red} x_{1}} \wedge \dots \wedge A^{\color{red} x_{n}}}} ; _[\color{red} s ] ; B}
+%\drv{\drv[yellow]{ \Delta \wedge \drv[green]{\Gamma ; |[\color{red} t] ; A ; -[\sharerule] ; A^{\color{red} x_{1}} \wedge \dots \wedge A^{\color{red} x_{n}}}} ; |[\color{red} s ] ; B}
 %\end{tabular}
 %\end{center}
 %\caption{Typing derivations for terms in the basic calculus}
@@ -624,7 +628,7 @@ $\share{t}{\vec{x}}{s} :$ {\small \drv{\Gamma \wedge \drv[yellow]{\Delta ; _[s] 
 %%We iterate the point here that the switch rule corresponds to an end-of-scope marker in the $\lambda$-calculus. To understand the idea, consider a closed term $\lambda x . t$ with $n$ maximal subterms $s_{1}, \dots, s_{n}$ that do not contain $x$ as a free variable. This abstraction can then be typed with the following derivation, where the derivation of $t$ is the composition of the derivations of each subterm $s_{i}$ as well as the derivation of the spine of $t$. It is possible to use a switch rule to mark each subterm independently, resulting in a possible explicit end-of-scope marker in the term calculus, but we choose to simplify such that each abstraction rule has at most one switch rule.
 %%
 %%\begin{center}
-%%\drv{\drv[yellow]{\top ; -[\lamrule] ; A \rightarrow A^{\color{red} x}} \wedge \drv{\top ; _[{\color{red} s_{1}}] ; B_{1}} \wedge \dots \wedge  \drv{\top ; _[{\color{red} s_{n}}] ; B_{n}} ; -[s] ; A \rightarrow \drv[green]{A \wedge B_{1} \wedge \dots \wedge B_{n} ; _[{\color{red} t-spine}] ; C}}
+%%\drv{\drv[yellow]{\top ; -[\lamrule] ; A \rightarrow A^{\color{red} x}} \wedge \drv{\top ; |[{\color{red} s_{1}}] ; B_{1}} \wedge \dots \wedge  \drv{\top ; |[{\color{red} s_{n}}] ; B_{n}} ; -[s] ; A \rightarrow \drv[green]{A \wedge B_{1} \wedge \dots \wedge B_{n} ; |[{\color{red} t-spine}] ; C}}
 %%\end{center}
 
 
@@ -636,21 +640,21 @@ $\share{t}{\vec{x}}{s} :$ {\small \drv{\Gamma \wedge \drv[yellow]{\Delta ; _[s] 
 %\end{center}
 %The distribution rule is introduced when an abstraction meets a contraction rule. The proof reduction step to be implemented in the spinal atomic $\lambda$-calculus is as follows.
 %\begin{center}
-%\drv{(A \rightarrow A) \wedge \Gamma ; -[s] ; A \rightarrow \drv[yellow]{A \wedge \Gamma ; _ ; B} ; -[\sharerule] ; (A \rightarrow B) \wedge (A \rightarrow B)}
+%\drv{(A \rightarrow A) \wedge \Gamma ; -[s] ; A \rightarrow \drv[yellow]{A \wedge \Gamma ; | ; B} ; -[\sharerule] ; (A \rightarrow B) \wedge (A \rightarrow B)}
 %\hspace{0.5cm}
 %$\rightsquigarrow$
 %\hspace{0.5cm}
-%\drv{(A \rightarrow A) \wedge \Gamma ; -[s] ; A \rightarrow \drv{\drv[yellow]{A \wedge \Gamma ; _ ; B} ; -[\sharerule] ; B \wedge B} ; -[d] ; (A \rightarrow B) \wedge (A \rightarrow B)}
+%\drv{(A \rightarrow A) \wedge \Gamma ; -[s] ; A \rightarrow \drv{\drv[yellow]{A \wedge \Gamma ; | ; B} ; -[\sharerule] ; B \wedge B} ; -[d] ; (A \rightarrow B) \wedge (A \rightarrow B)}
 %\end{center}
 %
 %By doing this, we leave a contraction applied to a subderivation for a term $\lambda x . t$. This reduction step allows to push the contraction past the abstraction, inside the body $t$, without duplicating any part of $t$ itself. The abstraction $\lambda x$ becomes duplicated, creating \emph{phantom-abstractions} (the derivations that occur underneath the distributor). Phantom-abstractions can intuively be interpretated as partially duplicated abstractions. The idea is that the contraction continues to duplicate $t$ stepwise, and the copies gets substituted into the body of the phantom-abstractions, i.e.\ subderivations produceed by continuing the duplication of $t$ are moved underneath the distributor rule as shown in Figure \ref{fig:flush}.
 %\begin{figure}[h]
 %\begin{center}
-%\drv{(A \rightarrow A) \wedge \Gamma ; -[s] ; A \rightarrow \drv[yellow]{A \wedge \Gamma ; _ ; C ; -[\sharerule] ; \drv[green]{C ; _ ; B} \wedge \drv[green]{C ; _ ; B}} ; -[d] ; (A \rightarrow B) \wedge (A \rightarrow B)}
+%\drv{(A \rightarrow A) \wedge \Gamma ; -[s] ; A \rightarrow \drv[yellow]{A \wedge \Gamma ; | ; C ; -[\sharerule] ; \drv[green]{C ; | ; B} \wedge \drv[green]{C ; | ; B}} ; -[d] ; (A \rightarrow B) \wedge (A \rightarrow B)}
 %\hspace{0.5cm}
 %$\rightsquigarrow$
 %\hspace{0.5cm}
-%\drv{(A \rightarrow A) \wedge \Gamma ; -[s] ; A \rightarrow \drv[yellow]{A \wedge \Gamma ; _ ; C ; -[\sharerule] ; C \wedge C} ; -[d] ; (A \rightarrow \drv[green]{C ; _ ; B}) \wedge (A \rightarrow \drv[green]{\Delta ; _ ; B})}
+%\drv{(A \rightarrow A) \wedge \Gamma ; -[s] ; A \rightarrow \drv[yellow]{A \wedge \Gamma ; | ; C ; -[\sharerule] ; C \wedge C} ; -[d] ; (A \rightarrow \drv[green]{C ; | ; B}) \wedge (A \rightarrow \drv[green]{\Delta ; | ; B})}
 %\end{center}
 %\caption{Flushing terms through the distributor}
 %\label{fig:flush}
@@ -658,20 +662,20 @@ $\share{t}{\vec{x}}{s} :$ {\small \drv{\Gamma \wedge \drv[yellow]{\Delta ; _[s] 
 %
 %As the duplication of the body of the abstraction proceeds we may create contraction rules on derivations that do not contain the bound variable. Instead of duplicating, we can instead `lift' the derivation outside the scope of the abstraction. This is implemented in the following proof reduction step.
 %\begin{center}
-%\drv{(A \rightarrow A) \wedge \Gamma_{1} \wedge \Gamma_{2} ; -[s] ; A \rightarrow \drv[yellow]{\drv[green]{A \wedge \Gamma_{1} ; _ ; C \wedge C} \wedge \drv[magenta]{\Gamma_{2} ; _ ; D \wedge D}} ; -[d] ; (A \rightarrow C \wedge D) \wedge (A \rightarrow C \wedge D)}
+%\drv{(A \rightarrow A) \wedge \Gamma_{1} \wedge \Gamma_{2} ; -[s] ; A \rightarrow \drv[yellow]{\drv[green]{A \wedge \Gamma_{1} ; | ; C \wedge C} \wedge \drv[magenta]{\Gamma_{2} ; | ; D \wedge D}} ; -[d] ; (A \rightarrow C \wedge D) \wedge (A \rightarrow C \wedge D)}
 %\hspace{0.5cm}
 %$\rightsquigarrow$
 %\hspace{0.5cm}
-%\drv{(A \rightarrow A) \wedge \Gamma_{1} \wedge \drv[magenta]{\Gamma_{2} ; _ ; D \wedge D} ; -[s] ; A \rightarrow \drv[yellow]{\drv[green]{A \wedge \Gamma_{1} ; _ ; C \wedge C} \wedge D \wedge D} ; -[d] ; (A \rightarrow C \wedge D) \wedge (A \rightarrow C \wedge D)}
+%\drv{(A \rightarrow A) \wedge \Gamma_{1} \wedge \drv[magenta]{\Gamma_{2} ; | ; D \wedge D} ; -[s] ; A \rightarrow \drv[yellow]{\drv[green]{A \wedge \Gamma_{1} ; | ; C \wedge C} \wedge D \wedge D} ; -[d] ; (A \rightarrow C \wedge D) \wedge (A \rightarrow C \wedge D)}
 %\end{center}
 %
 %\noindent After lifting the derivation, we may notice that the formula $D$ does not need to be affiliated with the switch rule but instead can be directly placed using switch rules on the phantom-abstractions. As we are duplicating an abstraction, the partially duplicated abstractions will also have scopes and it is natural that they would also have switch rules that maintain these scopes during duplication. The derivation we lift is not considered part of the spine, and by placing a switch rule on the phantom-abstraction we are transferring this information to the copies of the abstraction. Thus the spine of the copies are equal to the spine of the original.
 %\begin{center}
-%\drv{(A \rightarrow A) \wedge \Gamma_{1} \wedge \drv[magenta]{\Gamma_{2} ; _ ; D \wedge D} ; -[s] ; A \rightarrow \drv[yellow]{\drv[green]{A \wedge \Gamma_{1} ; _ ; C \wedge C} \wedge D \wedge D} ; -[d] ; (A \rightarrow C \wedge D) \wedge (A \rightarrow C \wedge D)}
+%\drv{(A \rightarrow A) \wedge \Gamma_{1} \wedge \drv[magenta]{\Gamma_{2} ; | ; D \wedge D} ; -[s] ; A \rightarrow \drv[yellow]{\drv[green]{A \wedge \Gamma_{1} ; | ; C \wedge C} \wedge D \wedge D} ; -[d] ; (A \rightarrow C \wedge D) \wedge (A \rightarrow C \wedge D)}
 %\hspace{0.5cm}
 %$\rightsquigarrow$
 %\hspace{0.5cm}
-%\drv{\drv[cyan]{(A \rightarrow A) \wedge \Gamma_{1} ; -[s] ; A \rightarrow \drv[green]{A \wedge \Gamma_{1} ; _ ; C \wedge C} ; -[d] ; (A \rightarrow C) \wedge (A \rightarrow C)} \wedge \drv[magenta]{\Gamma_{2} ; _ ; D \wedge D} ; =[s] ; (A \rightarrow C \wedge D) \wedge (A \rightarrow C \wedge D)}
+%\drv{\drv[cyan]{(A \rightarrow A) \wedge \Gamma_{1} ; -[s] ; A \rightarrow \drv[green]{A \wedge \Gamma_{1} ; | ; C \wedge C} ; -[d] ; (A \rightarrow C) \wedge (A \rightarrow C)} \wedge \drv[magenta]{\Gamma_{2} ; | ; D \wedge D} ; =[s] ; (A \rightarrow C \wedge D) \wedge (A \rightarrow C \wedge D)}
 %\end{center}
 %Eventually all the free variables affiliated with the switch are passed to the phantom-abstractions, and the switch rule associated with the abstraction being duplicated will be redundant. If we move all other derivations out of the distribution scope by lifting and flushing as shown in Figure \ref{fig:flush}, eventually the distribution rule will meet the abstraction rule. The distribution inference can then be eliminated by the reduction step below.
 %\begin{center}
@@ -799,11 +803,11 @@ This rule is the result of computationally interpreting the medial rule as done 
 %The main difference between our calculus is the bindings. We create a new class of bindings, where phantom-variables are captured by the distributor but variables are captured by the environment of the distributor. This shows in the derivations since the types of the variables ($\Sigma$ and $\Phi$) are not captured by the distribution rule.
 
 \begin{figure}[h]
-$\fake{c}{\vec{x}}{t}:$ {\small \drv{(A \rightarrow \Gamma) \wedge \Delta ; -[\switchrule] ; A^{c} \rightarrow \drv[yellow]{\Gamma^{\vec{x}} \wedge \Delta ; _[t] ; C}}}
+$\fake{c}{\vec{x}}{t}:$ {\small \drv{(A \rightarrow \Gamma) \wedge \Delta ; -[\switchrule] ; A^{c} \rightarrow \drv[yellow]{\Gamma^{\vec{x}} \wedge \Delta ; |[t] ; C}}}
 \hspace{1cm}
 $\dist{u}{\vecdist{e}{x}}{\overline{[\Gamma]}}{c}{\vec{z}}: $ {\small \drv{\drv{\drv[yellow]{(C \rightarrow \Gamma) \wedge \Delta ; -[\switchrule] ; C^{c} \rightarrow
-	\drv[cyan]{\Gamma^{\color{black} \vec{z}} \wedge \Delta ; _[{\color{black} \overline{[\Gamma]}} ] ; \Sigma_{1} \wedge \dots \wedge \Sigma_{n}} ; -[\distrule] ; (C^{\color{black}e_{1}} \rightarrow \Sigma_{1}^{\vec{\color{black}x_{1}}}) \wedge \dots \wedge  (C^{\color{black}e_{n}} \rightarrow \Sigma_{n}^{\vec{\color{black}x_{n}}})}
-	\wedge \Omega} ; . ; (C \rightarrow \Sigma_{1}) \wedge \dots \wedge (C \rightarrow \Sigma_{n}) \wedge \Omega ; _[u] ; E} }
+	\drv[cyan]{\Gamma^{\color{black} \vec{z}} \wedge \Delta ; |[{\color{black} \overline{[\Gamma]}} ] ; \Sigma_{1} \wedge \dots \wedge \Sigma_{n}} ; -[\distrule] ; (C^{\color{black}e_{1}} \rightarrow \Sigma_{1}^{\vec{\color{black}x_{1}}}) \wedge \dots \wedge  (C^{\color{black}e_{n}} \rightarrow \Sigma_{n}^{\vec{\color{black}x_{n}}})}
+	\wedge \Omega} ; . ; (C \rightarrow \Sigma_{1}) \wedge \dots \wedge (C \rightarrow \Sigma_{n}) \wedge \Omega ; |[u] ; E} }
 \caption{Typing derivations for phantom-abstractions and distributors}
 \label{fig:derivphandist}
 \end{figure}
@@ -1061,17 +1065,17 @@ The proof rewrite rule corresponding with the rewrite rule \ref{red:distshare} c
 
 \begin{center}
 \begin{tabular}{c c c}
-	$\drv{(C \rightarrow \Gamma) \wedge \Delta \wedge \Omega ; -[\switchrule] ; C^{\color{red} c} \rightarrow \drv[yellow]{\drv[green]{\Gamma^{\color{red} \vec{x}} \wedge \Delta \wedge \drv[cyan]{\Omega ; _[\color{red} {[\Gamma]} ] ; A \wedge \dots \wedge A}} ; _[{\color{red} \overline{[\Gamma]}}] ; \Sigma_{1}^{{\color{red} \vec{w_{1}}}} \dots \Sigma_{n}^{{\color{red} \vec{w_{n}}}} } ; -[\distrule] ; (C \rightarrow \Sigma_{1}) \wedge \dots \wedge (C \rightarrow \Sigma_{n})}$
+	$\drv{(C \rightarrow \Gamma) \wedge \Delta \wedge \Omega ; -[\switchrule] ; C^{\color{red} c} \rightarrow \drv[yellow]{\drv[green]{\Gamma^{\color{red} \vec{x}} \wedge \Delta \wedge \drv[cyan]{\Omega ; |[\color{red} {[\Gamma]} ] ; A \wedge \dots \wedge A}} ; |[{\color{red} \overline{[\Gamma]}}] ; \Sigma_{1}^{{\color{red} \vec{w_{1}}}} \dots \Sigma_{n}^{{\color{red} \vec{w_{n}}}} } ; -[\distrule] ; (C \rightarrow \Sigma_{1}) \wedge \dots \wedge (C \rightarrow \Sigma_{n})}$
 	& $\rightsquigarrow_{L}$ &
-	$\drv{(C \rightarrow \Gamma) \wedge \Delta \wedge \drv[cyan]{\Omega ; _[\color{red} {[\Gamma]}] ; A \wedge \dots \wedge A} ; -[\switchrule] ; C^{\color{red} c} \rightarrow \drv[yellow]{\drv[green]{\Gamma^{\color{red} \vec{x}} \wedge \Delta \wedge A \dots A} ; _[\color{red} { \overline{[\Gamma]}}] ; \Sigma_{1}^{{\color{red} \vec{w_{1}}}} \dots \Sigma_{n}^{{\color{red} \vec{w_{n}}}} } ; -[\distrule] ; (C \rightarrow \Sigma_{1}) \wedge \dots \wedge (C \rightarrow \Sigma_{n})}$
+	$\drv{(C \rightarrow \Gamma) \wedge \Delta \wedge \drv[cyan]{\Omega ; |[\color{red} {[\Gamma]}] ; A \wedge \dots \wedge A} ; -[\switchrule] ; C^{\color{red} c} \rightarrow \drv[yellow]{\drv[green]{\Gamma^{\color{red} \vec{x}} \wedge \Delta \wedge A \dots A} ; |[\color{red} { \overline{[\Gamma]}}] ; \Sigma_{1}^{{\color{red} \vec{w_{1}}}} \dots \Sigma_{n}^{{\color{red} \vec{w_{n}}}} } ; -[\distrule] ; (C \rightarrow \Sigma_{1}) \wedge \dots \wedge (C \rightarrow \Sigma_{n})}$
 \end{tabular}
 \end{center}
 The second part of the rewrite rule justifies the need for the book-keeping operation. In the rewrite below, let $A$ be the type of a variable $z$ where $z \in \vec{z}$. After lifting, we want to remove the variable from the cover as to ensure correctness since the variables in the cover denote the variables captured by the environment. Book-keeping allows us to remove these variables simultaneously.
 \begin{center}
 \begin{tabular}{c c c}
-	$\drv{(C \rightarrow \Gamma^{\color{red} \vec{x}}) \wedge \Delta \wedge A ; -[\switchrule] ; C^{\color{red} c} \rightarrow \drv[yellow]{\drv[green]{\Gamma \wedge \Delta ; _[{\color{red} \overline{[\Gamma]}}] ; \Sigma_{1} \wedge \dots \wedge \Sigma_{n}} \wedge A^{{\color{red} z}} ; . ; \Sigma_{1} \wedge \dots \wedge \Sigma_{i} \wedge A \wedge \dots \wedge \Sigma_{n}}  ; -[\distrule] ; \dots \wedge (C^{{\color{red} e_{i}}} \rightarrow \Sigma_{i}^{{\color{red} \vec{w}}} \wedge A) \wedge \dots}$
+	$\drv{(C \rightarrow \Gamma^{\color{red} \vec{x}}) \wedge \Delta \wedge A ; -[\switchrule] ; C^{\color{red} c} \rightarrow \drv[yellow]{\drv[green]{\Gamma \wedge \Delta ; |[{\color{red} \overline{[\Gamma]}}] ; \Sigma_{1} \wedge \dots \wedge \Sigma_{n}} \wedge A^{{\color{red} z}} ; . ; \Sigma_{1} \wedge \dots \wedge \Sigma_{i} \wedge A \wedge \dots \wedge \Sigma_{n}}  ; -[\distrule] ; \dots \wedge (C^{{\color{red} e_{i}}} \rightarrow \Sigma_{i}^{{\color{red} \vec{w}}} \wedge A) \wedge \dots}$
 	& $\rightsquigarrow$ &
-	$\drv{\drv{(C \rightarrow \Gamma^{\color{red} \vec{x}}) \wedge \Delta ; -[\switchrule] ; C^{\color{red} c} \rightarrow \drv[yellow]{\drv[green]{\Gamma \wedge \Delta ; _[{\color{red} \overline{[\Gamma]}}] ; \Sigma_{1} \wedge \dots \wedge \Sigma_{n}} ; . ; \Sigma_{1} \wedge \dots \wedge \Sigma_{i} \wedge \dots \wedge \Sigma_{n}}  ; -[\distrule] ; \dots \wedge (C \rightarrow \Sigma_{i}) \wedge \dots}\wedge A^{\color{red} z} ; . ; \dots \wedge \drv[cyan]{(C^{\color{red} e_{i}} \rightarrow \Sigma_{i}^{{\color{red} \vec{w} }}) \wedge A ; -[\switchrule] ; C \rightarrow \Sigma_{i} \wedge A} \wedge \dots}$
+	$\drv{\drv{(C \rightarrow \Gamma^{\color{red} \vec{x}}) \wedge \Delta ; -[\switchrule] ; C^{\color{red} c} \rightarrow \drv[yellow]{\drv[green]{\Gamma \wedge \Delta ; |[{\color{red} \overline{[\Gamma]}}] ; \Sigma_{1} \wedge \dots \wedge \Sigma_{n}} ; . ; \Sigma_{1} \wedge \dots \wedge \Sigma_{i} \wedge \dots \wedge \Sigma_{n}}  ; -[\distrule] ; \dots \wedge (C \rightarrow \Sigma_{i}) \wedge \dots}\wedge A^{\color{red} z} ; . ; \dots \wedge \drv[cyan]{(C^{\color{red} e_{i}} \rightarrow \Sigma_{i}^{{\color{red} \vec{w} }}) \wedge A ; -[\switchrule] ; C \rightarrow \Sigma_{i} \wedge A} \wedge \dots}$
 \end{tabular}
 \end{center}
 
@@ -1097,9 +1101,9 @@ The atomic steps for duplicating are given in the third and final set of rewrite
 \end{multlined}
 \end{equation}
 \begin{center}
-\drv{(A \rightarrow B) \wedge \Gamma ; -[\switchrule] ; A \rightarrow \drv[cyan]{B \wedge \Gamma ; _ ; C} ; -[\sharerule] ; (A \rightarrow C) \wedge (A \rightarrow C)}
+\drv{(A \rightarrow B) \wedge \Gamma ; -[\switchrule] ; A \rightarrow \drv[cyan]{B \wedge \Gamma ; | ; C} ; -[\sharerule] ; (A \rightarrow C) \wedge (A \rightarrow C)}
 \hspace{0.5cm}
-\drv{(A \rightarrow B) \wedge \Gamma ; -[\switchrule] ; A \rightarrow \drv[cyan]{B \wedge \Gamma ; _ ; C ; -[\sharerule] ; C \wedge C} ; -[\distrule] ; (A \rightarrow C) \wedge (A \rightarrow C)}
+\drv{(A \rightarrow B) \wedge \Gamma ; -[\switchrule] ; A \rightarrow \drv[cyan]{B \wedge \Gamma ; | ; C ; -[\sharerule] ; C \wedge C} ; -[\distrule] ; (A \rightarrow C) \wedge (A \rightarrow C)}
 \end{center}
 \begin{equation} \label{red:distelim} \tag{$d_{3}$}
 \dist{u}{\fakedist{e_{1}}{\vec{w_{1}}} \dots \fakedist{e_{n}}{\vec{w_{n}}}}{\share{}{\vec{w_{1}}, \dots, \vec{w_{n}}}{c}}{c}{c} \rightsquigarrow_{D} \exor{\exor{u}{e_{1}}{\vec{w_{1}}} \dots}{e_{n}}{\vec{w_{n}}}
