@@ -1115,7 +1115,9 @@ The atomic steps for duplicating are given in the third and final set of rewrite
 \drv{\drv{ ; -[\lamrule] ; A \rightarrow A} \wedge \drv{ ; -[\lamrule] ; A \rightarrow A}}
 \end{center}
 
-\noindent Each rewrite rule preserves the conclusion of the derivation, and thus the following proposition is easy to observe.
+\noindent As an example, observe $\share{u}{z_{1}, z_{2}}{\abs{x}{\app{(\abs{z}{z})}{\abs{y}{\app{(\app{y}{y})}{x}}}}}$ (note $\abs{x}{t} \equiv \fake{x}{x}{t}$). By (\ref{red:absdup}) we obtain $\dist{u'}{\fakedist{e_{1}}{z_{1}}, \fakedist{e_{2}}{z_{2}}}{\share{}{z_{1}, z_{2}}{\app{(\abs{z}{z})}{\abs{y}{\app{(\app{y}{y})}{x}}}}}{x}{x}$ where $u' = u\sub{}{\fake{e_{i}}{z_{i}}{z_{i}}}{z_{i}}_{i \in [2]}$. Then by reductions (\ref{red:appdup}, \ref{red:distshare}), we obtain the distributor $\dist{u''}{\fakedist{e_{1}}{z_{1}}, \fakedist{e_{2}}{z_{2}}}{\share{}{z_{1}, z_{2}}{\abs{y}{\app{(\app{y}{y})}{x}}}}{x}{x}$ where $u'' = u\sub{}{\fake{e_{i}}{z_{i}}{\app{a_{i}}{z_{i}}}}{z_{i}}_{i \in [2]}$. Then by (\ref{red:absdup}, \ref{red:appdup}, \ref{red:distshare}, \ref{red:distshare}) we obtain the distributor $\dist{u'''}{\fakedist{e_{1}}{z_{1}}, \fakedist{e_{2}}{z_{2}}}{\share{}{z_{1}, z_{2}}{x}}{x}{x}$ which can be eliminated by (\ref{red:distelim}). A full example can be found in the Appendix. 
+
+Each rewrite rule preserves the conclusion of the derivation, and thus the following proposition is easy to observe.
 
 \begin{proposition}
 If $s \rightsquigarrow_{L, C, D, \beta} t$ and $s : C$, then $t : C$
@@ -1426,8 +1428,13 @@ For a given $N \in \Lambda$ that is strongly normalising, we know by Lemma \ref{
 \section{Conclusion and Further Remarks}
 \label{chap:conc}
 
+We have studied the computational interpretation of the switch rule and discovered its correspondence with scope in the $\lambda$-calculus. We have studied the interaction between the switch and the medial rule, the two characteristic inference rules of deep inference. We interpret a calculus based on this interaction called the spinal atomic $\lambda$-calculus, which not only has the ability to duplicate terms atomically but can also duplicate solely the spine of an abstraction such that beta reduction can be applied on the duplicates. 
 
-%Once we fully duplicate the abstraction, the phantom-abstractions will convert to abstractions. %and thus will use a switch rule will depict the scope oas depicted in Figure \ref{fig:typebasic}.
+In the future we would like to have a full Curry-Howard correspondence rather than just an interpretation, i.e.\ where each inference rule in the typing system corresponds with a construct in the term calculus. Additionally, we are interested in studying the computational interpretation of the same rules with different connectives.
+
+Additionally, we aim to translate the result of Blanc, L\'{e}vy, and Maranget \cite{blanc2007sharing} into our calculus. There they provide an algorithm proven by Balabonski in \cite{Balabonski12} to implement optimal reduction for Wadsworth's \emph{weak $\lambda$-calculus} \cite{wadsworth1971semantics} (further studied in \cite{CAGMAN1998239}. By showing their result in our formalism, we develop a logical framework that follows an optimal reduction strategy.
+
+%Lastly, and a long-term goal, would be to develop a complete logical framework for optimal reduction. The algorithms for optimal reduction us graph rewriting techniques, and nodes that specify enclosures and scopes. Furthermore, the implementations do not share terms like in either of the atomic $\lambda$-calculi, but they share contexts i.e.\ terms with holes that can be `filled' with distinct terms. Thus it is clear that they use a notion of sharing more than the one demonstrated here.
 
 
 
@@ -1541,6 +1548,129 @@ The proof for $\exists_{ M \in \Lambda} . t = \compile{M}'$ is the same as in \c
 \end{proof}
 
 \subsection{Rewrite Rules}
+
+Here we will give more concrete definitions of substitution, book-keeping and exorcisms respectively. 
+
+\begin{definition}[Substitution] The operation \emph{substitution} is defined as
+\label{def:sub}
+\begingroup
+\allowdisplaybreaks
+	\begin{align*}
+		\sub{x}{s}{x}	&=	s \\
+		\sub{y}{s}{x} 	&= 	y \\
+		\sub{(\app{u}{t})}{s}{x} &= \app{(\sub{u}{s}{x})}{\sub{t}{s}{x}} \\
+		\sub{(\fake{c}{\vec{y}}{t})}{s}{x} &= \fake{c}{\vec{y}}{\sub{t}{s}{x}} \\
+		\sub{(\fake{c}{\vec{y} \cdot x}{t})}{s}{x} &= \fake{c}{\vec{y} \cdot \vec{z}}{\sub{t}{s}{x}} \\
+		\sub{\share{u}{\vec{y}}{t}}{s}{x} &= \share{\sub{u}{s}{x}}{\vec{y}}{\sub{t}{s}{x}} \\
+		\sub{\dist{u}{\vecdist{e}{\vec{w}}}{\overline{[\Gamma]}}{c}{\vec{y}}}{s}{x} &= \dist{u}{\vecdist{e}{\vec{w}}}{\overline{[\Gamma]} \sub{}{s}{x}}{c}{\vec{y}} \\
+		\sub{\dist{u}{\vecdist{e}{\vec{w}}}{\overline{[\Gamma]}}{c}{\vec{y} \cdot x}}{s}{x} &= \dist{u}{\vecdist{e}{\vec{w}}}{\overline{[\Gamma]}\sub{}{s}{x}}{c}{\vec{y} \cdot \vec{z}} \\
+		\dist{u}{\vecdist{e}{\vec{w}}}{\sub{}{s}{x}\overline{[\Gamma]}}{c}{\vec{y}} &= \dist{\sub{u}{s}{x}}{\vecdist{e}{\vec{w}}}{\overline{[\Gamma]}}{c}{\vec{y}} \\
+		\dist{u}{e \{ \fakedist{e_{i}}{\vec{w} \cdot x }\}}{\sub{}{s}{x} \overline{[\Gamma]}}{c}{\vec{y}} &= \dist{\sub{u}{s}{x}}{e\{ \fakedist{e_{i}}{ \vec{w} \cdot \vec{z}} \}}{\overline{[\Gamma]}}{c}{\vec{y}} \\
+	\end{align*}
+\vspace{-1cm}
+\newline
+\noindent Where $\vec{z} = \fv{s}$
+\endgroup
+\end{definition}
+
+Although substitution performs some book-keeping on phantom-abstractions, we define an explicit notion that updates the variables stored in a free-cover i.e.\ for a term $t$, $\fakedist{e}{\vec{x}} \in \fc{t}$ then $\fakedist{e}{\vec{y}} \in \fc{\psub{t}{\vec{y}}{e}}$.
+
+\begin{definition}[Book-Keeping] The operation \emph{book-keeping} is defined as
+\label{def:bk}
+\begingroup
+\allowdisplaybreaks
+	\begin{align*}
+		\psub{x}{\vec{w}}{e} &= x \\
+		\psub{\app{s}{t}}{\vec{w}}{e} &= \app{(\psub{s}{\vec{w}}{e})}{\psub{t}{\vec{w}}{e}} \\
+		\psub{\fake{e}{\vec{z}}{t}}{\vec{w}}{e} &= \fake{e}{\vec{w}}{t} \\
+		\psub{(\fake{c}{\vec{z}}{t})}{\vec{w}}{e} &= \fake{c}{\vec{z}}{\psub{t}{\vec{w}}{e}} \\
+		\psub{\share{u}{\vec{z}}{t}}{\vec{w}}{e} &= \share{\psub{u}{\vec{w}}{e}}{\vec{z}}{\psub{t}{\vec{w}}{e}} \\
+		\psub{\dist{u}{\vecdist{f}{\vec{y}}}{\overline{[\Gamma]}}{e}{\vec{z}}}{\vec{w}}{e} &= \dist{u}{\vecdist{f}{\vec{y}}}{\overline{[\Gamma]}}{e}{\vec{w}} \\
+		\psub{\dist{u}{\vecdist{f}{\vec{y}}}{\overline{[\Gamma]}}{c}{\vec{z}}}{\vec{w}}{e} &= \dist{u}{\vecdist{f}{\vec{y}}}{\overline{[\Gamma]} \psub{}{\vec{w}}{e}}{c}{\vec{z}} \\
+		\dist{u}{\vecdist{f}{\vec{y}}}{\psub{}{\vec{w}}{e}\overline{[\Gamma]}}{c}{\vec{z}} &= \dist{\psub{u}{\vec{w}}{e}}{\vecdist{f}{\vec{y}}}{\overline{[\Gamma]}}{c}{\vec{z}}
+	\end{align*}
+\endgroup
+\end{definition}
+
+\begin{definition}[Exorcism] The operation \emph{exorcism} is defined as
+\label{def:exor}
+\begingroup
+\allowdisplaybreaks
+	\begin{align*}
+		\exor{y}{c}{\vec{x}} 	&= y \\
+		\exor{\app{s}{t}}{c}{\vec{x}} &= \app{(\exor{s}{c}{\vec{x}})}{\exor{t}{c}{\vec{x}}} \\
+		\exor{\fake{c}{\vec{x}}{t}}{c}{\vec{x}} &= \fake{c}{c}{\share{t}{\vec{x}}{c}} \\
+		\exor{\fake{d}{\vec{y}}{t}}{c}{\vec{x}} &= \fake{d}{\vec{y}}{\exor{t}{c}{\vec{x}}}\\
+		\exor{\share{u}{\vec{y}}{t}}{c}{\vec{x}} &= \share{\exor{u}{c}{\vec{x}}}{\vec{y}}{\exor{t}{c}{\vec{x}}} \\
+		\exor{\dist{u}{\vecdist{e}{\vec{w}}}{\overline{[\Gamma]}}{c}{\vec{x}}}{c}{\vec{x}} &= \dist{u}{\vecdist{e}{\vec{w}}}{\overline{[\Gamma]} \share{}{\vec{x}}{c}}{c}{c} \\
+		\exor{\dist{u}{\vecdist{e}{\vec{w}}}{\overline{[\Gamma]}}{d}{\vec{y}}}{c}{\vec{x}} &= \dist{u}{\vecdist{e}{\vec{w}}}{\exor{\overline{[\Gamma]}}{c}{\vec{x}}}{d}{\vec{y}} \\
+		\dist{u}{\vecdist{e}{\vec{w}}}{ \exor{}{c}{\vec{x}} \overline{[\Gamma]}}{d}{\vec{y}} &= \dist{\exor{u}{c}{\vec{w}}}{\vecdist{e}{\vec{w}}}{\overline{[\Gamma]}}{d}{\vec{y}}
+	\end{align*}
+\endgroup
+\end{definition}
+
+First, observe the following example that demonstrates the rewrite rules. 
+
+\begin{example}
+Take the $\lambda$-term $M = \app{(\abs{f}{\abs{x}{\app{f}{(\app{f}{x})}}})}{\abs{g}{\abs{y}{\app{g}{(\app{g}{y})}}}}$. 
+
+Then $\compile{M} = \app{(\fake{f}{f}{\fake{x}{x}{\share{\app{f_{1}}{(\app{f_{2}}{x})}}{f_{1}, f_{2}}{f}}})}{(\fake{g}{g}{\fake{y}{y}{\share{\app{g_{1}}{(\app{g_{2}}{y})}}{g_{1}, g_{2}}{g}}})}$. 
+
+We then may have the following reduction sequence.
+\begingroup
+\allowdisplaybreaks
+\begin{align*}
+	 & & & \app{(\fake{f}{f}{\fake{x}{x}{\share{\app{f_{1}}{(\app{f_{2}}{x})}}{f_{1}, f_{2}}{f}}})}{(\fake{g}{g}{\fake{y}{y}{\share{\app{g_{1}}{(\app{g_{2}}{y})}}{g_{1}, g_{2}}{g}}})}&  \\
+	  \rightsquigarrow_{\beta} & & & \fake{x}{x}{\share{\app{f_{1}}{(\app{f_{2}}{x})}}{f_{1}, f_{2}}{\fake{g}{g}{\fake{y}{y}{\share{\app{g_{1}}{(\app{g_{2}}{y})}}{g_{1}, g_{2}}{g}}}}} &  \text{(\ref{red:beta})} \displaybreak[0] \\ 
+	%%%%%%%%
+	\rightsquigarrow_{D}& & & \fake{x}{x}{(\app{\fake{f_{1}}{w_{1}}{w_{1}}}{(\app{(\fake{f_{2}}{w_{2}}{w_{2}})}{x})})} & \\
+	& & & \indent \dist{}{\fakedist{f_{1}}{w_{1}}, \fakedist{f_{2}}{w_{2}}}{\share{}{w_{1}, w_{2}}{\fake{y}{y}{\share{\app{g_{1}}{(\app{g_{2}}{y})}}{g_{1}, g_{2}}{g}}}}{g}{g} & \text{(\ref{red:absdup})} \displaybreak[0] \\
+	%%%%%%%%
+	\rightsquigarrow_{D} & & & \fake{x}{x}{(\app{\fake{f_{1}}{z_{1}}{\fake{y_{1}}{z_{1}}{z_{1}}}}{(\app{(\fake{f_{2}}{z_{2}}{\fake{y_{2}}{z_{2}}{z_{2}}})}{x})})} & \\
+	& & & \indent [ \fakedist{f_{1}}{z_{1}}, \fakedist{f_{2}}{z_{2}} \, \vert \, \fakedist{g}{g} [ \fakedist{y_{1}}{z_{1}}, \fakedist{y_{2}}{z_{2}} \, \vert \, \fakedist{y}{y} & \\
+	& & & \indent \indent \share{}{z_{1}, z_{2}}{\share{\app{g_{1}}{(\app{g_{2}}{y})}}{g_{1}, g_{2}}{g}} ] ]   &  \text{(\ref{red:absdup})} \displaybreak[0] \\
+	%%%%%%%%
+	\rightsquigarrow_{L} & & & \fake{x}{x}{(\app{\fake{f_{1}}{z_{1}}{\fake{y_{1}}{z_{1}}{z_{1}}}}{(\app{(\fake{f_{2}}{z_{2}}{\fake{y_{2}}{z_{2}}{z_{2}}})}{x})})} & \\
+	& & & \indent [ \fakedist{f_{1}}{z_{1}}, \fakedist{f_{2}}{z_{2}} \, \vert \, \fakedist{g}{g} [ \fakedist{y_{1}}{z_{1}}, \fakedist{y_{2}}{z_{2}} \, \vert \, \fakedist{y}{y} & \\
+	& & & \indent \indent \share{}{z_{1}, z_{2}}{\app{g_{1}}{(\app{g_{2}}{y})}} \share{}{g_{1}, g_{2}}{g} ] ]   &  \text{(\ref{red:liftshare})} \displaybreak[0] \\
+	%%%%%%%%
+	\rightsquigarrow_{D} & & &  \fake{x}{x}{(\app{(\fake{f_{1}}{a_{1}, b_{1}}{\fake{y_{1}}{a_{1}, b_{1}}{\app{a_{1}}{b_{1}}}})}{(\app{(\fake{f_{2}}{a_{2}, b_{2}}{\fake{y_{2}}{a_{2}, b_{2}}{\app{a_{2}}{b_{2}}}})}{x})})} & \\
+	& & & \indent [ \fakedist{f_{1}}{a_{1}, b_{1}}, \fakedist{f_{2}}{a_{2}, b_{2}} \, \vert \, \fakedist{g}{g} [ \fakedist{y_{1}}{a_{1}, b_{1}}, \fakedist{y_{2}}{a_{2}, b_{2}} \, \vert \, \fakedist{y}{y} & \\
+	& & & \indent \indent \share{}{a_{1}, a_{2}}{g_{1}} \share{}{b_{1}, b_{2}}{\app{g_{2}}{y}} \share{}{g_{1}, g_{2}}{g} ] ]   &  \text{(\ref{red:appdup})} \displaybreak[0] \\
+	%%%%%%%%
+	\rightsquigarrow_{C} & & &  \fake{x}{x}{(\app{(\fake{f_{1}}{a_{1}, b_{1}}{\fake{y_{1}}{a_{1}, b_{1}}{\app{a_{1}}{b_{1}}}})}{(\app{(\fake{f_{2}}{a_{2}, b_{2}}{\fake{y_{2}}{a_{2}, b_{2}}{\app{a_{2}}{b_{2}}}})}{x})})} & \\
+	& & & \indent [ \fakedist{f_{1}}{a_{1}, b_{1}}, \fakedist{f_{2}}{a_{2}, b_{2}} \, \vert \, \fakedist{g}{g} [ \fakedist{y_{1}}{a_{1}, b_{1}}, \fakedist{y_{2}}{a_{2}, b_{2}} \, \vert \, \fakedist{y}{y} & \\
+	& & & \indent \indent \share{}{b_{1}, b_{2}}{\app{g_{2}}{y}} \share{}{a_{1}, a_{2}, g_{2}}{g} ] ]   &  \text{(\ref{red:mergeshare})} \displaybreak[0] \\
+	%%%%%%%%%
+	\rightsquigarrow_{D} & & &  \fake{x}{x}{}((\fake{f_{1}}{a_{1}, b_{1}, c_{1}}{\fake{y_{1}}{a_{1}, b_{1}, c_{1}}{\app{a_{1}}{(\app{b_{1}}{c_{1}})}}}) & \\
+	& & & \indent (\app{(\fake{f_{2}}{a_{2}, b_{2}, c_{2}}{\fake{y_{2}}{a_{2}, b_{2}, c_{2}}{\app{a_{2}}{(\app{b_{2}}{c_{2}})}}})}{x}) & \\
+	& & & \indent \indent [ \fakedist{f_{1}}{a_{1}, b_{1}, c_{1}}, \fakedist{f_{2}}{a_{2}, b_{2}, c_{2}} \, \vert \, \fakedist{g}{g} [ \fakedist{y_{1}}{a_{1}, b_{1}, c_{1}}, \fakedist{y_{2}}{a_{2}, b_{2}, c_{2}} \, \vert \, \fakedist{y}{y} & \\
+	& & & \indent \indent \indent \share{}{b_{1}, b_{2}}{g_{2}} \share{}{c_{1}, c_{2}}{y} \share{}{a_{1}, a_{2}, g_{2}}{g} ] ]   &  \text{(\ref{red:appdup})} \displaybreak[0]  \\
+	%%%%%%%%
+	\rightsquigarrow_{C} & & &  \fake{x}{x}{}((\fake{f_{1}}{a_{1}, b_{1}, c_{1}}{\fake{y_{1}}{a_{1}, b_{1}, c_{1}}{\app{a_{1}}{(\app{b_{1}}{c_{1}})}}}) & \\
+	& & & \indent (\app{(\fake{f_{2}}{a_{2}, b_{2}, c_{2}}{\fake{y_{2}}{a_{2}, b_{2}, c_{2}}{\app{a_{2}}{(\app{b_{2}}{c_{2}})}}})}{x}) & \\
+	& & & \indent \indent [ \fakedist{f_{1}}{a_{1}, b_{1}, c_{1}}, \fakedist{f_{2}}{a_{2}, b_{2}, c_{2}} \, \vert \, \fakedist{g}{g} [ \fakedist{y_{1}}{a_{1}, b_{1}, c_{1}}, \fakedist{y_{2}}{a_{2}, b_{2}, c_{2}} \, \vert \, \fakedist{y}{y} & \\
+	& & & \indent \indent \indent \share{}{c_{1}, c_{2}}{y} \share{}{a_{1}, b_{1},  a_{2}, b_{2}}{g} ] ]   &  \text{(\ref{red:mergeshare})} \displaybreak[0]  \\
+	%%%%%%%%
+	\rightsquigarrow_{L} & & &  \fake{x}{x}{}((\fake{f_{1}}{a_{1}, b_{1}, c_{1}}{\fake{y_{1}}{c_{1}}{\app{a_{1}}{(\app{b_{1}}{c_{1}})}}}) & \\
+	& & & \indent (\app{(\fake{f_{2}}{a_{2}, b_{2}, c_{2}}{\fake{y_{2}}{c_{2}}{\app{a_{2}}{(\app{b_{2}}{c_{2}})}}})}{x}) & \\
+	& & & \indent \indent [ \fakedist{f_{1}}{a_{1}, b_{1}, c_{1}}, \fakedist{f_{2}}{a_{2}, b_{2}, c_{2}} \, \vert \, \fakedist{g}{g} [ \fakedist{y_{1}}{c_{1}}, \fakedist{y_{2}}{c_{2}} \, \vert \, \fakedist{y}{y} & \\
+	& & & \indent \indent \indent \share{}{c_{1}, c_{2}}{y} ] \share{}{a_{1}, b_{1},  a_{2}, b_{2}}{g} ]   &  \text{(\ref{red:distshare})} \displaybreak[0]  \\
+	%%%%%%%
+	\rightsquigarrow_{L} & & & \fake{x}{x}{(\app{(\fake{f_{1}}{a_{1}, b_{1}}{\fake{y_{1}}{c_{1}}{\app{a_{1}}{(\app{b_{1}}{c_{1}})}}})}{(\app{(\fake{f_{2}}{a_{2}, b_{2}}{\fake{y_{2}}{c_{2}}{\app{a_{2}}{(\app{b_{2}}{c_{2}})}}})}{x})})} & \\   		
+	& & & \indent \dist{}{\fakedist{f_{1}}{a_{1}, b_{1}}, \fakedist{f_{2}}{a_{2}, b_{2}}}{\share{}{a_{1}, b_{1}, a_{2}, b_{2}}{g}}{g}{g} & \\
+	& & & \indent \indent \dist{}{\fakedist{y_{1}}{c_{1}}, \fakedist{y_{2}}{c_{2}}}{\share{}{c_{1}, c_{2}}{y}}{y}{y} & \text{(\ref{red:distshare})} \displaybreak[0]  \\
+	%%%%%%%
+	\rightsquigarrow_{D} & & & \fake{x}{x}{}((\fake{f_{1}}{f_{1}}{\share{\fake{y_{1}}{c_{1}}{\app{a_{1}}{(\app{b_{1}}{c_{1}})}}}{a_{1}, b_{1}}{f_{1}}}) & \\
+	& & & \indent (\app{(\fake{f_{2}}{f_{2}}{\share{\fake{y_{2}}{c_{2}}{\app{a_{2}}{(\app{b_{2}}{c_{2}})}}}{a_{2}, b_{2}}{f_{2}}})}{x}) & \\  	
+	& & & \indent \indent \dist{}{\fakedist{y_{1}}{c_{1}}, \fakedist{y_{2}}{c_{2}}}{\share{}{c_{1}, c_{2}}{y}}{y}{y} & \text{(\ref{red:distelim})} \displaybreak[0]  \\
+	%%%%%%%
+	\rightsquigarrow_{D} & & & \fake{x}{x}{}((\fake{f_{1}}{f_{1}}{\share{\fake{y_{1}}{y_{1}}{\app{a_{1}}{(\app{b_{1}}{y_{1}})}}}{a_{1}, b_{1}}{f_{1}}}) & \\
+	& & & \indent (\app{(\fake{f_{2}}{f_{2}}{\share{\fake{y_{2}}{y_{2}}{\app{a_{2}}{(\app{b_{2}}{y_{2}})}}}{a_{2}, b_{2}}{f_{2}}})}{x}) & \text{(\ref{red:distelim})} \displaybreak[0]  \\
+\end{align*}
+\endgroup
+
+\end{example}
 
 In this section we provide the proof for Proposition \ref{prop:suboutcomm}: Given $M \in \Lambda$ such that for all $v \in V$, $\gamma(v) \not\in \fv{M}$  and $\sigma(x) = x$, the translation $\readbackwmap{u}{\sigma}{\gamma}$ commutes with substitution $\sub{}{M}{x}$ in the following way
 
@@ -2040,66 +2170,6 @@ $\readbackwmap{\dist{u}{\vecdist{e}{\vec{x}}}{\overline{[\Gamma]}}{c}{c}}{\sigma
 \section{Strong Normalisation of Sharing Reductions}
 
 The weakening calculus is used to show preservation of strong normalisation with respect to the $\lambda$-calculus. A $\beta$-step in our calculus may occur within a weakening, and therefore is simulated by zero $\beta$-steps in the $\lambda$-calculus. Therefore if there is an infinite reduction path located inside a weakening in $\FALC$, then the reduction path is not preserved in the corresponding $\lambda$-term as there are no weakenings. To deal with this, just as done in \cite{kesneraccattoli12, gundersen2013atomic, he2018atomic}, we make use of the weakening calculus. A $\beta$-step is non-deleteing precisely because of the weakening construct. If a $\beta$-step would be deleting in the $\lambda$-calculus, then the weakening calculus would instead keep the deleted term around as `garbage', which can continue to reduce unless explicitly `garbage-collected' by extra (non-$\beta$) reduction steps. The weakening calculus has already been shown to preserve strong normalisation through the use of a perpetual strategy in \cite{gundersen2013atomic}. A part of proving PSN is then using the weakening calculus to prove that if $t \in \FALC$ has a infinite reduction path, then its translation into the weakening calculus also has an infinite reduction path.
-
-Here we will give more concrete definitions of substitution, book-keeping and exorcisms respectively. 
-
-\begin{definition}[Substitution] The operation \emph{substitution} is defined as
-\label{def:sub}
-\begingroup
-\allowdisplaybreaks
-	\begin{align*}
-		\sub{x}{s}{x}	&=	s \\
-		\sub{y}{s}{x} 	&= 	y \\
-		\sub{(\app{u}{t})}{s}{x} &= \app{(\sub{u}{s}{x})}{\sub{t}{s}{x}} \\
-		\sub{(\fake{c}{\vec{y}}{t})}{s}{x} &= \fake{c}{\vec{y}}{\sub{t}{s}{x}} \\
-		\sub{(\fake{c}{\vec{y} \cdot x}{t})}{s}{x} &= \fake{c}{\vec{y} \cdot \vec{z}}{\sub{t}{s}{x}} \\
-		\sub{\share{u}{\vec{y}}{t}}{s}{x} &= \share{\sub{u}{s}{x}}{\vec{y}}{\sub{t}{s}{x}} \\
-		\sub{\dist{u}{\vecdist{e}{\vec{w}}}{\overline{[\Gamma]}}{c}{\vec{y}}}{s}{x} &= \dist{u}{\vecdist{e}{\vec{w}}}{\overline{[\Gamma]} \sub{}{s}{x}}{c}{\vec{y}} \\
-		\sub{\dist{u}{\vecdist{e}{\vec{w}}}{\overline{[\Gamma]}}{c}{\vec{y} \cdot x}}{s}{x} &= \dist{u}{\vecdist{e}{\vec{w}}}{\overline{[\Gamma]}\sub{}{s}{x}}{c}{\vec{y} \cdot \vec{z}} \\
-		\dist{u}{\vecdist{e}{\vec{w}}}{\sub{}{s}{x}\overline{[\Gamma]}}{c}{\vec{y}} &= \dist{\sub{u}{s}{x}}{\vecdist{e}{\vec{w}}}{\overline{[\Gamma]}}{c}{\vec{y}} \\
-		\dist{u}{e \{ \fakedist{e_{i}}{\vec{w} \cdot x }\}}{\sub{}{s}{x} \overline{[\Gamma]}}{c}{\vec{y}} &= \dist{\sub{u}{s}{x}}{e\{ \fakedist{e_{i}}{ \vec{w} \cdot \vec{z}} \}}{\overline{[\Gamma]}}{c}{\vec{y}} \\
-	\end{align*}
-\vspace{-1cm}
-\newline
-\noindent Where $\vec{z} = \fv{s}$
-\endgroup
-\end{definition}
-
-Although substitution performs some book-keeping on phantom-abstractions, we define an explicit notion that updates the variables stored in a free-cover i.e.\ for a term $t$, $\fakedist{e}{\vec{x}} \in \fc{t}$ then $\fakedist{e}{\vec{y}} \in \fc{\psub{t}{\vec{y}}{e}}$.
-
-\begin{definition}[Book-Keeping] The operation \emph{book-keeping} is defined as
-\label{def:bk}
-\begingroup
-\allowdisplaybreaks
-	\begin{align*}
-		\psub{x}{\vec{w}}{e} &= x \\
-		\psub{\app{s}{t}}{\vec{w}}{e} &= \app{(\psub{s}{\vec{w}}{e})}{\psub{t}{\vec{w}}{e}} \\
-		\psub{\fake{e}{\vec{z}}{t}}{\vec{w}}{e} &= \fake{e}{\vec{w}}{t} \\
-		\psub{(\fake{c}{\vec{z}}{t})}{\vec{w}}{e} &= \fake{c}{\vec{z}}{\psub{t}{\vec{w}}{e}} \\
-		\psub{\share{u}{\vec{z}}{t}}{\vec{w}}{e} &= \share{\psub{u}{\vec{w}}{e}}{\vec{z}}{\psub{t}{\vec{w}}{e}} \\
-		\psub{\dist{u}{\vecdist{f}{\vec{y}}}{\overline{[\Gamma]}}{e}{\vec{z}}}{\vec{w}}{e} &= \dist{u}{\vecdist{f}{\vec{y}}}{\overline{[\Gamma]}}{e}{\vec{w}} \\
-		\psub{\dist{u}{\vecdist{f}{\vec{y}}}{\overline{[\Gamma]}}{c}{\vec{z}}}{\vec{w}}{e} &= \dist{u}{\vecdist{f}{\vec{y}}}{\overline{[\Gamma]} \psub{}{\vec{w}}{e}}{c}{\vec{z}} \\
-		\dist{u}{\vecdist{f}{\vec{y}}}{\psub{}{\vec{w}}{e}\overline{[\Gamma]}}{c}{\vec{z}} &= \dist{\psub{u}{\vec{w}}{e}}{\vecdist{f}{\vec{y}}}{\overline{[\Gamma]}}{c}{\vec{z}}
-	\end{align*}
-\endgroup
-\end{definition}
-
-\begin{definition}[Exorcism] The operation \emph{exorcism} is defined as
-\label{def:exor}
-\begingroup
-\allowdisplaybreaks
-	\begin{align*}
-		\exor{y}{c}{\vec{x}} 	&= y \\
-		\exor{\app{s}{t}}{c}{\vec{x}} &= \app{(\exor{s}{c}{\vec{x}})}{\exor{t}{c}{\vec{x}}} \\
-		\exor{\fake{c}{\vec{x}}{t}}{c}{\vec{x}} &= \fake{c}{c}{\share{t}{\vec{x}}{c}} \\
-		\exor{\fake{d}{\vec{y}}{t}}{c}{\vec{x}} &= \fake{d}{\vec{y}}{\exor{t}{c}{\vec{x}}}\\
-		\exor{\share{u}{\vec{y}}{t}}{c}{\vec{x}} &= \share{\exor{u}{c}{\vec{x}}}{\vec{y}}{\exor{t}{c}{\vec{x}}} \\
-		\exor{\dist{u}{\vecdist{e}{\vec{w}}}{\overline{[\Gamma]}}{c}{\vec{x}}}{c}{\vec{x}} &= \dist{u}{\vecdist{e}{\vec{w}}}{\overline{[\Gamma]} \share{}{\vec{x}}{c}}{c}{c} \\
-		\exor{\dist{u}{\vecdist{e}{\vec{w}}}{\overline{[\Gamma]}}{d}{\vec{y}}}{c}{\vec{x}} &= \dist{u}{\vecdist{e}{\vec{w}}}{\exor{\overline{[\Gamma]}}{c}{\vec{x}}}{d}{\vec{y}} \\
-		\dist{u}{\vecdist{e}{\vec{w}}}{ \exor{}{c}{\vec{x}} \overline{[\Gamma]}}{d}{\vec{y}} &= \dist{\exor{u}{c}{\vec{w}}}{\vecdist{e}{\vec{w}}}{\overline{[\Gamma]}}{d}{\vec{y}}
-	\end{align*}
-\endgroup
-\end{definition}
 
 \noindent We demonstrate that our readback translation (Definition \ref{def:transfalcweak}) is truly an extention of the translation into the $\lambda$-calculus (Definition \ref{def:readback}). We therefore demonstrate that our operations (substitution, book-keeping, and exorcisms) commute with the two translation functions in the same way.
 
