@@ -1,12 +1,5 @@
 
 \documentclass[a4paper,UKenglish,cleveref, autoref]{lipics-v2019}
-%This is a template for producing LIPIcs articles.
-%See lipics-manual.pdf for further information.
-%for A4 paper format use option "a4paper", for US-letter use option "letterpaper"
-%for british hyphenation rules use option "UKenglish", for american hyphenation rules use option "USenglish"
-%for section-numbered lemmas etc., use "numberwithinsect"
-%for enabling cleveref support, use "cleveref"
-%for enabling cleveref support, use "autoref"
 
 \usepackage{opendeduction}
 \usepackage{tikz}
@@ -19,8 +12,6 @@
 \usepackage{MnSymbol}
 
 \newtheorem{notation}[definition]{Notation}
-
-%\newcommand{\lambdabar}{\mbox{\textipa{\textcrlambda}}}
 
 \newcommand{\FALC}{\Lambda^{S}_{a}}
 \newcommand{\SLC}{\Lambda^{S}}
@@ -75,76 +66,6 @@
 \newcommand{\IH}{\stackrel{\hbox{\tiny I.H.}}{\hbox{=}}}
 
 \colorlet{myGreen}{green!40!gray}
-
-
-%\graphicspath{{./graphics/}}%helpful if your graphic files are in another directory
-
-\bibliographystyle{plainurl}% the mandatory bibstyle
-
-\title{Spinal Atomic Lambda-Calculus} %TODO Please add
-
-\titlerunning{Spinal Atomic Lambda-Calculus}%optional, please use if title is longer than one line
-
-\author{Tom Gundersen}{Red Hat, Inc.}{teg@jklm.no}{}{}
-
-\author{Willem Heijltjes}{University of Bath, England, UK \and \url{http://www.cs.bath.ac.uk/~wbh22/} }{w.b.heijltjes@bath.ac.uk}{}{}%TODO mandatory, please use full name; only 1 author per \author macro; first two parameters are mandatory, other parameters can be empty. Please provide at least the name of the affiliation and the country. The full address is optional
-
-\author{Michel Parigot}{Laboratoire PPS, UMR 7126, CNRS \& Universit\'{e} Paris 7 (France)}{michel.parigot@gmail.com}{}{}
-
-\author{David Rhys Sherratt}{Friedrich-Schiller University Jena, Germany}{david.rhys.sherratt@uni-jena.de
-}{}{}
-
-\authorrunning{Gundersen et al}%TODO mandatory. First: Use abbreviated first/middle names. Second (only in severe cases): Use first author plus 'et al.'
-
-\Copyright{Gundersen, Heijltjes, Parigot, and Sherratt}%TODO mandatory, please use full first names. LIPIcs license is "CC-BY";  http://creativecommons.org/licenses/by/3.0/
-
-%\ccsdesc[100]{General and reference~General literature}
-%\ccsdesc[100]{General and reference}%TODO mandatory: Please choose ACM 2012 classifications from https://dl.acm.org/ccs/ccs_flat.cfm
-
-\begin{CCSXML}
-<ccs2012>
-<concept>
-<concept_id>10002950.10003714.10003732.10003733</concept_id>
-<concept_desc>Mathematics of computing~Lambda calculus</concept_desc>
-<concept_significance>500</concept_significance>
-</concept>
-</ccs2012>
-\end{CCSXML}
-
-\ccsdesc[500]{Mathematics of computing~Lambda calculus}
-
-\keywords{Lambda-Calculus, Sharing, Duplication, Laziness, Scope}%TODO mandatory; please add comma-separated list of keywords
-
-\category{}%optional, e.g. invited paper
-
-\relatedversion{}%optional, e.g. full version hosted on arXiv, HAL, or other respository/website
-%\relatedversion{A full version of the paper is available at \url{...}.}
-
-\supplement{}%optional, e.g. related research data, source code, ... hosted on a repository like zenodo, figshare, GitHub, ...
-
-%\funding{(Optional) general funding statement \dots}%optional, to capture a funding statement, which applies to all authors. Please enter author specific funding statements as fifth argument of the \author macro.
-
-%\acknowledgements{I want to thank \dots}%optional
-
-%\nolinenumbers %uncomment to disable line numbering
-
-%\hideLIPIcs  %uncomment to remove references to LIPIcs series (logo, DOI, ...), e.g. when preparing a pre-final version to be uploaded to arXiv or another public repository
-
-%Editor-only macros:: begin (do not touch as author)%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\EventEditors{John Q. Open and Joan R. Access}
-\EventNoEds{2}
-\EventLongTitle{42nd Conference on Very Important Topics (CVIT 2016)}
-\EventShortTitle{CVIT 2016}
-\EventAcronym{CVIT}
-\EventYear{2016}
-\EventDate{December 24--27, 2016}
-\EventLocation{Little Whinging, United Kingdom}
-\EventLogo{}
-\SeriesVolume{42}
-\ArticleNo{23}
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \newcommand{\lambdabar}{\mbox{\textipa{\textcrlambda}}}
 
@@ -255,7 +176,76 @@
         \draw (#2_tip) -- (#2_left) -- (#2_right) -- cycle
 }
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newcommand\BA{{\scriptstyle B\!\raisebox{.5ex}{$\scriptstyle A$}}}
+\newcommand\imp{\mathbin\rightarrow}
+\newcommand\con{\mathbin\wedge}
+\newcommand\adbmal{\reflectbox{$\lambda$}}
+\newcommand\red{\color{red}}
+\newcommand\blue{\color{blue}}
+\newcommand\black{\color{black}}
+\newcommand\dirL{{\scriptscriptstyle\shortleftarrow}}
+\newcommand\dirR{{\scriptscriptstyle\shortrightarrow}}
+\newcommand\dirRL{{\scriptscriptstyle\leftrightarrow}}
+\newcommand\dirSTOP{{\scriptscriptstyle\bot}}
+\newcommand\var{{\scriptstyle\square}}
+
+% ================================================== FRONTMATTER
+
+\bibliographystyle{plainurl}
+
+\title{Spinal Atomic Lambda-Calculus}
+
+\author
+{Tom Gundersen}
+{Red Hat, Inc.}
+{teg@jklm.no}
+{}
+{}
+
+\author
+{Willem Heijltjes}
+{University of Bath, UK \and \url{http://www.cs.bath.ac.uk/~wbh22/}}{w.b.heijltjes@bath.ac.uk}
+{}
+{Supported by EPSRC Project EP/R029121/1 \emph{Typed lambda-calculi with sharing and unsharing}}
+
+
+\author
+{Michel Parigot}
+{Laboratoire PPS, UMR 7126, CNRS \& Universit\'{e} Paris 7 (France)}{michel.parigot@gmail.com}
+{}
+{}
+
+\author
+{David Rhys Sherratt}
+{Friedrich-Schiller University Jena, Germany}
+{david.rhys.sherratt@uni-jena.de}
+{}
+{}
+
+\authorrunning{T.E.\ Gundersen, W.B.\ Heijltjes, M.\ Parigot, and D.R.\ Sherratt}
+
+\Copyright{Tom E.\ Gundersen, Willem B.\ Heijltjes, Michel Parigot, and David R.\ Sherratt}
+
+\begin{CCSXML}
+<ccs2012>
+<concept>
+<concept_id>10002950.10003714.10003732.10003733</concept_id>
+<concept_desc>Mathematics of computing~Lambda calculus</concept_desc>
+<concept_significance>500</concept_significance>
+</concept>
+</ccs2012>
+\end{CCSXML}
+
+\ccsdesc[500]{Mathematics of computing~Lambda calculus}
+
+\keywords{Lambda-Calculus, Full laziness, Deep inference, Curry--Howard}
+
+%\acknowledgements{}
+
+%\nolinenumbers
+
+
+% ================================================== PAPER
 
 \begin{document}
 
@@ -283,78 +273,73 @@ The atomic lambda-calculus arose as a Curry--Howard interpretation of a deep-inf
 \]
 In this work, we investigate the computational interpretation of another characteristic deep-inference proof rule: the \emph{switch} rule above right~\cite{}. Our result is the \emph{spinal atomic lambda-calculus}, a term calculus in which the natural strategy is a refined form of full laziness, \emph{spine duplication}. This strategy duplicates only the \emph{spine} of an abstraction: the paths to its bound variables in the syntax tree of the term.
 
-We illustrate these notions below, for the example term $\lambda x.\lambda y.((\lambda z.z)y)x$. The \emph{scope} of the abstraction $\lambda x$ is the entire subterm, $\lambda y.((\lambda z.z)y)x$ (which may or may not be taken to include $\lambda x$ itself). Note that with explicit substitution, the scope may grow or shrink by lifting explicit substitutions in or out. The \emph{skeleton}, indicated in blue below, is the term $\lambda x.\lambda y.(wy)x$ where the subterm $\lambda z.z$ is lifted out as an (explicit) substitution $[\lambda z.z/w]$. The \emph{spine} of a term, indicated in red in the second image, cannot naturally be expressed with explicit substitution, though one can get an impression with \emph{capturing} substitutions: it would be $\lambda x.\lambda y.wx$, with the subterm $(\lambda z.z)y$ extracted by a capturing substitution $[(\lambda z.z)y/w]$.
+We illustrate these notions below, for the example term $\lambda x.\lambda y.((\lambda z.z)y)x$. The \emph{scope} of the abstraction $\lambda x$ is the entire subterm, $\lambda y.((\lambda z.z)y)x$ (which may or may not be taken to include $\lambda x$ itself). Note that with explicit substitution, the scope may grow or shrink by lifting explicit substitutions in or out. The \emph{skeleton}, indicated in blue below, is the term $\lambda x.\lambda y.(wy)x$ where the subterm $\lambda z.z$ is lifted out as an (explicit) substitution $[\lambda z.z/w]$. The \emph{spine} of a term, indicated in red in the second image, cannot naturally be expressed with explicit substitution, though one can get an impression with \emph{capturing} substitutions: it would be $\lambda x.\lambda y.wx$, with the subterm $(\lambda z.z)y$ extracted by a capturing substitution $[(\lambda z.z)y/w]$. Observe further that the skeleton can be described as the \emph{iterated spine}: it is the smallest subgraph of the syntax tree closed under taking the spine of each abstraction, i.e.\ that contains the spine of every abstraction it contains.
 %
+
 \[
-	{\small   \begin{tikzpicture}[auto, scale = 0.75]
-		%%%%%%%%%%%%%
-		\filldraw[fill = yellow!20, draw = yellow!70, rounded corners] (-0.3, -1.25) rectangle (0.3, -2.5);
-		%\filldraw[fill = yellow!20, draw = yellow!70, rounded corners] g(0.45, -2.75) rectangle (1.75, -4);
+{\small \centering   
+	\raisebox{0.25cm}{
+	\begin{tikzpicture}[auto, scale = 0.75]
+		\filldraw[fill = orange!20, draw = orange!70, rounded corners] (-0.3, -2.75) rectangle (0.3, -4);
 		%%%%%%%%%%%%%
 		\node (a) at (0, 0) {$\lambda x$};
-		\node (b) at (0, -0.75) {$@$};
-		\node (c) at (0, -1.5) {$\lambda z$};
-		\node (d) at (0, -2.25) {$z$};
-		\node (e) at (0.75, -1.5) {$\lambda y$};
-		\node (f) at (0.75, -2.25) {$@$};
-		\node (g) at (0.75, -3) {$@$};
-		\node (h) at (0.75, -3.75) {$y$};
-		\node (i) at (1.5, -3.75) {$y$};
-		\node (j) at (2.25, -3) {$x$};
+		\node (b) at (0, -0.75) {$\lambda y$};
+		\node (c) at (0, -1.5) {$@$};
+		\node (d) at (0, -2.25) {$@$};
+		\node (e) at (0, -3) {$\lambda z$};
+		\node (f) at (0, -3.75) {$z$};
+		\node (g) at (0.75, -3) {$y$};
+		\node (h) at (1.5, -2.25) {$x$};
 		%%%%%%%%%%%%%
 		\draw [very thick, blue] (a) to (b);
-		\draw (b) to (c);
-		\draw (c) to (d);
-		\draw [rounded corners, blue, very thick] (b) -| (e);
-		\draw [blue, very thick] (e) to (f);
-		\draw [very thick, blue] (f) to (g);
-		\draw [blue, very thick, rounded corners] (f) -| (j);
-		\draw [blue, very thick] (g) to (h); \draw [rounded corners, blue, very thick] (g) -| (i);
-		%%%%%%%%%%%%%%
+		\draw [very thick, blue] (b) to (c);
+		\draw [very thick, blue] (c) to (d);
+		\draw [very thick, blue, rounded corners] (d) -| (g);
+		\draw [very thick, blue, rounded corners] (c) -| (h);
+		\draw (d) to (e);
+		\draw (e) to (f);
 	\end{tikzpicture}}
-\hspace{1cm}
-	{\small  \begin{tikzpicture}[auto, scale = 0.75]
-		%%%%%%%%%%%%%
-		\filldraw[fill = yellow!20, draw = yellow!70, rounded corners] (-0.3, -1.25) rectangle (0.3, -2.5);
-		\filldraw[fill = yellow!20, draw = yellow!70, rounded corners] (0.45, -2.75) rectangle (1.75, -4);
+	}
+	\hspace{1cm}
+{\small   \begin{tikzpicture}[auto, scale = 0.75]
+		\filldraw[fill = yellow!20, draw = yellow!70, rounded corners] (-0.55, -2) rectangle (1.125, -4.25);
+		\filldraw[fill = orange!20, draw = orange!70, rounded corners] (-0.3, -2.75) rectangle (0.3, -4);
 		%%%%%%%%%%%%%
 		\node (a) at (0, 0) {$\lambda x$};
-		\node (b) at (0, -0.75) {$@$};
-		\node (c) at (0, -1.5) {$\lambda z$};
-		\node (d) at (0, -2.25) {$z$};
-		\node (e) at (0.75, -1.5) {$\lambda y$};
-		\node (f) at (0.75, -2.25) {$@$};
-		\node (g) at (0.75, -3) {$@$};
-		\node (h) at (0.75, -3.75) {$y$};
-		\node (i) at (1.5, -3.75) {$y$};
-		\node (j) at (2.25, -3) {$x$};
+		\node (b) at (0, -0.75) {$\lambda y$};
+		\node (c) at (0, -1.5) {$@$};
+		\node (d) at (0, -2.25) {$@$};
+		\node (e) at (0, -3) {$\lambda z$};
+		\node (f) at (0, -3.75) {$z$};
+		\node (g) at (0.75, -3) {$y$};
+		\node (h) at (1.5, -2.25) {$x$};
 		%%%%%%%%%%%%%
 		\draw [very thick, red] (a) to (b);
-		\draw (b) to (c);
+		\draw [very thick, red] (b) to (c);
 		\draw (c) to (d);
-		\draw [rounded corners, red, very thick] (b) -| (e);
-		\draw [red, very thick] (e) to (f);
-		\draw (f) to (g);
-		\draw [red, very thick, rounded corners] (f) -| (j);
-		\draw (g) to (h); \draw [rounded corners] (g) -| (i);
-		%%%%%%%%%%%%%%
+		\draw [rounded corners] (d) -| (g);
+		\draw [very thick, red, rounded corners] (c) -| (h);
+		\draw (d) to (e);
+		\draw (e) to (f);
 	\end{tikzpicture}}
-\hspace{1cm}
-	\raisebox{2cm}{
+	\hspace{1cm}
+	\raisebox{1.5cm}{
 	\begin{tabular}{l c}
-		{\small Spine} &
-		 \raisebox{0.1cm}{\begin{tikzpicture}[auto]
-			\draw [red, very thick] (0, 0) to (1, 0);
-		\end{tikzpicture}}  \\[0.2cm]
-		{\small Skeleton} & {\begin{tikzpicture}[auto]
+		{\small Skeleton} &
+		 \raisebox{0.5ex}{\begin{tikzpicture}[auto]
 			\draw [blue, very thick] (0, 0) to (1, 0);
-		\end{tikzpicture}} \\[0.2cm]
-		{\small Subterm} &
-		 \raisebox{-0.1cm}{\begin{tikzpicture}[auto]
+		\end{tikzpicture}}  \\[0.2cm]
+		{\small Spine} & \raisebox{0.5ex}{{\begin{tikzpicture}[auto]
+			\draw [red, very thick] (0, 0) to (1, 0);
+		\end{tikzpicture}}} \\[0.2cm]
+		{\small Subterms} &
+		 \raisebox{-1ex}{\begin{tikzpicture}[auto]
 			\filldraw[fill = yellow!20, draw = yellow!70, rounded corners] (0, 0) rectangle (0.5, 0.5);
+			\filldraw[fill = orange!20, draw = orange!70, rounded corners] (0+0.75, 0) rectangle (0.5+0.75, 0.5);
 		\end{tikzpicture}}
 	\end{tabular}}
 \]
+
 %\[
 %	{\small   \begin{tikzpicture}[auto, scale = 0.75]
 %		%%%%%%%%%%%%%
@@ -425,21 +410,37 @@ We illustrate these notions below, for the example term $\lambda x.\lambda y.((\
 %		\end{tikzpicture}}
 %	\end{tabular}}
 %\]
-The above notions give rise to four natural duplication regimes. For a shared term $\lambda x.N$ to become available as the function in a $\beta$-redex:
+The above notions give rise to four natural duplication regimes. For a shared abstraction to become available as the function in a $\beta$-redex:
 \begin{description}
 \item[Laziness] duplicates its \emph{scope} \cite{};
 \item[Full laziness] duplicates its \emph{skeleton} \cite{Wadsworth, Balabonski};
 \item[Spinal full laziness] duplicates its \emph{spine} \cite{Levy-Blanc-Maranget, etc.};
-\item[Optimal reduction] duplicates only the abstraction $\lambda x$ and its bound variables $x$ \cite{Lamping, etc.}.
+\item[Optimal reduction] duplicates only the abstraction $\lambda x$ and its bound variables $x$ \cite{Lamping, etc.}.%
+\footnote{Interestingly, Balabonski \cite{} shows that for \emph{weak} reduction (where one does not reduce under an abstraction) full laziness and spinal full laziness are both optimal (in the number of beta-steps required to reach a normal form).}
 \end{description}
-While each of these duplication strategies has been expressed in graphs and labelled calculi, the atomic lambda-calculus was the first term calculus 
+While each of these duplication strategies has been expressed in graphs and labelled calculi, the atomic $\lambda$-calculus is the first term calculus with Curry--Howard corresponding proof system to naturally describe full laziness. Likewise, the spinal atomic $\lambda$-calculus presented here is the first term calculus with Curry--Howard corresponding proof system to naturally describe spinal full laziness.
 
+\paragraph*{Switch and Spine}
 
-\newcommand\BA{{\scriptstyle B\!\raisebox{.5ex}{$\scriptstyle A$}}}
-\newcommand\imp{\mathbin\rightarrow}
-\newcommand\con{\mathbin\wedge}
-
+One way to describe the skeleton or the spine of an abstraction within a $\lambda$-term is through explicit end-of-scope markers, as explored by Berkling \cite{berkling1976symmetric,BERKLING198289}, and more recently by Hendriks and Van Oostrom \cite{hendriks2003lambda}. We use their \emph{adbmal} ($\adbmal$) to illustrate the idea: the constructor $\adbmal x.N$ indicates that the subterm $N$ does not contain occurrences of $x$ (or that any that do occur are not available to a binder $\lambda x$ outside $\adbmal x.N$). The scope of an abstraction thus becomes explicitly indicated in the term. This opens up a distinction between \emph{balanced} and \emph{unbalanced} scopes: whether scopes must be properly nested, or not; for example, in $\lambda x.\lambda y.N$, a subterm $\adbmal y.\adbmal x.M$ is balanced, but $\adbmal x.\adbmal y.M$ is not. With balanced scope, one can indicate the skeleton of an abstraction; with unbalanced scope (which Hendriks and Van Oostrom dismiss) one can indicate the spine. We do so for our example term $\lambda x.\lambda y.((\lambda z.z)y)x$ below. 
+%
 \[
+\text{\small Balanced:}
+~~{\blue\lambda x. \lambda y. ((\adbmal y.({\black\adbmal x.\lambda z.z})y)(\adbmal y.x)}
+\qquad
+\text{\small Unbalanced:}
+~~{\red\lambda x. \lambda y. ({\black\adbmal x. (\adbmal y.\lambda z.z)y})(\adbmal y.x)}
+\]
+%
+A closely related approach is \emph{director strings}, introduced by Kennaway and Sleep \cite{kennaway1988director} for combinator reduction and generalized to any reduction strategy by Fern\'{a}ndez, Mackie, and Sinot in \cite{fernandez2005lambda}. The idea is to use nameless abstractions (as with  DeBruijn indices) and make the path to each variable occurrence explicit by  annotating each constructor with a string of directors: \emph{left} $(^\dirL)$, \emph{right} $(^\dirR)$, \emph{both} $(^\dirRL)$, \emph{none} $(^\dirSTOP)$. Using $\lambda$ for nameless abstraction and $\var$ for nameless variable, our example becomes as follows (where the red directors are those for $x$).
+\[
+\text{\small Director strings:}~~\red\lambda.(\lambda.({\black((\lambda.\var)\var)^\dirR}\var)^{\dirR\black\dirL})^\dirR
+\]
+The primary aims of these approaches is to eliminate $\alpha$-conversion and to streamline substitution. Consequently, while they \emph{identify} the spine, they do not readily isolate it for duplication, as required for spinal full laziness.
+
+The basis of the present work is the observation that the \emph{switch} rule in open deduction functions as a proof-theoretic end-of-scope construction. However, it does so in a \emph{structural} way: it forces a deconstruction of a proof into readily duplicable parts, which together may form the spine of an abstraction. We illustrate this below with two typing derivations for our example, where we let $x$ have type $A$ and $y,z$ type $A\imp B$, shortened to $\BA$. For a formal definition of how these derivations are constructed, see the next section.
+\[
+\scalebox{0.9}{
 \drv{
  \drv[orange]{\top;-[\lambda];\BA\imp\BA}
  ;-[\lambda];
@@ -454,8 +455,9 @@ While each of these duplication strategies has been expressed in graphs and labe
    \drv[blue]{(\BA\imp\BA)\con\BA;-[@];\BA}\con A
    ;-[@];
    B
-}}}
-\qquad\quad
+}}}}
+\qquad\qquad
+\scalebox{0.9}{
 \drv{
  \drv[red]{\top;-[a];A\imp A}
  \con
@@ -478,72 +480,25 @@ While each of these duplication strategies has been expressed in graphs and labe
    (\BA\imp\BA)\con A
    ;-[s];
    \BA\imp\drv[red]{\BA\con A;-[@];B}
-}}}
+}}}}
 \]
+An abstraction $\lambda x$ corresponds in the proof system to an implication $A\imp$, explicitly scoping over its right-hand side. On the left, with the \emph{abstraction} rule $(\lambda)$, scopes must be balanced, and the proof system may identify the \emph{skeleton}; here, that of $\lambda x$ as the largest blue box. Decomposing the abstraction $(\lambda)$ into \emph{axiom} $(a)$ and \emph{switch} $(s)$, on the right the proof system may express unbalanced scope. It does so by separating the scope of an abstraction into multiple parts; here, that of $\lambda x$ is captured as the two top-level red boxes. Each box is ready to be duplicated; in this way, one may duplicate only the spine of an abstraction.
+
+In this paper, we ...
+
+
 
 \[
-{\small \centering   
-	\raisebox{0.25cm}{
-	\begin{tikzpicture}[auto, scale = 0.75]
-		\filldraw[fill = orange!20, draw = orange!70, rounded corners] (-0.3, -2.75) rectangle (0.3, -4);
-		%%%%%%%%%%%%%
-		\node (a) at (0, 0) {$\lambda x$};
-		\node (b) at (0, -0.75) {$\lambda y$};
-		\node (c) at (0, -1.5) {$@$};
-		\node (d) at (0, -2.25) {$@$};
-		\node (e) at (0, -3) {$\lambda z$};
-		\node (f) at (0, -3.75) {$z$};
-		\node (g) at (0.75, -3) {$y$};
-		\node (h) at (1.5, -2.25) {$x$};
-		%%%%%%%%%%%%%
-		\draw [very thick, blue] (a) to (b);
-		\draw [very thick, blue] (b) to (c);
-		\draw [very thick, blue] (c) to (d);
-		\draw [very thick, blue, rounded corners] (d) -| (g);
-		\draw [very thick, blue, rounded corners] (c) -| (h);
-		\draw (d) to (e);
-		\draw (e) to (f);
-	\end{tikzpicture}}
-	}
-	\hspace{1cm}
-{\small   \begin{tikzpicture}[auto, scale = 0.75]
-		\filldraw[fill = yellow!20, draw = yellow!70, rounded corners] (-0.55, -2) rectangle (1.125, -4.25);
-		\filldraw[fill = orange!20, draw = orange!70, rounded corners] (-0.3, -2.75) rectangle (0.3, -4);
-		%%%%%%%%%%%%%
-		\node (a) at (0, 0) {$\lambda x$};
-		\node (b) at (0, -0.75) {$\lambda y$};
-		\node (c) at (0, -1.5) {$@$};
-		\node (d) at (0, -2.25) {$@$};
-		\node (e) at (0, -3) {$\lambda z$};
-		\node (f) at (0, -3.75) {$z$};
-		\node (g) at (0.75, -3) {$y$};
-		\node (h) at (1.5, -2.25) {$x$};
-		%%%%%%%%%%%%%
-		\draw [very thick, red] (a) to (b);
-		\draw [very thick, red] (b) to (c);
-		\draw (c) to (d);
-		\draw [rounded corners] (d) -| (g);
-		\draw [very thick, red, rounded corners] (c) -| (h);
-		\draw (d) to (e);
-		\draw (e) to (f);
-	\end{tikzpicture}}
-	\hspace{1cm}
-	\raisebox{1.5cm}{
-	\begin{tabular}{l c}
-		{\small Skeleton} &
-		 \raisebox{0.5ex}{\begin{tikzpicture}[auto]
-			\draw [blue, very thick] (0, 0) to (1, 0);
-		\end{tikzpicture}}  \\[0.2cm]
-		{\small Spine} & \raisebox{0.5ex}{{\begin{tikzpicture}[auto]
-			\draw [red, very thick] (0, 0) to (1, 0);
-		\end{tikzpicture}}} \\[0.2cm]
-		{\small Subterms} &
-		 \raisebox{-1ex}{\begin{tikzpicture}[auto]
-			\filldraw[fill = yellow!20, draw = yellow!70, rounded corners] (0, 0) rectangle (0.5, 0.5);
-			\filldraw[fill = orange!20, draw = orange!70, rounded corners] (0+0.75, 0) rectangle (0.5+0.75, 0.5);
-		\end{tikzpicture}}
-	\end{tabular}}
+\drv{\drv[yellow]{\drv[red]{A;|;B};-[r];\drv[red!50!blue]{C;|;D}};.;\drv[blue]{D;|;E}~}
+=
+\drv{\drv[red]{A;|;B};-[r];\drv[yellow]{~\drv[red!50!blue]{C;|;D}~;.;\drv[blue]{D;|;E}}}
 \]
+
+
+%End-of-scope markers in the $\lambda$-calculus have been seen throughout literature. \emph{Berkling's lambda bar} \cite{berkling1976symmetric} has shown to remove the need for variable names while maintaining correctness; improving efficiency by removing the need for alpha conversion \cite{BERKLING198289}. This result was generalized by \emph{Adbmal} (invert of ``Lambda'') \cite{hendriks2003lambda}. It was shown by using multiple variables, scopes can be sequenced rather than nested which correspond closely to the boxes in MELL proof nets of linear logic \cite{Lafont94fromproof-nets}. This approach was studied further in \cite{van2004lambdascope} as graph reduction that satisfies optimality \cite{levy1980optimal}. Although these approaches could identify the skeleton of a term, none however identify the spine of a term, which meant the scopes explicitly displayed may be larger than necessary from the perspective of performing substitution. This problem was solved by \emph{director strings}, introduced by Kennaway and Sleep in \cite{kennaway1988director} for combinator reduction and then generalized for any strategy by Fern\'{a}ndez et al.\ in \cite{fernandez2005lambda}. Director strings are an annotation on terms detailing the location of variable occurrences. An apt annotation on the body of an abstraction will consequently identify the spine of it. Despite being implementations that use director strings \cite{sinot2003efficient, fernandez2005lambda, fernandez2005closed}, an implementation with sharing techniques allowing for duplicating solely the spine could not be found.
+
+
+
 
 %\end{document}
 
