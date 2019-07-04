@@ -283,13 +283,13 @@ The atomic lambda-calculus arose as a Curry--Howard interpretation of a deep-inf
 \]
 In this work, we investigate the computational interpretation of another characteristic deep-inference proof rule: the \emph{switch} rule above right~\cite{}. Our result is the \emph{spinal atomic lambda-calculus}, a term calculus in which the natural strategy is a refined form of full laziness, \emph{spine duplication}. This strategy duplicates only the \emph{spine} of an abstraction: the paths to its bound variables in the syntax tree of the term.
 
-We illustrate these notions below, for the example term $\lambda x.(\lambda z.z)(\lambda y.(yy)x)$. The \emph{scope} of the abstraction $\lambda x$ is the entire subterm, $(\lambda z.z)(\lambda y.(yy)x)$ (which may or may not be taken to include $\lambda x$ itself). Note that with explicit substitution, the scope may grow or shrink by lifting explicit substitutions in or out. The \emph{skeleton}, indicated in blue below, is the term $\lambda x.w(\lambda y.(yy)x)$ where the subterm $\lambda z.z$ is lifted out as an (explicit) substitution $[\lambda z.z/w]$. The \emph{spine} of a term, indicated in red in the second image, cannot naturally be expressed with explicit substitution, though one can get an impression with \emph{capturing} substitutions: it would be $\lambda x.w(\lambda y.vx)$, with the subterm $yy$ extracted by a capturing substitution $[yy/x]$.
+We illustrate these notions below, for the example term $\lambda x.\lambda y.((\lambda z.z)y)x$. The \emph{scope} of the abstraction $\lambda x$ is the entire subterm, $\lambda y.((\lambda z.z)y)x$ (which may or may not be taken to include $\lambda x$ itself). Note that with explicit substitution, the scope may grow or shrink by lifting explicit substitutions in or out. The \emph{skeleton}, indicated in blue below, is the term $\lambda x.\lambda y.(wy)x$ where the subterm $\lambda z.z$ is lifted out as an (explicit) substitution $[\lambda z.z/w]$. The \emph{spine} of a term, indicated in red in the second image, cannot naturally be expressed with explicit substitution, though one can get an impression with \emph{capturing} substitutions: it would be $\lambda x.\lambda y.wx$, with the subterm $(\lambda z.z)y$ extracted by a capturing substitution $[(\lambda z.z)y/w]$.
 %
 \[
 	{\small   \begin{tikzpicture}[auto, scale = 0.75]
 		%%%%%%%%%%%%%
 		\filldraw[fill = yellow!20, draw = yellow!70, rounded corners] (-0.3, -1.25) rectangle (0.3, -2.5);
-		%\filldraw[fill = yellow!20, draw = yellow!70, rounded corners] (0.45, -2.75) rectangle (1.75, -4);
+		%\filldraw[fill = yellow!20, draw = yellow!70, rounded corners] g(0.45, -2.75) rectangle (1.75, -4);
 		%%%%%%%%%%%%%
 		\node (a) at (0, 0) {$\lambda x$};
 		\node (b) at (0, -0.75) {$@$};
@@ -432,6 +432,8 @@ The above notions give rise to four natural duplication regimes. For a shared te
 \item[Spinal full laziness] duplicates its \emph{spine} \cite{Levy-Blanc-Maranget, etc.};
 \item[Optimal reduction] duplicates only the abstraction $\lambda x$ and its bound variables $x$ \cite{Lamping, etc.}.
 \end{description}
+While each of these duplication strategies has been expressed in graphs and labelled calculi, the atomic lambda-calculus was the first term calculus 
+
 
 \newcommand\BA{{\scriptstyle B\!\raisebox{.5ex}{$\scriptstyle A$}}}
 \newcommand\imp{\mathbin\rightarrow}
