@@ -275,76 +275,71 @@ In this work, we investigate the computational interpretation of another charact
 
 We illustrate these notions below, for the example term $\lambda x.\lambda y.((\lambda z.z)y)x$. The \emph{scope} of the abstraction $\lambda x$ is the entire subterm, $\lambda y.((\lambda z.z)y)x$ (which may or may not be taken to include $\lambda x$ itself). Note that with explicit substitution, the scope may grow or shrink by lifting explicit substitutions in or out. The \emph{skeleton}, indicated in blue below, is the term $\lambda x.\lambda y.(wy)x$ where the subterm $\lambda z.z$ is lifted out as an (explicit) substitution $[\lambda z.z/w]$. The \emph{spine} of a term, indicated in red in the second image, cannot naturally be expressed with explicit substitution, though one can get an impression with \emph{capturing} substitutions: it would be $\lambda x.\lambda y.wx$, with the subterm $(\lambda z.z)y$ extracted by a capturing substitution $[(\lambda z.z)y/w]$. Observe further that the skeleton can be described as the \emph{iterated spine}: it is the smallest subgraph of the syntax tree closed under taking the spine of each abstraction, i.e.\ that contains the spine of every abstraction it contains.
 %
+
 \[
-	{\small   \begin{tikzpicture}[auto, scale = 0.75]
-		%%%%%%%%%%%%%
-		\filldraw[fill = yellow!20, draw = yellow!70, rounded corners] (-0.3, -1.25) rectangle (0.3, -2.5);
-		%\filldraw[fill = yellow!20, draw = yellow!70, rounded corners] g(0.45, -2.75) rectangle (1.75, -4);
+{\small \centering   
+	\raisebox{0.25cm}{
+	\begin{tikzpicture}[auto, scale = 0.75]
+		\filldraw[fill = orange!20, draw = orange!70, rounded corners] (-0.3, -2.75) rectangle (0.3, -4);
 		%%%%%%%%%%%%%
 		\node (a) at (0, 0) {$\lambda x$};
-		\node (b) at (0, -0.75) {$@$};
-		\node (c) at (0, -1.5) {$\lambda z$};
-		\node (d) at (0, -2.25) {$z$};
-		\node (e) at (0.75, -1.5) {$\lambda y$};
-		\node (f) at (0.75, -2.25) {$@$};
-		\node (g) at (0.75, -3) {$@$};
-		\node (h) at (0.75, -3.75) {$y$};
-		\node (i) at (1.5, -3.75) {$y$};
-		\node (j) at (2.25, -3) {$x$};
+		\node (b) at (0, -0.75) {$\lambda y$};
+		\node (c) at (0, -1.5) {$@$};
+		\node (d) at (0, -2.25) {$@$};
+		\node (e) at (0, -3) {$\lambda z$};
+		\node (f) at (0, -3.75) {$z$};
+		\node (g) at (0.75, -3) {$y$};
+		\node (h) at (1.5, -2.25) {$x$};
 		%%%%%%%%%%%%%
 		\draw [very thick, blue] (a) to (b);
-		\draw (b) to (c);
-		\draw (c) to (d);
-		\draw [rounded corners, blue, very thick] (b) -| (e);
-		\draw [blue, very thick] (e) to (f);
-		\draw [very thick, blue] (f) to (g);
-		\draw [blue, very thick, rounded corners] (f) -| (j);
-		\draw [blue, very thick] (g) to (h); \draw [rounded corners, blue, very thick] (g) -| (i);
-		%%%%%%%%%%%%%%
+		\draw [very thick, blue] (b) to (c);
+		\draw [very thick, blue] (c) to (d);
+		\draw [very thick, blue, rounded corners] (d) -| (g);
+		\draw [very thick, blue, rounded corners] (c) -| (h);
+		\draw (d) to (e);
+		\draw (e) to (f);
 	\end{tikzpicture}}
-\hspace{1cm}
-	{\small  \begin{tikzpicture}[auto, scale = 0.75]
-		%%%%%%%%%%%%%
-		\filldraw[fill = yellow!20, draw = yellow!70, rounded corners] (-0.3, -1.25) rectangle (0.3, -2.5);
-		\filldraw[fill = yellow!20, draw = yellow!70, rounded corners] (0.45, -2.75) rectangle (1.75, -4);
+	}
+	\hspace{1cm}
+{\small   \begin{tikzpicture}[auto, scale = 0.75]
+		\filldraw[fill = yellow!20, draw = yellow!70, rounded corners] (-0.55, -2) rectangle (1.125, -4.25);
+		\filldraw[fill = orange!20, draw = orange!70, rounded corners] (-0.3, -2.75) rectangle (0.3, -4);
 		%%%%%%%%%%%%%
 		\node (a) at (0, 0) {$\lambda x$};
-		\node (b) at (0, -0.75) {$@$};
-		\node (c) at (0, -1.5) {$\lambda z$};
-		\node (d) at (0, -2.25) {$z$};
-		\node (e) at (0.75, -1.5) {$\lambda y$};
-		\node (f) at (0.75, -2.25) {$@$};
-		\node (g) at (0.75, -3) {$@$};
-		\node (h) at (0.75, -3.75) {$y$};
-		\node (i) at (1.5, -3.75) {$y$};
-		\node (j) at (2.25, -3) {$x$};
+		\node (b) at (0, -0.75) {$\lambda y$};
+		\node (c) at (0, -1.5) {$@$};
+		\node (d) at (0, -2.25) {$@$};
+		\node (e) at (0, -3) {$\lambda z$};
+		\node (f) at (0, -3.75) {$z$};
+		\node (g) at (0.75, -3) {$y$};
+		\node (h) at (1.5, -2.25) {$x$};
 		%%%%%%%%%%%%%
 		\draw [very thick, red] (a) to (b);
-		\draw (b) to (c);
+		\draw [very thick, red] (b) to (c);
 		\draw (c) to (d);
-		\draw [rounded corners, red, very thick] (b) -| (e);
-		\draw [red, very thick] (e) to (f);
-		\draw (f) to (g);
-		\draw [red, very thick, rounded corners] (f) -| (j);
-		\draw (g) to (h); \draw [rounded corners] (g) -| (i);
-		%%%%%%%%%%%%%%
+		\draw [rounded corners] (d) -| (g);
+		\draw [very thick, red, rounded corners] (c) -| (h);
+		\draw (d) to (e);
+		\draw (e) to (f);
 	\end{tikzpicture}}
-\hspace{1cm}
-	\raisebox{2cm}{
+	\hspace{1cm}
+	\raisebox{1.5cm}{
 	\begin{tabular}{l c}
-		{\small Spine} &
-		 \raisebox{0.1cm}{\begin{tikzpicture}[auto]
-			\draw [red, very thick] (0, 0) to (1, 0);
-		\end{tikzpicture}}  \\[0.2cm]
-		{\small Skeleton} & {\begin{tikzpicture}[auto]
+		{\small Skeleton} &
+		 \raisebox{0.5ex}{\begin{tikzpicture}[auto]
 			\draw [blue, very thick] (0, 0) to (1, 0);
-		\end{tikzpicture}} \\[0.2cm]
-		{\small Subterm} &
-		 \raisebox{-0.1cm}{\begin{tikzpicture}[auto]
+		\end{tikzpicture}}  \\[0.2cm]
+		{\small Spine} & \raisebox{0.5ex}{{\begin{tikzpicture}[auto]
+			\draw [red, very thick] (0, 0) to (1, 0);
+		\end{tikzpicture}}} \\[0.2cm]
+		{\small Subterms} &
+		 \raisebox{-1ex}{\begin{tikzpicture}[auto]
 			\filldraw[fill = yellow!20, draw = yellow!70, rounded corners] (0, 0) rectangle (0.5, 0.5);
+			\filldraw[fill = orange!20, draw = orange!70, rounded corners] (0+0.75, 0) rectangle (0.5+0.75, 0.5);
 		\end{tikzpicture}}
 	\end{tabular}}
 \]
+
 %\[
 %	{\small   \begin{tikzpicture}[auto, scale = 0.75]
 %		%%%%%%%%%%%%%
@@ -421,100 +416,31 @@ The above notions give rise to four natural duplication regimes. For a shared ab
 \item[Full laziness] duplicates its \emph{skeleton} \cite{Wadsworth, Balabonski};
 \item[Spinal full laziness] duplicates its \emph{spine} \cite{Levy-Blanc-Maranget, etc.};
 \item[Optimal reduction] duplicates only the abstraction $\lambda x$ and its bound variables $x$ \cite{Lamping, etc.}.%
-\footnote{Interestingly, Balabonski \cite{} shows that for \emph{weak} reduction (where one does not reduce under an abstraction) full laziness, spinal full laziness, and optimal reduction all require a comparable number of beta-steps to reach a normal form.}
+\footnote{Interestingly, Balabonski \cite{} shows that for \emph{weak} reduction (where one does not reduce under an abstraction) full laziness and spinal full laziness are both optimal (in the number of beta-steps required to reach a normal form).}
 \end{description}
 While each of these duplication strategies has been expressed in graphs and labelled calculi, the atomic $\lambda$-calculus is the first term calculus with Curry--Howard corresponding proof system to naturally describe full laziness. Likewise, the spinal atomic $\lambda$-calculus presented here is the first term calculus with Curry--Howard corresponding proof system to naturally describe spinal full laziness.
-
-
-\[
-{\small \centering   
-	\raisebox{0.25cm}{
-	\begin{tikzpicture}[auto, scale = 0.75]
-		\filldraw[fill = orange!20, draw = orange!70, rounded corners] (-0.3, -2.75) rectangle (0.3, -4);
-		%%%%%%%%%%%%%
-		\node (a) at (0, 0) {$\lambda x$};
-		\node (b) at (0, -0.75) {$\lambda y$};
-		\node (c) at (0, -1.5) {$@$};
-		\node (d) at (0, -2.25) {$@$};
-		\node (e) at (0, -3) {$\lambda z$};
-		\node (f) at (0, -3.75) {$z$};
-		\node (g) at (0.75, -3) {$y$};
-		\node (h) at (1.5, -2.25) {$x$};
-		%%%%%%%%%%%%%
-		\draw [very thick, blue] (a) to (b);
-		\draw [very thick, blue] (b) to (c);
-		\draw [very thick, blue] (c) to (d);
-		\draw [very thick, blue, rounded corners] (d) -| (g);
-		\draw [very thick, blue, rounded corners] (c) -| (h);
-		\draw (d) to (e);
-		\draw (e) to (f);
-	\end{tikzpicture}}
-	}
-	\hspace{1cm}
-{\small   \begin{tikzpicture}[auto, scale = 0.75]
-		\filldraw[fill = yellow!20, draw = yellow!70, rounded corners] (-0.55, -2) rectangle (1.125, -4.25);
-		\filldraw[fill = orange!20, draw = orange!70, rounded corners] (-0.3, -2.75) rectangle (0.3, -4);
-		%%%%%%%%%%%%%
-		\node (a) at (0, 0) {$\lambda x$};
-		\node (b) at (0, -0.75) {$\lambda y$};
-		\node (c) at (0, -1.5) {$@$};
-		\node (d) at (0, -2.25) {$@$};
-		\node (e) at (0, -3) {$\lambda z$};
-		\node (f) at (0, -3.75) {$z$};
-		\node (g) at (0.75, -3) {$y$};
-		\node (h) at (1.5, -2.25) {$x$};
-		%%%%%%%%%%%%%
-		\draw [very thick, red] (a) to (b);
-		\draw [very thick, red] (b) to (c);
-		\draw (c) to (d);
-		\draw [rounded corners] (d) -| (g);
-		\draw [very thick, red, rounded corners] (c) -| (h);
-		\draw (d) to (e);
-		\draw (e) to (f);
-	\end{tikzpicture}}
-	\hspace{1cm}
-	\raisebox{1.5cm}{
-	\begin{tabular}{l c}
-		{\small Skeleton} &
-		 \raisebox{0.5ex}{\begin{tikzpicture}[auto]
-			\draw [blue, very thick] (0, 0) to (1, 0);
-		\end{tikzpicture}}  \\[0.2cm]
-		{\small Spine} & \raisebox{0.5ex}{{\begin{tikzpicture}[auto]
-			\draw [red, very thick] (0, 0) to (1, 0);
-		\end{tikzpicture}}} \\[0.2cm]
-		{\small Subterms} &
-		 \raisebox{-1ex}{\begin{tikzpicture}[auto]
-			\filldraw[fill = yellow!20, draw = yellow!70, rounded corners] (0, 0) rectangle (0.5, 0.5);
-			\filldraw[fill = orange!20, draw = orange!70, rounded corners] (0+0.75, 0) rectangle (0.5+0.75, 0.5);
-		\end{tikzpicture}}
-	\end{tabular}}
-\]
 
 \paragraph*{Switch and Spine}
 
 One way to describe the skeleton or the spine of an abstraction within a $\lambda$-term is through explicit end-of-scope markers, as explored by Berkling \cite{berkling1976symmetric,BERKLING198289}, and more recently by Hendriks and Van Oostrom \cite{hendriks2003lambda}. We use their \emph{adbmal} ($\adbmal$) to illustrate the idea: the constructor $\adbmal x.N$ indicates that the subterm $N$ does not contain occurrences of $x$ (or that any that do occur are not available to a binder $\lambda x$ outside $\adbmal x.N$). The scope of an abstraction thus becomes explicitly indicated in the term. This opens up a distinction between \emph{balanced} and \emph{unbalanced} scopes: whether scopes must be properly nested, or not; for example, in $\lambda x.\lambda y.N$, a subterm $\adbmal y.\adbmal x.M$ is balanced, but $\adbmal x.\adbmal y.M$ is not. With balanced scope, one can indicate the skeleton of an abstraction; with unbalanced scope (which Hendriks and Van Oostrom dismiss) one can indicate the spine. We do so for our example term $\lambda x.\lambda y.((\lambda z.z)y)x$ below. 
 %
 \[
-\text{\small balanced:}
+\text{\small Balanced:}
 ~~{\blue\lambda x. \lambda y. ((\adbmal y.({\black\adbmal x.\lambda z.z})y)(\adbmal y.x)}
-\qquad\quad
-\text{\small unbalanced:}
+\qquad
+\text{\small Unbalanced:}
 ~~{\red\lambda x. \lambda y. ({\black\adbmal x. (\adbmal y.\lambda z.z)y})(\adbmal y.x)}
 \]
 %
-A closely related approach is \emph{director strings}, introduced by Kennaway and Sleep \cite{kennaway1988director} for combinator reduction and generalized to any reduction strategy by Fern\'{a}ndez, Mackie, and Sinot in \cite{fernandez2005lambda}. The idea is to use nameless abstractions (as with  DeBruijn indices) and make the path to each variable occurrence explicit by  annotating each constructor with a string of directors: \emph{left} $(^\dirL)$, \emph{right} $(^\dirR)$, \emph{both} $(^\dirRL)$, \emph{none} $(^\dirSTOP)$. Using $\lambda$ for nameless abstraction and $\var$ for nameless variable, our example becomes as follows (where the red directors are those for $x$):
+A closely related approach is \emph{director strings}, introduced by Kennaway and Sleep \cite{kennaway1988director} for combinator reduction and generalized to any reduction strategy by Fern\'{a}ndez, Mackie, and Sinot in \cite{fernandez2005lambda}. The idea is to use nameless abstractions (as with  DeBruijn indices) and make the path to each variable occurrence explicit by  annotating each constructor with a string of directors: \emph{left} $(^\dirL)$, \emph{right} $(^\dirR)$, \emph{both} $(^\dirRL)$, \emph{none} $(^\dirSTOP)$. Using $\lambda$ for nameless abstraction and $\var$ for nameless variable, our example becomes as follows (where the red directors are those for $x$).
 \[
-	\red\lambda.(\lambda.({\black((\lambda.\var)\var)^\dirR}\var)^{\dirR\black\dirL})^\dirR
+\text{\small Director strings:}~~\red\lambda.(\lambda.({\black((\lambda.\var)\var)^\dirR}\var)^{\dirR\black\dirL})^\dirR
 \]
-The primary aim of these ideas is to streamline substitutions, avoiding their unnecessary duplication. Consequently, while they \emph{identify} the spine, they do not readily isolate it for duplication. 
+The primary aims of these approaches is to eliminate $\alpha$-conversion and to streamline substitution. Consequently, while they \emph{identify} the spine, they do not readily isolate it for duplication, as required for spinal full laziness.
 
-
-Blanc, L\'evy and Maranget 
-
-\cite{blanc2007sharing} use a labelled calculus.
-
-
+The basis of the present work is the observation that the \emph{switch} rule in open deduction functions as a proof-theoretic end-of-scope construction. However, it does so in a \emph{structural} way: it forces a deconstruction of a proof into readily duplicable parts, which together may form the spine of an abstraction. We illustrate this below with two typing derivations for our example, where we let $x$ have type $A$ and $y,z$ type $A\imp B$, shortened to $\BA$. For a formal definition of how these derivations are constructed, see the next section.
 \[
+\scalebox{0.9}{
 \drv{
  \drv[orange]{\top;-[\lambda];\BA\imp\BA}
  ;-[\lambda];
@@ -529,8 +455,9 @@ Blanc, L\'evy and Maranget
    \drv[blue]{(\BA\imp\BA)\con\BA;-[@];\BA}\con A
    ;-[@];
    B
-}}}
-\qquad\quad
+}}}}
+\qquad\qquad
+\scalebox{0.9}{
 \drv{
  \drv[red]{\top;-[a];A\imp A}
  \con
@@ -553,8 +480,12 @@ Blanc, L\'evy and Maranget
    (\BA\imp\BA)\con A
    ;-[s];
    \BA\imp\drv[red]{\BA\con A;-[@];B}
-}}}
+}}}}
 \]
+An abstraction $\lambda x$ corresponds in the proof system to an implication $A\imp$, explicitly scoping over its right-hand side. On the left, with the \emph{abstraction} rule $(\lambda)$, scopes must be balanced, and the proof system may identify the \emph{skeleton}; here, that of $\lambda x$ as the largest blue box. Decomposing the abstraction $(\lambda)$ into \emph{axiom} $(a)$ and \emph{switch} $(s)$, on the right the proof system may express unbalanced scope. It does so by separating the scope of an abstraction into multiple parts; here, that of $\lambda x$ is captured as the two top-level red boxes. Each box is ready to be duplicated; in this way, one may duplicate only the spine of an abstraction.
+
+In this paper, we ...
+
 
 
 \[
