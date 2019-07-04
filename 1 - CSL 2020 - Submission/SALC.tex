@@ -272,7 +272,7 @@ The atomic lambda-calculus arose as a Curry--Howard interpretation of a deep-inf
 \]
 In this work, we investigate the computational interpretation of another characteristic deep-inference proof rule: the \emph{switch} rule above right~\cite{}. Our result is the \emph{spinal atomic lambda-calculus}, a term calculus in which the natural strategy is a refined form of full laziness, \emph{spine duplication}. This strategy duplicates only the \emph{spine} of an abstraction: the paths to its bound variables in the syntax tree of the term.
 
-We illustrate these notions below, for the example term $\lambda x.(\lambda z.z)(\lambda y.(yy)x)$. The \emph{scope} of the abstraction $\lambda x$ is the entire subterm, $(\lambda z.z)(\lambda y.(yy)x)$ (which may or may not be taken to include $\lambda x$ itself). The \emph{skeleton}, indicated in blue below, is the term $\lambda x.w(\lambda y.(yy)x)$ where the subterm $\lambda z.z$ is lifted out as an (explicit) substitution $[\lambda z.z/w]$. The \emph{spine} of a term, indicated in red in the second image, cannot naturally be expressed with explicit substitution, though one can get an impression with \emph{capturing} substitutions: it would be $\lambda x.w(\lambda y.vx)$, with the subterm $yy$ extracted by a capturing substitution $[yy/x]$.
+We illustrate these notions below, for the example term $\lambda x.(\lambda z.z)(\lambda y.(yy)x)$. The \emph{scope} of the abstraction $\lambda x$ is the entire subterm, $(\lambda z.z)(\lambda y.(yy)x)$ (which may or may not be taken to include $\lambda x$ itself). Note that with explicit substitution, the scope may grow or shrink by lifting explicit substitutions in or out. The \emph{skeleton}, indicated in blue below, is the term $\lambda x.w(\lambda y.(yy)x)$ where the subterm $\lambda z.z$ is lifted out as an (explicit) substitution $[\lambda z.z/w]$. The \emph{spine} of a term, indicated in red in the second image, cannot naturally be expressed with explicit substitution, though one can get an impression with \emph{capturing} substitutions: it would be $\lambda x.w(\lambda y.vx)$, with the subterm $yy$ extracted by a capturing substitution $[yy/x]$.
 %
 \[
 	{\small   \begin{tikzpicture}[auto, scale = 0.75]
@@ -344,15 +344,131 @@ We illustrate these notions below, for the example term $\lambda x.(\lambda z.z)
 		\end{tikzpicture}}
 	\end{tabular}}
 \]
-We identify four natural duplication regimes from the literature. For a shared term $\lambda x.N$ to become available as the function of a redex:
+%\[
+%	{\small   \begin{tikzpicture}[auto, scale = 0.75]
+%		%%%%%%%%%%%%%
+%		\filldraw[fill = yellow!20, draw = yellow!70, rounded corners] (-0.3, -1.25) rectangle (0.3, -2.5);
+%		%\filldraw[fill = yellow!20, draw = yellow!70, rounded corners] (0.45, -2.75) rectangle (1.75, -4);
+%		%%%%%%%%%%%%%
+%		\node (a) at (0, 0) {$\lambda x$};
+%		\node (b) at (0, -0.75) {$@$};
+%		\node (c) at (0, -1.5) {$\lambda z$};
+%		\node (d) at (0, -2.25) {$z$};
+%		\node (e) at (0.75, -1.5) {$\lambda y$};
+%		\node (f) at (0.75, -2.25) {$@$};
+%		\node (g) at (0.75, -3) {$@$};
+%		\node (h) at (0.75, -3.75) {$y$};
+%		\node (i) at (1.5, -3.75) {$y$};
+%		\node (j) at (2.25, -3) {$x$};
+%		%%%%%%%%%%%%%
+%		\draw [very thick, blue] (a) to (b);
+%		\draw (b) to (c);
+%		\draw (c) to (d);
+%		\draw [rounded corners, blue, very thick] (b) -| (e);
+%		\draw [blue, very thick] (e) to (f);
+%		\draw [very thick, blue] (f) to (g);
+%		\draw [blue, very thick, rounded corners] (f) -| (j);
+%		\draw [blue, very thick] (g) to (h); \draw [rounded corners, blue, very thick] (g) -| (i);
+%		%%%%%%%%%%%%%%
+%	\end{tikzpicture}}
+%\hspace{1cm}
+%	{\small  \begin{tikzpicture}[auto, scale = 0.75]
+%		%%%%%%%%%%%%%
+%		\filldraw[fill = yellow!20, draw = yellow!70, rounded corners] (-0.3, -1.25) rectangle (0.3, -2.5);
+%		\filldraw[fill = yellow!20, draw = yellow!70, rounded corners] (0.45, -2.75) rectangle (1.75, -4);
+%		%%%%%%%%%%%%%
+%		\node (a) at (0, 0) {$\lambda x$};
+%		\node (b) at (0, -0.75) {$@$};
+%		\node (c) at (0, -1.5) {$\lambda z$};
+%		\node (d) at (0, -2.25) {$z$};
+%		\node (e) at (0.75, -1.5) {$\lambda y$};
+%		\node (f) at (0.75, -2.25) {$@$};
+%		\node (g) at (0.75, -3) {$@$};
+%		\node (h) at (0.75, -3.75) {$y$};
+%		\node (i) at (1.5, -3.75) {$y$};
+%		\node (j) at (2.25, -3) {$x$};
+%		%%%%%%%%%%%%%
+%		\draw [very thick, red] (a) to (b);
+%		\draw (b) to (c);
+%		\draw (c) to (d);
+%		\draw [rounded corners, red, very thick] (b) -| (e);
+%		\draw [red, very thick] (e) to (f);
+%		\draw (f) to (g);
+%		\draw [red, very thick, rounded corners] (f) -| (j);
+%		\draw (g) to (h); \draw [rounded corners] (g) -| (i);
+%		%%%%%%%%%%%%%%
+%	\end{tikzpicture}}
+%\hspace{1cm}
+%	\raisebox{2cm}{
+%	\begin{tabular}{l c}
+%		{\small Spine} &
+%		 \raisebox{0.1cm}{\begin{tikzpicture}[auto]
+%			\draw [red, very thick] (0, 0) to (1, 0);
+%		\end{tikzpicture}}  \\[0.2cm]
+%		{\small Skeleton} & {\begin{tikzpicture}[auto]
+%			\draw [blue, very thick] (0, 0) to (1, 0);
+%		\end{tikzpicture}} \\[0.2cm]
+%		{\small Subterm} &
+%		 \raisebox{-0.1cm}{\begin{tikzpicture}[auto]
+%			\filldraw[fill = yellow!20, draw = yellow!70, rounded corners] (0, 0) rectangle (0.5, 0.5);
+%		\end{tikzpicture}}
+%	\end{tabular}}
+%\]
+The above notions give rise to four natural duplication regimes. For a shared term $\lambda x.N$ to become available as the function in a $\beta$-redex:
 \begin{description}
 \item[Laziness] duplicates its \emph{scope} \cite{};
 \item[Full laziness] duplicates its \emph{skeleton} \cite{Wadsworth, Balabonski};
 \item[Spinal full laziness] duplicates its \emph{spine} \cite{Levy-Blanc-Maranget, etc.};
-\item[Optimal reduction] duplicates just the abstraction $\lambda x$ and its bound variables $x$ \cite{Lamping, etc.}.
+\item[Optimal reduction] duplicates only the abstraction $\lambda x$ and its bound variables $x$ \cite{Lamping, etc.}.
 \end{description}
 
+\newcommand\BA{{\scriptstyle B\!\raisebox{.5ex}{$\scriptstyle A$}}}
+\newcommand\imp{\mathbin\rightarrow}
+\newcommand\con{\mathbin\wedge}
 
+\[
+\drv{
+ \drv[orange]{\top;-[\lambda];\BA\imp\BA}
+ ;-[\lambda];
+ A\imp
+ \drv[blue!60!white]{
+  (\BA\rightarrow\BA)\con A
+  ;-[\lambda];
+  \BA\imp
+  \drv[blue!80!white]{
+   (\BA\imp\BA)\con A\con\BA
+   ;.;
+   \drv[blue]{(\BA\imp\BA)\con\BA;-[@];\BA}\con A
+   ;-[@];
+   B
+}}}
+\qquad\quad
+\drv{
+ \drv[red]{\top;-[a];A\imp A}
+ \con
+ \drv[yellow!60!white]{
+  \top
+  ;-[a];
+  \BA\imp\drv[yellow]{
+   \BA
+   ;.;
+   \drv[orange]{\top;-[a];\BA\imp\BA}
+   \con\BA
+   ;-[@];\BA
+ }}
+ ;-[s];
+ \drv[red!60!white]{
+  A\imp
+  \drv[red!80!white]{
+   A\con(\BA\imp\BA)
+   ;.;
+   (\BA\imp\BA)\con A
+   ;-[s];
+   \BA\imp\drv[red]{\BA\con A;-[@];B}
+}}}
+\]
+
+\end{document}
 
 We investigate the computational meaning of the following \emph{switch} rule of deep-inference proof theory \cite{Tiu:06:A-System:ai, Guglielm07}:
 \begin{center}
