@@ -584,12 +584,16 @@ Here we describe a system for intuitionistic logic in open deduction. This syste
 	\label{fig:abstraction}
 	\end{subfigure}
 	\\
-	\begin{subfigure}[b]{0.9\textwidth}
+	\begin{subfigure}[b]{\textwidth}
 \scalebox{0.9}{ 
 \drv{\drv[yellow]{X ; | ; Y} ; . ; \drv[yellow]{Y ; | ; Z}} ~{:}{=}~ \drv{X ; . ; \drv[yellow]{X ; | ; Z}} $=$ \drv{\drv[yellow]{X ; | ; Z} ; . ; Z} $=$ \drv{X ; | ; Z}}
 \hfill
  \scalebox{0.9}{\drv{\drv[yellow]{\drv[magenta]{A ; | ; B} ; -[r] ; \drv[green]{C ; | ; D}} ; . ; \drv[cyan]{D ; | ; E}} $=$ \drv{ \drv[magenta]{A ; | ; B} ; -[r] ; \drv[yellow]{ \drv[green]{C ; | ; D} ; . ; \drv[cyan]{D ; | ; E}}}
-} \hfill
+} 
+\hfill
+ \scalebox{0.9}{\drv{ \drv[magenta]{A ; | ; B} ; . ; \drv[yellow]{ \drv[green]{B ; | ; C} ; -[r] ; \drv[cyan]{D ; | ; E}}} $=$ \drv{\drv[yellow]{\drv[magenta]{A ; | ; B} ; . ; \drv[green]{B ; | ; C}} ; -[r] ; \drv[cyan]{D ; | ; E}}
+} 
+ \hfill
 \scalebox{0.9}{
 \drv{ \drv[yellow]{\drv[magenta]{X_{1} ; | ; Y_{1}} * \drv[orange]{X_{2} ; | ; Y_{2}}} ; . ; \drv[yellow]{\drv[cyan]{Y_{1} ; | ; Z_{1}} * \drv[green]{Y_{2} ; | ; Z_{2}}}}
 =
