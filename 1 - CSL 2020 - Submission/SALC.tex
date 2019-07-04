@@ -481,6 +481,65 @@ While each of these duplication strategies has been expressed in graphs and labe
 }}}
 \]
 
+\[
+{\small   \begin{tikzpicture}[auto, scale = 0.75]
+		\filldraw[fill = yellow!20, draw = yellow!70, rounded corners] (-0.3, -2.75) rectangle (0.3, -4);
+		%%%%%%%%%%%%%
+		\node (a) at (0, 0) {$\lambda x$};
+		\node (b) at (0, -0.75) {$\lambda y$};
+		\node (c) at (0, -1.5) {$@$};
+		\node (d) at (0, -2.25) {$@$};
+		\node (e) at (0, -3) {$\lambda z$};
+		\node (f) at (0, -3.75) {$z$};
+		\node (g) at (0.75, -3) {$y$};
+		\node (h) at (1.5, -2.25) {$x$};
+		%%%%%%%%%%%%%
+		\draw [very thick, blue] (a) to (b);
+		\draw [very thick, blue] (b) to (c);
+		\draw [very thick, blue] (c) to (d);
+		\draw [very thick, blue, rounded corners] (d) -| (g);
+		\draw [very thick, blue, rounded corners] (c) -| (h);
+		\draw (d) to (e);
+		\draw (e) to (f);
+	\end{tikzpicture}}
+	\hspace{1cm}
+{\small   \begin{tikzpicture}[auto, scale = 0.75]
+		\filldraw[fill = yellow!20, draw = yellow!70, rounded corners] (-0.3, -2) rectangle (1, -4);
+		%%%%%%%%%%%%%
+		\node (a) at (0, 0) {$\lambda x$};
+		\node (b) at (0, -0.75) {$\lambda y$};
+		\node (c) at (0, -1.5) {$@$};
+		\node (d) at (0, -2.25) {$@$};
+		\node (e) at (0, -3) {$\lambda z$};
+		\node (f) at (0, -3.75) {$z$};
+		\node (g) at (0.75, -3) {$y$};
+		\node (h) at (1.5, -2.25) {$x$};
+		%%%%%%%%%%%%%
+		\draw [very thick, red] (a) to (b);
+		\draw [very thick, red] (b) to (c);
+		\draw (c) to (d);
+		\draw [rounded corners] (d) -| (g);
+		\draw [very thick, red, rounded corners] (c) -| (h);
+		\draw (d) to (e);
+		\draw (e) to (f);
+	\end{tikzpicture}}
+	\hspace{1cm}
+	\raisebox{2cm}{
+	\begin{tabular}{l c}
+		{\small Spine} &
+		 \raisebox{0.1cm}{\begin{tikzpicture}[auto]
+			\draw [red, very thick] (0, 0) to (1, 0);
+		\end{tikzpicture}}  \\[0.2cm]
+		{\small Skeleton} & {\begin{tikzpicture}[auto]
+			\draw [blue, very thick] (0, 0) to (1, 0);
+		\end{tikzpicture}} \\[0.2cm]
+		{\small Subterm} &
+		 \raisebox{-0.1cm}{\begin{tikzpicture}[auto]
+			\filldraw[fill = yellow!20, draw = yellow!70, rounded corners] (0, 0) rectangle (0.5, 0.5);
+		\end{tikzpicture}}
+	\end{tabular}}
+\]
+
 \end{document}
 
 We investigate the computational meaning of the following \emph{switch} rule of deep-inference proof theory \cite{Tiu:06:A-System:ai, Guglielm07}:
