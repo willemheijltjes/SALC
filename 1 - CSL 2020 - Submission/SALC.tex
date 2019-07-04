@@ -98,10 +98,22 @@
 
 \Copyright{Gundersen, Heijltjes, Parigot, and Sherratt}%TODO mandatory, please use full first names. LIPIcs license is "CC-BY";  http://creativecommons.org/licenses/by/3.0/
 
-\ccsdesc[100]{General and reference~General literature}
-\ccsdesc[100]{General and reference}%TODO mandatory: Please choose ACM 2012 classifications from https://dl.acm.org/ccs/ccs_flat.cfm
+%\ccsdesc[100]{General and reference~General literature}
+%\ccsdesc[100]{General and reference}%TODO mandatory: Please choose ACM 2012 classifications from https://dl.acm.org/ccs/ccs_flat.cfm
 
-\keywords{Dummy keyword}%TODO mandatory; please add comma-separated list of keywords
+\begin{CCSXML}
+<ccs2012>
+<concept>
+<concept_id>10002950.10003714.10003732.10003733</concept_id>
+<concept_desc>Mathematics of computing~Lambda calculus</concept_desc>
+<concept_significance>500</concept_significance>
+</concept>
+</ccs2012>
+\end{CCSXML}
+
+\ccsdesc[500]{Mathematics of computing~Lambda calculus}
+
+\keywords{Lambda-Calculus, Sharing, Duplication, Laziness, Scope}%TODO mandatory; please add comma-separated list of keywords
 
 \category{}%optional, e.g. invited paper
 
@@ -250,8 +262,7 @@
 \maketitle
 
 \begin{abstract}
-We present the spinal atomic lambda-calculus, a lambda-calculus with explicit sharing and atomic duplication that achieves spinal full laziness:
-
+We present the spinal atomic lambda-calculus, a lambda-calculus with explicit sharing and atomic duplication that achieves spinal full laziness: duplicating only the direct path between a binder and bound variables is enough for beta reduction to proceed. We show how this calculus is the result of a Curry-Howard style interpretation of the deep inference proof formalism. We prove this calculus has natural properties with respect to the lambda-calculus: confluence and preservation of strongly normalising terms.
 
 \end{abstract}
 
@@ -503,9 +514,37 @@ End-of-scope markers in the $\lambda$-calculus have been seen throughout literat
 
 A \emph{derivation} from a \emph{premise} formula $X$ to a \emph{conclusion} formula $Z$ is constructed inductively as in Figure \ref{fig:derivations}, with from left to right: a propositional atom $a$, where $X = Z = a$; \emph{horizontal composition} with a connective $*$, where $X = X_{1} * X_{2}$ and $Z = Z_{1} * Z_{2}$; and \emph{rule composition}, where $r$ is an inference rule from $Y_{1}$ to $Y_{2}$. The boxes serve as parentheses (since derivations extend in two dimensions) and may be omitted. Derivations are considered up to associativity of rule composition. One may consider formulas as derivations that omit rule composition; and the binary $*$ may be generalised to $0$-ary, unary, and $n$-ary operators. \emph{Vertical composition} of a derivation from $X$ to $Y$ and one from $Y$ to $Z$, depicted by a dashed line, is a defined operation, given in Figure \ref{fig:vertical}.
 
+%\begin{figure}[h]
+%	\centering
+%	\begin{subfigure}[b]{0.3\textwidth}
+%{ \small
+%\drv{X ; | ; Z} {:}{:}{=} $a$ $\vert$ \drv{\drv[yellow]{X_{1} ; | ; Z_{1}} * \drv[yellow]{X_{1} ; | ; Z_{1}}} $\vert$ \drv{\drv[yellow]{X ; | ; Y_{1}} ; -[r] ; \drv[yellow]{Y_{2} ; | ; Z}}
+%}
+%	\caption{Derivations}
+%	\label{fig:derivations}
+%	\end{subfigure}
+%	\hfill
+%	\begin{subfigure}[b]{0.6\textwidth}
+%{ \small
+%\drv{\drv[yellow]{X ; | ; Y} ; . ; \drv[yellow]{Y ; | ; Z}} ~{:}{=}~ \drv{X ; . ; \drv[yellow]{X ; | ; Z}} $=$ \drv{\drv[yellow]{X ; | ; Z} ; . ; Z} $=$ \drv{X ; | ; Z}
+%} \hfill
+%{\small
+%\drv{ \drv[yellow]{\drv[magenta]{X_{1} ; | ; Y_{1}} * \drv[orange]{X_{2} ; | ; Y_{2}}} ; . ; \drv[yellow]{\drv[cyan]{Y_{1} ; | ; Z_{1}} * \drv[green]{Y_{2} ; | ; Z_{2}}}}
+%=
+%\drv{\drv[yellow]{ \drv[magenta]{X_{1} ; | ; Y_{1}} ; . ; \drv[cyan]{Y_{1} ; | ; Z_{1}}} * \drv[yellow]{ \drv[orange]{X_{2} ; | ; Y_{2}} ; . ; \drv[green]{Y_{2} ; | ; Z_{2}} }}
+%}
+%	\caption{Vertical composition}
+%	\label{fig:vertical}
+%	\end{subfigure}
+%%\caption{Derivations and Vertical Composition}
+%%\label{fig:dervandcomp}
+%\end{figure}
+
+A system for intuitionistic logic is given by the binary connectives $\rightarrow$, $\wedge$, and nullary connective $\top$, where we restrict implication to a form in Figure \ref{fig:implication}, and the inference rules in Figure \ref{fig:inference}. We work modulo associativity, symmetry, and unitality of conjunction, justifying the $n$-ary contraction, and may omit $\top$ from the axiom rule. A $0$-ary contraction, with conclusion $\top$, is a \emph{weakening}. Figure \ref{fig:abstraction}: the abstraction rule ($\lambda$) is derived from axiom and switch.
+
 \begin{figure}[h]
-	\centering
-	\begin{subfigure}[b]{0.3\textwidth}
+\centering
+		\begin{subfigure}[b]{0.3\textwidth}
 { \small
 \drv{X ; | ; Z} {:}{:}{=} $a$ $\vert$ \drv{\drv[yellow]{X_{1} ; | ; Z_{1}} * \drv[yellow]{X_{1} ; | ; Z_{1}}} $\vert$ \drv{\drv[yellow]{X ; | ; Y_{1}} ; -[r] ; \drv[yellow]{Y_{2} ; | ; Z}}
 }
@@ -525,13 +564,7 @@ A \emph{derivation} from a \emph{premise} formula $X$ to a \emph{conclusion} for
 	\caption{Vertical composition}
 	\label{fig:vertical}
 	\end{subfigure}
-%\caption{Derivations and Vertical Composition}
-%\label{fig:dervandcomp}
-\end{figure}
-
-\noindent A system for intuitionistic logic is given by the binary connectives $\rightarrow$, $\wedge$, and nullary connective $\top$, where we restrict implication to a form in Figure \ref{fig:implication}, and the inference rules in Figure \ref{fig:inference}. We work modulo associativity, symmetry, and unitality of conjunction, justifying the $n$-ary contraction, and may omit $\top$ from the axiom rule. A $0$-ary contraction, with conclusion $\top$, is a \emph{weakening}. Figure \ref{fig:abstraction}: the abstraction rule ($\lambda$) is derived from axiom and switch.
-
-\begin{figure}[h]
+	\\[0.4cm]
 	\begin{subfigure}[b]{0.2\textwidth}
 	\centering
 		{\small \drv{Y \rightarrow \drv[yellow]{X ; | ; Z}}}
@@ -555,6 +588,7 @@ A \emph{derivation} from a \emph{premise} formula $X$ to a \emph{conclusion} for
 	\caption{Abstraction}
 	\label{fig:abstraction}
 	\end{subfigure}
+	\caption{Intuitionistic Proof System in Open Deduction}
 \end{figure}
 
 \subsection{The Sharing Calculus}
@@ -583,7 +617,7 @@ A term $t$ will be typed by a derivation with restricted types, as shown below, 
 
 \begin{figure}[h]
 \begin{center}
-Basic Types: $A, B, C \quad {:}{=} \quad a \, \, \, \vert \, \, \, A \rightarrow B$ \hspace{1cm} Context Types: $\Gamma, \Delta \quad {:}{=} \quad A \, \, \, \vert \, \, \, \top \, \, \, \vert \, \, \, \Gamma \wedge \Delta$
+Basic Types: $A, B, C \quad {:}{=} \quad a \, \, \, \vert \, \, \, A \rightarrow B$ \hspace{1cm} Context Types: $\Gamma, \Delta, \Omega \quad {:}{=} \quad A \, \, \, \vert \, \, \, \top \, \, \, \vert \, \, \, \Gamma \wedge \Delta$
 \end{center}
 $x :$ {\small \drv{A^{x}}}
 \hfill
@@ -825,6 +859,8 @@ The distributor $\dist{u}{\fakedist{e_{1}}{\vec{x_{1}}} \dots \fakedist{e_{n}}{\
 
 \begin{definition}[Free and Bound Variables]
 \label{def:freeboundvar} The free variables $\fv{-}$ and bound variables $\bv{-}$ of a pre-term $t$ is defined as follows
+\begingroup
+\allowdisplaybreaks
 	\begin{align*}
 		\fv{x} &= \set{x} & \bv{x} &= \set{} \\
 		\fv{\app{s}{t}} &= \fv{s} \cup \fv{t} & \bv{\app{s}{t}} &= \bv{s} \cup \bv{t} \\
@@ -834,11 +870,14 @@ The distributor $\dist{u}{\fakedist{e_{1}}{\vec{x_{1}}} \dots \fakedist{e_{n}}{\
 		\fv{\dist{u}{\vecdist{e}{x}}{\overline{[\Gamma]}}{c}{c}} &= \fv{u \overline{[\Gamma]}} - \set{c} & \bv{\dist{u}{\vecdist{e}{x}}{\overline{[\Gamma]}}{c}{c}} &= \bv{u \overline{[\Gamma]}} \\
 		\fv{\dist{u}{\vecdist{e}{x}}{\overline{[\Gamma]}}{c}{\vec{y}}} &= \fv{u \overline{[\Gamma]}} \cup \set{c} & \bv{\dist{u}{\vecdist{e}{x}}{\overline{[\Gamma]}}{c}{\vec{y}}} &= \bv{u \overline{[\Gamma]}} \\
 	\end{align*}
+\endgroup
 \end{definition}
 
 \begin{definition}[Free and Bound Phantom-Variables]
 \label{def:freeboundphan}
 The free phantom-variables $\fp{-}$ and bound phantom-variables $\bp{-}$ of the pre-term $t$ is defined as follows
+\begingroup
+\allowdisplaybreaks
 	\begin{align*}
 		\fp{x} &= \set{} & \bp{x} &= \set{} \\
 		\fp{\app{s}{t}} &= \fp{s} \cup \fp{t} & \bp{\app{s}{t}} &= \bp{s} \cup \bp{t} \\
@@ -852,6 +891,7 @@ The free phantom-variables $\fp{-}$ and bound phantom-variables $\bp{-}$ of the 
 	\fp{\dist{u}{\fakedist{e_{1}}{\vec{x_{1}}} \dots \fakedist{e_{n}}{\vec{x_{n}}}}{\overline{[\Gamma]}}{c}{\vec{y}}} &= \fp{u \overline{[\Gamma]}} \cup \set{c} - \set{e_{1}, \dots, e_{n}} \\
 	\bp{\dist{u}{\fakedist{e_{1}}{\vec{x_{1}}} \dots \fakedist{e_{n}}{\vec{x_{n}}}}{\overline{[\Gamma]}}{c}{\vec{y}}} &= \bp{u \overline{[\Gamma]}} \cup \set{e_{1}, \dots, e_{n}}
 	\end{align*}
+\endgroup
 \end{definition}
 
 \noindent Variables are bound by abstractions (not phantoms) and sharings. Phantom-variables are bound by distributors. With these definitions, we can formally define the terms of $\FALC$.
@@ -1160,16 +1200,28 @@ if $\fake{c}{x_{1}, \dots, x_{n}} \in \fc{u}$ or $\set{x_{1}, \dots, x_{n}} \cap
 $$\readbackwmap{u \exor{}{c}{x_{1}, \dots, x_{n}}}{\sigma}{\gamma} = \readbackwmap{u}{\sigma[x_{i} \mapsto c]_{i \in [n]}}{\gamma}$$
 \end{proposition}
 
-Using these operations, we define the rewrite rules that allow for spinal duplication. Firstly we have beta reduction ($\rightsquigarrow_{\beta}$), which requires an abstraction and not a phantom-abstraction.
+Using these operations, we define the rewrite rules that allow for spinal duplication. Firstly we have beta reduction ($\rightsquigarrow_{\beta}$), which strictly requires an abstraction (not a phantom).
 \begin{equation}  \label{red:beta} \tag{$\beta$}
 \app{(\fake{x}{x}{t})}{s} \rightsquigarrow_{\beta} \sub{t}{s}{x}
 \end{equation}
-However, its effect is very different: here $\beta$-reduction is a linear operation, since the bound variable $x$ occurs exactly once in the body $t$. Any duplication of the term t in the atomic lambda-calculus proceeds via the sharing reductions, which we define next. The first set of sharing reduction rules move closures towards the outside of a term. Most of these rewrite rules only change the typing derivations in the way that subderivations are composed, with the exception of moving a closure out of scope of a distributor.
+However, its effect is very different: here $\beta$-reduction is a linear operation, since the bound variable $x$ occurs exactly once in the body $t$. Any duplication of the term t in the atomic lambda-calculus proceeds via the sharing reductions. The proof rewrite step that corrersponds to $\beta$-reduction is shown below.
+\begin{center}
+\begin{tabular}{c c c}
+	{\small 
+		\drv{\drv{\Gamma ; -[\lamrule] ; A \rightarrow \drv[yellow]{A^{x} \wedge \Gamma ; |[t] ; B}} \wedge \drv[green]{\Delta ; |[s] ; A} ; -[\apprule] ; B}
+	}
+	&
+	$\rightsquigarrow_{\beta}$
+	&
+	$\drv{\drv{\drv[green]{\Delta ; |[{s}] ; A} \wedge \Gamma} ; . ; \drv[yellow]{A \wedge \Gamma ; |[t] ; B}}$
+\end{tabular}
+\end{center}
+The first set of sharing reduction rules move closures towards the outside of a term. Most of these rewrite rules only change the typing derivations in the way that subderivations are composed, with the exception of moving a closure out of scope of a distributor.
 \begin{align}
 \app{s[\Gamma]}{t} &\rightsquigarrow_{L} (\app{s}{t})[\Gamma]   \label{red:liftappleft} \tag{$l_{1}$} \\
 \app{s}{t[\Gamma]} &\rightsquigarrow_{L} (\app{s}{t})[\Gamma] \label{red:liftappright} \tag{$l_{2}$} \\
 \fake{d}{\vec{x}}{t[\Gamma]} &\rightsquigarrow_{L} (\fake{d}{\vec{x}}{t})[\Gamma]  \text{ if } \set{\vec{x}} \cap \fv{t} = \set{\vec{x}}  \label{red:liftabs} \tag{$l_{3}$} \\
-\share{u}{x_{1}, \dots, x_{n}}{t[\Gamma]} &\rightsquigarrow_{L} \share{u}{x_{1}, \dots, x_{n}}{t}[\Gamma] \label{red:liftshare} \tag{$l_{4}$}
+\share{u}{\vec{x}}{t[\Gamma]} &\rightsquigarrow_{L} \share{u}{\vec{x}}{t}[\Gamma] \label{red:liftshare} \tag{$l_{4}$}
 \end{align}
 For the case of lifting a closure outside a distributor, we use a notation $\bindvars{[\Gamma]}$ to identify the variables captured by a closure, i.e.$\bindvars{\share{}{\vec{x}}{t}} = \set{\vec{x}}$ and $\bindvars{\dist{}{\fakedist{e_{1}}{\vec{x_{1}}}, \dots, \fakedist{e_{n}}{\vec{x_{x}}}}{\overline{[\Gamma]}}{c}{c}} = \set{\vec{x_{1}}, \dots, \vec{x_{n}}}$. Then let $\set{\vec{z}} = \bindvars{[\Gamma]}$ in the following rewrite rule, that can only occur if $\set{\vec{x}} \cap \fv{[\Gamma]} = \set{}$.
 \begin{equation} \label{red:distshare} \tag{$l_{5}$}
@@ -1196,39 +1248,50 @@ The second part of the rewrite rule justifies the need for the book-keeping oper
 \end{tabular}
 \end{center}
 
-The lifting rules ($l_{i}$) are justified by the need to lift closures out of the distributor, as opposed to duplicating them. The second set of rewrite rules, consecutive sharings are compounded and unary sharings are applied as substitutions.
+The lifting rules ($l_{i}$) are justified by the need to lift closures out of the distributor, as opposed to duplicating them. The second set of rewrite rules, consecutive sharings are compounded and unary sharings are applied as substitutions. For simplicity, in the equivalent proof rewrite step we only show the binary case for each rule.
 \begin{align}
 \share{\share{u}{w_{1}, \dots, w_{m}}{y_{i}}}{y_{1}, \dots, y_{n}}{t} & \rightsquigarrow_{C} \share{u}{y_{1}, \dots, y_{i-1}, w_{1}, \dots, w_{m}, y_{i+1}, \dots, y_{n}}{t}   \label{red:mergeshare} \tag{$c_{1}$} \\
 \share{u}{x}{t} & \rightsquigarrow_{C} \sub{u}{t}{x} \label{red:compshare} \tag{$c_{2}$}
 \end{align}
-
-The atomic steps for duplicating are given in the third and final set of rewrite rules. The first being the atomic duplication step of an application, which is the same rule used in \cite{gundersen2013atomic}. The proof rewrite steps for each rule are also provided. For simplicity, in the equivalent proof rewrite step we only show the binary case for each rule.
+\begin{center}
+\begin{tabular}{c c}
+	{\small \drv{A ; -[\sharerule] ; A \wedge \drv[yellow]{A ; -[\sharerule] ; A \wedge A}}} \hspace{0.1cm} $\rightsquigarrow_{C}$ \hspace{0.1cm} {\small \drv{A ; -[\sharerule] ; A \wedge A \wedge A}} \hspace{0.5cm} & 
+{\small \drv{A ; -[\sharerule] ; A}} \hspace{0.1cm} $\rightsquigarrow_{C}$ \hspace{0.1cm} {\small \drv{A}}
+\end{tabular}
+\end{center}
+The atomic steps for duplicating are given in the third and final set of rewrite rules. The first being the atomic duplication step of an application, which is the same rule used in \cite{gundersen2013atomic}. The binary case proof rewrite steps for each rule are also provided. 
 \begin{equation} \label{red:appdup} \tag{$d_{1}$}
 \share{u}{x_{1} \dots x_{n}}{\app{s}{t}} \rightsquigarrow_{D} \share{\share{\sub{\sub{u}{\app{z_{1}}{y_{1}}}{x_{1}}\dots}{\app{z_{n}}{y_{n}}}{x_{n}}}{z_{1} \dots z_{n}}{s}}{y_{1} \dots y_{n}}{t}
 \end{equation}
 \begin{center}
-\drv{(A \rightarrow B) \wedge A ; -[\apprule] ; B ; -[\sharerule] ; B \wedge B}
-\hspace{0.5cm}
-\drv{\drv{(A \rightarrow B) ; -[\sharerule] ; (A \rightarrow B) \wedge (A \rightarrow B)} \wedge \drv{B ; -[\sharerule] ; B \wedge B} ; . ; \drv{(A \rightarrow B) \wedge A ; -[\apprule] ; B} \wedge \drv{(A \rightarrow B) \wedge A ; -[\apprule] ; B}}
+{\small \drv{(A \rightarrow B) \wedge A ; -[\apprule] ; B ; -[\sharerule] ; B \wedge B}}
+\hspace{0.25cm}
+$\rightsquigarrow_{D}$
+\hspace{0.25cm}
+{\small \drv{\drv{(A \rightarrow B) ; -[\sharerule] ; (A \rightarrow B) \wedge (A \rightarrow B)} \wedge \drv{B ; -[\sharerule] ; B \wedge B} ; . ; \drv{(A \rightarrow B) \wedge A ; -[\apprule] ; B} \wedge \drv{(A \rightarrow B) \wedge A ; -[\apprule] ; B}}}
 \end{center}
 \begin{equation} \label{red:absdup} \tag{$d_{2}$}
 \begin{multlined}
 \share{u}{x_{1}, \dots, x_{n}}{\fake{c}{\vec{y}}{t}} \rightsquigarrow_{D} \\
-\sub{u}{\fake{e_{i}}{w^{i}_{1}}{w^{i}_{1}}}{x_{i}}_{1 \leq i \leq n} \dist{}{\fakedist{e_{1}}{w^{1}_{1}} \dots \fakedist{e_{n}}{w^{n}_{1}}}{\share{}{w^{1}_{1}, \dots, w^{n}_{1}}{t}}{c}{\vec{y}}
+\sub{u}{\fake{e_{i}}{w_{i}}{w_{i}}}{x_{i}}_{i \in [n]} \dist{}{\fakedist{e_{1}}{w_{1}} \dots \fakedist{e_{n}}{w_{n}}}{\share{}{w_{1}, \dots, w_{n}}{t}}{c}{\vec{y}}
 \end{multlined}
 \end{equation}
 \begin{center}
-\drv{(A \rightarrow B) \wedge \Gamma ; -[\switchrule] ; A \rightarrow \drv[cyan]{B \wedge \Gamma ; | ; C} ; -[\sharerule] ; (A \rightarrow C) \wedge (A \rightarrow C)}
-\hspace{0.5cm}
-\drv{(A \rightarrow B) \wedge \Gamma ; -[\switchrule] ; A \rightarrow \drv[cyan]{B \wedge \Gamma ; | ; C ; -[\sharerule] ; C \wedge C} ; -[\distrule] ; (A \rightarrow C) \wedge (A \rightarrow C)}
+{\small \drv{(A \rightarrow B) \wedge \Gamma ; -[\switchrule] ; A \rightarrow \drv[yellow]{B \wedge \Gamma ; | ; C} ; -[\sharerule] ; (A \rightarrow C) \wedge (A \rightarrow C)}}
+\hspace{0.25cm}
+$\rightsquigarrow_{D}$
+\hspace{0.25cm}
+{\small \drv{(A \rightarrow B) \wedge \Gamma ; -[\switchrule] ; A \rightarrow \drv[yellow]{B \wedge \Gamma ; | ; C ; -[\sharerule] ; C \wedge C} ; -[\distrule] ; (A \rightarrow C) \wedge (A \rightarrow C)}}
 \end{center}
 \begin{equation} \label{red:distelim} \tag{$d_{3}$}
 \dist{u}{\fakedist{e_{1}}{\vec{w_{1}}} \dots \fakedist{e_{n}}{\vec{w_{n}}}}{\share{}{\vec{w_{1}}, \dots, \vec{w_{n}}}{c}}{c}{c} \rightsquigarrow_{D} \exor{\exor{u}{e_{1}}{\vec{w_{1}}} \dots}{e_{n}}{\vec{w_{n}}}
 \end{equation}
 \begin{center}
-\drv{ ; -[\lamrule] ; A \rightarrow \drv{A ; -[\sharerule] ; A \wedge A} ; -[\distrule] ; (A \rightarrow A) \wedge (A \rightarrow A)}
-\hspace{0.5cm}
-\drv{\drv{ ; -[\lamrule] ; A \rightarrow A} \wedge \drv{ ; -[\lamrule] ; A \rightarrow A}}
+{\small \drv{ ; -[a] ; A \rightarrow \drv{A ; -[\sharerule] ; A \wedge A} ; -[\distrule] ; (A \rightarrow A) \wedge (A \rightarrow A)}}
+\hspace{0.25cm}
+$\rightsquigarrow_{D}$
+\hspace{0.25cm}
+{\small \drv{\drv{ ; -[a] ; A \rightarrow A} \wedge \drv{ ; -[a] ; A \rightarrow A}}}
 \end{center}
 
 \noindent As an example, observe $\share{u}{z_{1}, z_{2}}{\abs{x}{\app{(\abs{z}{z})}{\abs{y}{\app{(\app{y}{y})}{x}}}}}$ (note $\abs{x}{t} \equiv \fake{x}{x}{t}$). By (\ref{red:absdup}) we obtain $\dist{u'}{\fakedist{e_{1}}{z_{1}}, \fakedist{e_{2}}{z_{2}}}{\share{}{z_{1}, z_{2}}{\app{(\abs{z}{z})}{\abs{y}{\app{(\app{y}{y})}{x}}}}}{x}{x}$ where $u' = u\sub{}{\fake{e_{i}}{z_{i}}{z_{i}}}{z_{i}}_{i \in [2]}$. Then by reductions (\ref{red:appdup}, \ref{red:distshare}), we obtain the distributor $\dist{u''}{\fakedist{e_{1}}{z_{1}}, \fakedist{e_{2}}{z_{2}}}{\share{}{z_{1}, z_{2}}{\abs{y}{\app{(\app{y}{y})}{x}}}}{x}{x}$ where $u'' = u\sub{}{\fake{e_{i}}{z_{i}}{\app{a_{i}}{z_{i}}}}{z_{i}}_{i \in [2]}$. Then by (\ref{red:absdup}, \ref{red:appdup}, \ref{red:distshare}, \ref{red:distshare}) we obtain the distributor $\dist{u'''}{\fakedist{e_{1}}{z_{1}}, \fakedist{e_{2}}{z_{2}}}{\share{}{z_{1}, z_{2}}{x}}{x}{x}$ which can be eliminated by (\ref{red:distelim}). A full example can be found in the Appendix. 
@@ -1236,14 +1299,14 @@ The atomic steps for duplicating are given in the third and final set of rewrite
 Each rewrite rule preserves the conclusion of the derivation, and thus the following proposition is easy to observe.
 
 \begin{proposition}
-If $s \rightsquigarrow_{L, C, D, \beta} t$ and $s : C$, then $t : C$
+If $s \rightsquigarrow_{(L, C, D, \beta)} t$ and $s : C$, then $t : C$
 \end{proposition}
 
 \noindent The readback translation collapses the shared terms. The lifting, duplication, and compound rules are used solely for the duplication of terms. Therefore it is expected that the following Lemma be true (proven in Appendix by induction). It is also important for proving confluence of $\FALC$ (Theorem \ref{theo:strongnormal}).
 
-\begin{lemma}[Sharing reduction preserves denotation]
+\begin{lemma}
 \label{lem:preservesdenotation}
- If $s \rightsquigarrow_{L, D, C} t$ then $\readbackwmap{s}{\sigma}{\gamma} = \readbackwmap{t}{\sigma}{\gamma}$
+ If $s \rightsquigarrow_{(L, D, C)} t$ then $\readbackwmap{s}{\sigma}{\gamma} = \readbackwmap{t}{\sigma}{\gamma}$
 \end{lemma}
 
 \section{Strong Normalisation of Sharing Reductions}
@@ -1410,7 +1473,7 @@ The sharing height $\height{i}{t}$ of a term $t$ is given by
 
 \begin{lemma}
 \label{theo:liftingheight}
-If $t \rightsquigarrow_{(L)} u$ then $\height{i}{t} > \height{i}{u}$
+If $t \rightsquigarrow_{L} u$ then $\height{i}{t} > \height{i}{u}$
 \end{lemma}
 
 The other measure we consider is the \emph{weight} of a term. Intuitively this quantifies the remaining duplications, which are performed with $\rightsquigarrow_{D}$ reductions. Calculating the weight of a term requires an auxiliary function from variables to integers. This function is defined by assigning integer weights to the variables of a term. This auxiliary function is defined on terms $\weightvar{i}{-}$, where $i$ is an integer. To measure variables independently of binders is vital. It allows to measure distributors, which duplicate $\lambda$'s but not the bound variable. Also, only bound variables for abstractions are measured since variables bound by sharings are substituted in the interpretation.
@@ -1544,11 +1607,10 @@ For a given $N \in \Lambda$ that is strongly normalising, we know by Lemma \ref{
 \section{Conclusion and Further Remarks}
 \label{chap:conc}
 
-We have studied the computational interpretation of the switch rule and discovered its correspondence with scope in the $\lambda$-calculus. We have studied the interaction between the switch and the medial rule, the two characteristic inference rules of deep inference. We interpret a calculus based on this interaction called the spinal atomic $\lambda$-calculus, which not only has the ability to duplicate terms atomically but can also duplicate solely the spine of an abstraction such that beta reduction can be applied on the duplicates. 
+We have studied the computational interpretation of the switch rule and discovered its correspondence with scope in the $\lambda$-calculus. We have studied the interaction between the switch and the medial rule, the two characteristic inference rules of deep inference. We interpret a calculus based on this interaction, which not only has the ability to duplicate terms atomically but can also duplicate solely the spine of an abstraction such that beta reduction can be applied on the duplicates. We show that this resulting calculus has natural properties with respect to the $\lambda$-calculus. 
 
-In the future we would like to have a full Curry-Howard correspondence rather than just an interpretation, i.e.\ where each inference rule in the typing system corresponds with a construct in the term calculus. Additionally, we are interested in studying the computational interpretation of the same rules with different connectives.
-
-Additionally, we aim to translate the result of Blanc, L\'{e}vy, and Maranget \cite{blanc2007sharing} into our calculus. There they provide an algorithm proven by Balabonski in \cite{Balabonski12} to implement optimal reduction for Wadsworth's \emph{weak $\lambda$-calculus} \cite{wadsworth1971semantics} (further studied in \cite{CAGMAN1998239}. By showing their result in our formalism, we develop a logical framework that follows an optimal reduction strategy.
+In the future we would like to have a full Curry-Howard correspondence rather than just an interpretation, i.e.\ where each inference rule in the typing system corresponds with a construct in the term calculus. This would mean introducing an explicit end-of-scope operator (such as done in \cite{berkling1976symmetric, hendriks2003lambda, fernandez2005lambda}) to correspond with the switch rule. %Additionally, we are interested in studying the computational interpretation of the same rules with different connectives.
+Additionally, we aim to translate the result of Blanc, L\'{e}vy, and Maranget \cite{blanc2007sharing} into our calculus. There they provide an algorithm proven by Balabonski in \cite{Balabonski12} to implement optimal reduction for Wadsworth's \emph{weak $\lambda$-calculus} \cite{wadsworth1971semantics} (further studied in \cite{CAGMAN1998239}). By showing their result in our formalism, we would develop a logical framework that follows an optimal reduction strategy.
 
 %Lastly, and a long-term goal, would be to develop a complete logical framework for optimal reduction. The algorithms for optimal reduction us graph rewriting techniques, and nodes that specify enclosures and scopes. Furthermore, the implementations do not share terms like in either of the atomic $\lambda$-calculi, but they share contexts i.e.\ terms with holes that can be `filled' with distinct terms. Thus it is clear that they use a notion of sharing more than the one demonstrated here.
 
