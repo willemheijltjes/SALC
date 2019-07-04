@@ -252,15 +252,15 @@
 \maketitle
 
 \begin{abstract}
-We present the spinal atomic lambda-calculus, a lambda-calculus with explicit sharing and atomic duplication that achieves spinal full laziness: duplicating only the direct path between a binder and bound variables is enough for beta reduction to proceed. We show how this calculus is the result of a Curry-Howard style interpretation of the deep inference proof formalism. We prove this calculus has natural properties with respect to the lambda-calculus: confluence and preservation of strongly normalising terms.
+We present the spinal atomic $\lambda$-calculus, a $\lambda$-calculus with explicit sharing and atomic duplication that achieves spinal full laziness: duplicating only the direct path between a binder and bound variables is enough for beta reduction to proceed. We show how this calculus is the result of a Curry-Howard style interpretation of the deep inference proof formalism. We prove this calculus has natural properties with respect to the $\lambda$-calculus: confluence and preservation of strongly normalising terms.
 
 \end{abstract}
 
 \section{Introduction}
 
-In the lambda-calculus, a main source of efficiency is \emph{sharing}: multiple use of a single subterm, commonly expressed through graph reduction~\cite{} or explicit substitution~\cite{levy1991}. This work, and the \emph{atomic lambda-calculus}~\cite{gundersen2013atomic} on which it builds, is an investigation into sharing as it occurs naturally in intuitionistic \emph{deep-inference} proof theory~\cite{Tiu:06:A-System:ai, Guglielm07}.
+In the $\lambda$-calculus, a main source of efficiency is \emph{sharing}: multiple use of a single subterm, commonly expressed through graph reduction~\cite{lamping1989algorithm} or explicit substitution~\cite{levy1991}. This work, and the \emph{atomic $\lambda$-calculus}~\cite{gundersen2013atomic} on which it builds, is an investigation into sharing as it occurs naturally in intuitionistic \emph{deep-inference} proof theory~\cite{Tiu:06:A-System:ai, Guglielm07}.
 
-The atomic lambda-calculus arose as a Curry--Howard interpretation of a deep-inference proof system, in particular of the \emph{distribution} rule below left, a variant of the characteristic \emph{medial} rule~\cite{bruntiu01}. In the term calculus, the corresponding \emph{distributor} construct enables duplication to proceed \emph{atomically}, on individual constructors, in the style of sharing graphs \cite{}. As a consequence, the natural reduction strategy in the atomic lambda-calculus is \emph{fully lazy}~\cite{Wadsworth,Balabonski}: it duplicates only the minimal part of a term, the \emph{skeleton}, that can be obtained by lifting out subterms as explicit substitutions.%
+The atomic $\lambda$-calculus arose as a Curry--Howard interpretation of a deep-inference proof system, in particular of the \emph{distribution} rule below left, a variant of the characteristic \emph{medial} rule~\cite{bruntiu01}. In the term calculus, the corresponding \emph{distributor} construct enables duplication to proceed \emph{atomically}, on individual constructors, in the style of sharing graphs \cite{lamping1989algorithm}. As a consequence, the natural reduction strategy in the atomic $\lambda$-calculus is \emph{fully lazy}~\cite{wadsworth1971semantics, Balabonski12}: it duplicates only the minimal part of a term, the \emph{skeleton}, that can be obtained by lifting out subterms as explicit substitutions.%
 \footnote{While duplication is atomic \emph{locally}, a duplicated abstraction does not form a redex until also its bound variables have been duplicated; hence duplication becomes fully lazy \emph{globally}.}
 \[
 	\text{\small Distribution:}
@@ -271,12 +271,11 @@ The atomic lambda-calculus arose as a Curry--Howard interpretation of a deep-inf
 \quad
 	\drv{(A\rightarrow B)\wedge C;-[s];A\rightarrow(B\wedge C)}
 \]
-In this work, we investigate the computational interpretation of another characteristic deep-inference proof rule: the \emph{switch} rule above right~\cite{}. Our result is the \emph{spinal atomic lambda-calculus}, a term calculus in which the natural strategy is a refined form of full laziness, \emph{spine duplication}. This strategy duplicates only the \emph{spine} of an abstraction: the paths to its bound variables in the syntax tree of the term.
+In this work, we investigate the computational interpretation of another characteristic deep-inference proof rule: the \emph{switch} rule above right~\cite{Guglielm07}. Our result is the \emph{spinal atomic $\lambda$-calculus}, a term calculus in which the natural strategy is a refined form of full laziness, \emph{spine duplication}. This strategy duplicates only the \emph{spine} of an abstraction: the paths to its bound variables in the syntax tree of the term.
 
 We illustrate these notions below, for the example term $\lambda x.\lambda y.((\lambda z.z)y)x$. The \emph{scope} of the abstraction $\lambda x$ is the entire subterm, $\lambda y.((\lambda z.z)y)x$ (which may or may not be taken to include $\lambda x$ itself). Note that with explicit substitution, the scope may grow or shrink by lifting explicit substitutions in or out. The \emph{skeleton}, indicated in blue below, is the term $\lambda x.\lambda y.(wy)x$ where the subterm $\lambda z.z$ is lifted out as an (explicit) substitution $[\lambda z.z/w]$. The \emph{spine} of a term, indicated in red in the second image, cannot naturally be expressed with explicit substitution, though one can get an impression with \emph{capturing} substitutions: it would be $\lambda x.\lambda y.wx$, with the subterm $(\lambda z.z)y$ extracted by a capturing substitution $[(\lambda z.z)y/w]$. Observe further that the skeleton can be described as the \emph{iterated spine}: it is the smallest subgraph of the syntax tree closed under taking the spine of each abstraction, i.e.\ that contains the spine of every abstraction it contains.
 %
 
-\[
 {\small \centering   
 	\raisebox{0.25cm}{
 	\begin{tikzpicture}[auto, scale = 0.75]
@@ -338,7 +337,6 @@ We illustrate these notions below, for the example term $\lambda x.\lambda y.((\
 			\filldraw[fill = orange!20, draw = orange!70, rounded corners] (0+0.75, 0) rectangle (0.5+0.75, 0.5);
 		\end{tikzpicture}}
 	\end{tabular}}
-\]
 
 %\[
 %	{\small   \begin{tikzpicture}[auto, scale = 0.75]
@@ -412,11 +410,11 @@ We illustrate these notions below, for the example term $\lambda x.\lambda y.((\
 %\]
 The above notions give rise to four natural duplication regimes. For a shared abstraction to become available as the function in a $\beta$-redex:
 \begin{description}
-\item[Laziness] duplicates its \emph{scope} \cite{};
-\item[Full laziness] duplicates its \emph{skeleton} \cite{Wadsworth, Balabonski};
-\item[Spinal full laziness] duplicates its \emph{spine} \cite{Levy-Blanc-Maranget, etc.};
-\item[Optimal reduction] duplicates only the abstraction $\lambda x$ and its bound variables $x$ \cite{Lamping, etc.}.%
-\footnote{Interestingly, Balabonski \cite{} shows that for \emph{weak} reduction (where one does not reduce under an abstraction) full laziness and spinal full laziness are both optimal (in the number of beta-steps required to reach a normal form).}
+\item[Laziness] duplicates its \emph{scope} \cite{Launchbury1993, ariolafelleisen1997};
+\item[Full laziness] duplicates its \emph{skeleton} \cite{wadsworth1971semantics, Balabonski12, gundersen2013atomic};
+\item[Spinal full laziness] duplicates its \emph{spine} \cite{Blanc2005, blanc2007sharing};
+\item[Optimal reduction] duplicates only the abstraction $\lambda x$ and its bound variables $x$ \cite{lamping1989algorithm, van2004lambdascope}.%
+\footnote{Interestingly, Balabonski \cite{Balabonski12} shows that for \emph{weak} reduction (where one does not reduce under an abstraction) full laziness and spinal full laziness are both optimal (in the number of beta-steps required to reach a normal form).}
 \end{description}
 While each of these duplication strategies has been expressed in graphs and labelled calculi, the atomic $\lambda$-calculus is the first term calculus with Curry--Howard corresponding proof system to naturally describe full laziness. Likewise, the spinal atomic $\lambda$-calculus presented here is the first term calculus with Curry--Howard corresponding proof system to naturally describe spinal full laziness.
 
@@ -484,16 +482,16 @@ The basis of the present work is the observation that the \emph{switch} rule in 
 \]
 An abstraction $\lambda x$ corresponds in the proof system to an implication $A\imp$, explicitly scoping over its right-hand side. On the left, with the \emph{abstraction} rule $(\lambda)$, scopes must be balanced, and the proof system may identify the \emph{skeleton}; here, that of $\lambda x$ as the largest blue box. Decomposing the abstraction $(\lambda)$ into \emph{axiom} $(a)$ and \emph{switch} $(s)$, on the right the proof system may express unbalanced scope. It does so by separating the scope of an abstraction into multiple parts; here, that of $\lambda x$ is captured as the two top-level red boxes. Each box is ready to be duplicated; in this way, one may duplicate only the spine of an abstraction.
 
-In this paper, we ...
+In Section \ref{sec:typingacalculus}, we introduce a simple sharing calculus that we expand on in Section \ref{chap:salc}, where we introduce the syntax and semantics of the spinal atomic $\lambda$-calculus, and its typing system. In Section \ref{chap:snosr} we further study the reduction rules that allow for spinal duplication, and prove natural properties of these rules such as termination and confluence. In Section \ref{chap:posn} we extend these results to include beta reduction, and show preservation of strong normalisation with respect to the $\lambda$-calculus. We conclude in Section \ref{chap:conc}.
 
-
-
-\[
-\drv{\drv[yellow]{\drv[red]{A;|;B};-[r];\drv[red!50!blue]{C;|;D}};.;\drv[blue]{D;|;E}~}
-=
-\drv{\drv[red]{A;|;B};-[r];\drv[yellow]{~\drv[red!50!blue]{C;|;D}~;.;\drv[blue]{D;|;E}}}
-\]
-
+%
+%\scalebox{0.5}{
+%\[
+%{ \drv{\drv[yellow]{\drv[red]{A;|;B};-[r];\drv[red!50!blue]{C;|;D}};.;\drv[blue]{D;|;E}~}}
+%=
+%{\drv{\drv[red]{A;|;B};-[r];\drv[yellow]{~\drv[red!50!blue]{C;|;D}~;.;\drv[blue]{D;|;E}}}}
+%\]
+%}
 
 %End-of-scope markers in the $\lambda$-calculus have been seen throughout literature. \emph{Berkling's lambda bar} \cite{berkling1976symmetric} has shown to remove the need for variable names while maintaining correctness; improving efficiency by removing the need for alpha conversion \cite{BERKLING198289}. This result was generalized by \emph{Adbmal} (invert of ``Lambda'') \cite{hendriks2003lambda}. It was shown by using multiple variables, scopes can be sequenced rather than nested which correspond closely to the boxes in MELL proof nets of linear logic \cite{Lafont94fromproof-nets}. This approach was studied further in \cite{van2004lambdascope} as graph reduction that satisfies optimality \cite{levy1980optimal}. Although these approaches could identify the skeleton of a term, none however identify the spine of a term, which meant the scopes explicitly displayed may be larger than necessary from the perspective of performing substitution. This problem was solved by \emph{director strings}, introduced by Kennaway and Sleep in \cite{kennaway1988director} for combinator reduction and then generalized for any strategy by Fern\'{a}ndez et al.\ in \cite{fernandez2005lambda}. Director strings are an annotation on terms detailing the location of variable occurrences. An apt annotation on the body of an abstraction will consequently identify the spine of it. Despite being implementations that use director strings \cite{sinot2003efficient, fernandez2005lambda, fernandez2005closed}, an implementation with sharing techniques allowing for duplicating solely the spine could not be found.
 
@@ -502,38 +500,38 @@ In this paper, we ...
 
 %\end{document}
 
-We investigate the computational meaning of the following \emph{switch} rule of deep-inference proof theory \cite{Tiu:06:A-System:ai, Guglielm07}:
-\begin{center}
-	\drv{(A \rightarrow B) \wedge C ; -[s] ; A \rightarrow (B \wedge C)}
-\end{center}
-On its own, it corresponds to an \emph{end-of-scope} marker in $\lambda$-calculus. This is a special annotation of a subterm, to indicate that a given variable does not occur free, so that a substitution on that variable can be aborted early. In the above rule, $A$ corresponds to the binding variable of an abstraction and $C$ to the subterm of said abstraction where it doesn't occur, while $B$ represents those subterms where it does occur.
-
-The main thrust of our work is to incorporate this rule, and its computational interpretation as a term construct, into the \emph{atomic $\lambda$-calculus} \cite{gundersen2013atomic}. This calculus results from an investigation of the following \emph{medial} rule:
-\begin{center}
-	\drv{(A \vee B) \rightarrow (C \wedge D) ; -[m] ; (A \rightarrow C) \wedge (B \rightarrow D)}
-\end{center}
-The medial rule enables duplication to proceed \emph{atomically}: on individual constructors (abstraction and application) rather than entire subterms. The atomic $\lambda$-calculus implements \emph{full laziness}, a standard notion of sharing where only the \emph{skeleton} of a term needs to be duplicated. Given a term $t$ which needs to be duplicated, full laziness allows to share all maximal subterms $u_{1}$, . . . , $u_{k}$ of $t$ that do not contain occurrences of a variable bound in $t$ outside $u_{i}$. The constructors in $t$ not in any $u_{i}$ are then part of the skeleton.
-
-Our investigation is then focused on the interaction of switch and medial. Based on this we develop the \emph{spinal atomic $\lambda$-calculus}, a natural evolution of the atomic $\lambda$-calculus. The new calculus improves on full laziness with \emph{spinal full laziness}, which duplicates the \emph{spine} rather than the skeleton. The spine of an abstraction are the direct paths from the binder to bound variables \cite{Balabonski12}. The graph below provides an example of this for the term $\lambda x . (\lambda z . z) \lambda y . (y y) x$, where the spine of $\lambda x$ is the very thick red line and the largest subterms that could be identied by an end-of-scope operator in the term calculus (or the switch rule in the proof theory) are enclosed by yellow boxes. %would be identiﬁed by an end-of-scope operator/the switch rule are enclosed by yellow boxes.
-
-
-
-\noindent In Section \ref{sec:typingacalculus} introduces a simple sharing calculus that we expand on in Section \ref{chap:salc}, where we introduce the syntax and semantics of the spinal atomic $\lambda$-calculus, and its typing system. In Section \ref{chap:snosr} we further study the reduction rules that allow for spinal duplication, and prove natural properties of these rules such as termination and confluence. In Section \ref{chap:posn} we extend these results to include beta reduction, and show preservation of strong normalisation with respect to the $\lambda$-calculus. We conclude in Section \ref{chap:conc}.
-
+%We investigate the computational meaning of the following \emph{switch} rule of deep-inference proof theory \cite{Tiu:06:A-System:ai, Guglielm07}:
+%\begin{center}
+%	\drv{(A \rightarrow B) \wedge C ; -[s] ; A \rightarrow (B \wedge C)}
+%\end{center}
+%On its own, it corresponds to an \emph{end-of-scope} marker in $\lambda$-calculus. This is a special annotation of a subterm, to indicate that a given variable does not occur free, so that a substitution on that variable can be aborted early. In the above rule, $A$ corresponds to the binding variable of an abstraction and $C$ to the subterm of said abstraction where it doesn't occur, while $B$ represents those subterms where it does occur.
+%
+%The main thrust of our work is to incorporate this rule, and its computational interpretation as a term construct, into the \emph{atomic $\lambda$-calculus} \cite{gundersen2013atomic}. This calculus results from an investigation of the following \emph{medial} rule:
+%\begin{center}
+%	\drv{(A \vee B) \rightarrow (C \wedge D) ; -[m] ; (A \rightarrow C) \wedge (B \rightarrow D)}
+%\end{center}
+%The medial rule enables duplication to proceed \emph{atomically}: on individual constructors (abstraction and application) rather than entire subterms. The atomic $\lambda$-calculus implements \emph{full laziness}, a standard notion of sharing where only the \emph{skeleton} of a term needs to be duplicated. Given a term $t$ which needs to be duplicated, full laziness allows to share all maximal subterms $u_{1}$, . . . , $u_{k}$ of $t$ that do not contain occurrences of a variable bound in $t$ outside $u_{i}$. The constructors in $t$ not in any $u_{i}$ are then part of the skeleton.
+%
+%Our investigation is then focused on the interaction of switch and medial. Based on this we develop the \emph{spinal atomic $\lambda$-calculus}, a natural evolution of the atomic $\lambda$-calculus. The new calculus improves on full laziness with \emph{spinal full laziness}, which duplicates the \emph{spine} rather than the skeleton. The spine of an abstraction are the direct paths from the binder to bound variables \cite{Balabonski12}. The graph below provides an example of this for the term $\lambda x . (\lambda z . z) \lambda y . (y y) x$, where the spine of $\lambda x$ is the very thick red line and the largest subterms that could be identied by an end-of-scope operator in the term calculus (or the switch rule in the proof theory) are enclosed by yellow boxes. %would be identiﬁed by an end-of-scope operator/the switch rule are enclosed by yellow boxes.
+%
+%
+%
+%\noindent In Section \ref{sec:typingacalculus} introduces a simple sharing calculus that we expand on in Section \ref{chap:salc}, where we introduce the syntax and semantics of the spinal atomic $\lambda$-calculus, and its typing system. In Section \ref{chap:snosr} we further study the reduction rules that allow for spinal duplication, and prove natural properties of these rules such as termination and confluence. In Section \ref{chap:posn} we extend these results to include beta reduction, and show preservation of strong normalisation with respect to the $\lambda$-calculus. We conclude in Section \ref{chap:conc}.
+%
 %\subsection{Alternative Introduction}
 %
 %The \emph{scope} of an abstraction $\lambda x . M$ in the $\lambda$-calculus implicitly extends the whole of $M$. When performing a substitution $M \{N / x\}$, the substitution will traverse the whole term $M$. By making the scope explicit, we can trim the traverse space of the substitution. If there is a subterm $P$, and we know the variable $x$ does not occur freely, then we can explicitly move it out of the scope of the abstraction $\lambda x . M$ and the substitution will not needlessly traverse through $P$.
-
-\subsection{Related Work}
-
-Spine duplication has been implemented by Blanc et al.\ in \cite{blanc2007sharing}, by making use of labels in a dag-implementation. The main purpose of their work is to study sharing in Wadsworth's \emph{weak $\lambda$-calculus} \cite{wadsworth1971semantics} (further studied in \cite{CAGMAN1998239}). Balabonski \cite{Balabonski12} showed that spine duplication allows for an optimal reduction in the sense of L\'{e}vy \cite{levy1980optimal} for \emph{weak reduction} i.e.\ where a $\beta$-reduction $(\lambda x . t) s$ occurring in a subterm $u$ can only reduce if all free variables in the redex are also free in the term $u$. Blelloch and Greiner \cite{Blelloch:1995:PSF:224164.224210} showed that the weak call-by-value reduction strategy can be implemented in polynomial time with respect to the size of the initial term and the number of $\beta$ steps in said term. Given the restriction that $u$ is a closed term, this is then the same as \emph{closed reduction} \cite{fernandez1999closed, fernandez2005closed}. Our work generalizes spine duplication to the $\lambda$-calculus. It uses environments to implement sharing, and does not make use of labels, while maintaining a close intuition to dag-implementations.
-
-End-of-scope markers in the $\lambda$-calculus have been seen throughout literature. \emph{Berkling's lambda bar} \cite{berkling1976symmetric} has shown to remove the need for variable names while maintaining correctness; improving efficiency by removing the need for alpha conversion \cite{BERKLING198289}. This result was generalized by \emph{Adbmal} (invert of ``Lambda'') \cite{hendriks2003lambda}. It was shown by using multiple variables, scopes can be sequenced rather than nested which correspond closely to the boxes in MELL proof nets of linear logic \cite{Lafont94fromproof-nets}. This approach was studied further in \cite{van2004lambdascope} as graph reduction that satisfies optimality \cite{levy1980optimal}. Although these approaches could identify the skeleton of a term, none however identify the spine of a term, which meant the scopes explicitly displayed may be larger than necessary from the perspective of performing substitution. This problem was solved by \emph{director strings}, introduced by Kennaway and Sleep in \cite{kennaway1988director} for combinator reduction and then generalized for any strategy by Fern\'{a}ndez et al.\ in \cite{fernandez2005lambda}. Director strings are an annotation on terms detailing the location of variable occurrences. An apt annotation on the body of an abstraction will consequently identify the spine of it. Despite being implementations that use director strings \cite{sinot2003efficient, fernandez2005lambda, fernandez2005closed}, an implementation with sharing techniques allowing for duplicating solely the spine could not be found.
+%
+%\subsection{Related Work}
+%
+%Spine duplication has been implemented by Blanc et al.\ in \cite{blanc2007sharing}, by making use of labels in a dag-implementation. The main purpose of their work is to study sharing in Wadsworth's \emph{weak $\lambda$-calculus} \cite{wadsworth1971semantics} (further studied in \cite{CAGMAN1998239}). Balabonski \cite{Balabonski12} showed that spine duplication allows for an optimal reduction in the sense of L\'{e}vy \cite{levy1980optimal} for \emph{weak reduction} i.e.\ where a $\beta$-reduction $(\lambda x . t) s$ occurring in a subterm $u$ can only reduce if all free variables in the redex are also free in the term $u$. Blelloch and Greiner \cite{Blelloch:1995:PSF:224164.224210} showed that the weak call-by-value reduction strategy can be implemented in polynomial time with respect to the size of the initial term and the number of $\beta$ steps in said term. Given the restriction that $u$ is a closed term, this is then the same as \emph{closed reduction} \cite{fernandez1999closed, fernandez2005closed}. Our work generalizes spine duplication to the $\lambda$-calculus. It uses environments to implement sharing, and does not make use of labels, while maintaining a close intuition to dag-implementations.
+%
+%End-of-scope markers in the $\lambda$-calculus have been seen throughout literature. \emph{Berkling's lambda bar} \cite{berkling1976symmetric} has shown to remove the need for variable names while maintaining correctness; improving efficiency by removing the need for alpha conversion \cite{BERKLING198289}. This result was generalized by \emph{Adbmal} (invert of ``Lambda'') \cite{hendriks2003lambda}. It was shown by using multiple variables, scopes can be sequenced rather than nested which correspond closely to the boxes in MELL proof nets of linear logic \cite{Lafont94fromproof-nets}. This approach was studied further in \cite{van2004lambdascope} as graph reduction that satisfies optimality \cite{levy1980optimal}. Although these approaches could identify the skeleton of a term, none however identify the spine of a term, which meant the scopes explicitly displayed may be larger than necessary from the perspective of performing substitution. This problem was solved by \emph{director strings}, introduced by Kennaway and Sleep in \cite{kennaway1988director} for combinator reduction and then generalized for any strategy by Fern\'{a}ndez et al.\ in \cite{fernandez2005lambda}. Director strings are an annotation on terms detailing the location of variable occurrences. An apt annotation on the body of an abstraction will consequently identify the spine of it. Despite being implementations that use director strings \cite{sinot2003efficient, fernandez2005lambda, fernandez2005closed}, an implementation with sharing techniques allowing for duplicating solely the spine could not be found.
 
 \section{Typing a $\lambda$-calculus in open deduction}
 \label{sec:typingacalculus}
 
-A \emph{derivation} from a \emph{premise} formula $X$ to a \emph{conclusion} formula $Z$ is constructed inductively as in Figure \ref{fig:derivations}, with from left to right: a propositional atom $a$, where $X = Z = a$; \emph{horizontal composition} with a connective $*$, where $X = X_{1} * X_{2}$ and $Z = Z_{1} * Z_{2}$; and \emph{rule composition}, where $r$ is an inference rule from $Y_{1}$ to $Y_{2}$. The boxes serve as parentheses (since derivations extend in two dimensions) and may be omitted. Derivations are considered up to associativity of rule composition. One may consider formulas as derivations that omit rule composition; and the binary $*$ may be generalised to $0$-ary, unary, and $n$-ary operators. \emph{Vertical composition} of a derivation from $X$ to $Y$ and one from $Y$ to $Z$, depicted by a dashed line, is a defined operation, given in Figure \ref{fig:vertical}.
+Here we describe a system for intuitionistic logic in open deduction. This system can be extended to work in a more general case, but we choose restrict it to only our case. A \emph{derivation} from a \emph{premise} formula $X$ to a \emph{conclusion} formula $Z$ is constructed inductively as in Figure \ref{fig:derivations}, with from left to right: a propositional atom $a$, where $X = Z = a$; \emph{horizontal composition} with a connective $\rightarrow$, where $X = Y \rightarrow X_{2}$ and $Z = Y \rightarrow Z_{2}$;\emph{horizontal composition} with a connective $\wedge$, where $X = X_{1} \wedge X_{2}$ and $Z = Z_{1} \wedge Z_{2}$; and \emph{rule composition}, where $r$ is an inference rule (Figure \ref{fig:abstraction}) from $Y_{1}$ to $Y_{2}$. The boxes serve as parentheses (since derivations extend in two dimensions) and may be omitted. Derivations are considered up to associativity of rule composition. One may consider formulas as derivations that omit rule composition. We work modulo associativity, symmetry, and unitality of conjunction, justifying the $n$-ary contraction, and may omit $\top$ from the axiom rule. A $0$-ary contraction, with conclusion $\top$, is a \emph{weakening}. Figure \ref{fig:abstraction}: the abstraction rule ($\lambda$) is derived from axiom and switch. \emph{Vertical composition} of a derivation from $X$ to $Y$ and one from $Y$ to $Z$, depicted by a dashed line, is a defined operation, given in Figure \ref{fig:vertical}.
 
 %\begin{figure}[h]
 %	\centering
@@ -561,23 +559,34 @@ A \emph{derivation} from a \emph{premise} formula $X$ to a \emph{conclusion} for
 %%\label{fig:dervandcomp}
 %\end{figure}
 
-A system for intuitionistic logic is given by the binary connectives $\rightarrow$, $\wedge$, and nullary connective $\top$, where we restrict implication to a form in Figure \ref{fig:implication}, and the inference rules in Figure \ref{fig:inference}. We work modulo associativity, symmetry, and unitality of conjunction, justifying the $n$-ary contraction, and may omit $\top$ from the axiom rule. A $0$-ary contraction, with conclusion $\top$, is a \emph{weakening}. Figure \ref{fig:abstraction}: the abstraction rule ($\lambda$) is derived from axiom and switch.
-
 \begin{figure}[h]
 \centering
-		\begin{subfigure}[b]{0.3\textwidth}
+		\begin{subfigure}[b]{0.45 \textwidth}
 { \small
-\drv{X ; | ; Z} {:}{:}{=} $a$ $\vert$ \drv{\drv[yellow]{X_{1} ; | ; Z_{1}} * \drv[yellow]{X_{2} ; | ; Z_{2}}} $\vert$ \drv{\drv[yellow]{X ; | ; Y_{1}} ; -[r] ; \drv[yellow]{Y_{2} ; | ; Z}}
+\drv{X ; | ; Z} {:}{:}{=} $a$ $\vert$ \drv{Y \rightarrow \drv[yellow]{X_{2} ; | ; Z_{2}}} $\vert$ \drv{\drv[yellow]{X_{1} ; | ; Z_{1}} \wedge \drv[yellow]{X_{2} ; | ; Z_{2}}} $\vert$ \drv{\drv[yellow]{X ; | ; Y_{1}} ; -[r] ; \drv[yellow]{Y_{2} ; | ; Z}}
 }
 	\caption{Derivations}
 	\label{fig:derivations}
 	\end{subfigure}
 	\hfill
-	\begin{subfigure}[b]{0.6\textwidth}
-{ \small
-\drv{\drv[yellow]{X ; | ; Y} ; . ; \drv[yellow]{Y ; | ; Z}} ~{:}{=}~ \drv{X ; . ; \drv[yellow]{X ; | ; Z}} $=$ \drv{\drv[yellow]{X ; | ; Z} ; . ; Z} $=$ \drv{X ; | ; Z}
+		\begin{subfigure}[b]{0.525\textwidth}
+	\centering
+	\scalebox{0.9}{ \drv{\top ; -[a] ; X \rightarrow X}} \hspace{0.1cm}
+		\scalebox{0.9}{ \drv{(X \rightarrow Y) \wedge X ; -[\apprule] ; Y}} \hspace{0.1cm}
+		\scalebox{0.9}{ \drv{X ; -[\sharerule] ; X \wedge \dots \wedge X}} \\[0.2cm]
+		\scalebox{0.9}{ \drv{(X \rightarrow Y) \wedge Z ; -[s] ; X \rightarrow (Y \wedge Z)}} \hspace{0.05cm}
+	\scalebox{0.9}{ \drv{X ; -[\lambda] ; Y \rightarrow (X \wedge Y)}} {:}{=} \scalebox{0.9}{ \drv{\drv[yellow]{\top ; -[a] ; Y \rightarrow Y} \wedge X ; -[s] ; Y \rightarrow (X \wedge Y)}}
+	\caption{Axiom, Application, Contraction, Switch, and Abstraction}
+	\label{fig:abstraction}
+	\end{subfigure}
+	\\
+	\begin{subfigure}[b]{0.9\textwidth}
+\scalebox{0.9}{ 
+\drv{\drv[yellow]{X ; | ; Y} ; . ; \drv[yellow]{Y ; | ; Z}} ~{:}{=}~ \drv{X ; . ; \drv[yellow]{X ; | ; Z}} $=$ \drv{\drv[yellow]{X ; | ; Z} ; . ; Z} $=$ \drv{X ; | ; Z}}
+\hfill
+ \scalebox{0.9}{\drv{\drv[yellow]{\drv[magenta]{A ; | ; B} ; -[r] ; \drv[green]{C ; | ; D}} ; . ; \drv[cyan]{D ; | ; E}} $=$ \drv{ \drv[magenta]{A ; | ; B} ; -[r] ; \drv[yellow]{ \drv[green]{C ; | ; D} ; . ; \drv[cyan]{D ; | ; E}}}
 } \hfill
-{\small
+\scalebox{0.9}{
 \drv{ \drv[yellow]{\drv[magenta]{X_{1} ; | ; Y_{1}} * \drv[orange]{X_{2} ; | ; Y_{2}}} ; . ; \drv[yellow]{\drv[cyan]{Y_{1} ; | ; Z_{1}} * \drv[green]{Y_{2} ; | ; Z_{2}}}}
 =
 \drv{\drv[yellow]{ \drv[magenta]{X_{1} ; | ; Y_{1}} ; . ; \drv[cyan]{Y_{1} ; | ; Z_{1}}} * \drv[yellow]{ \drv[orange]{X_{2} ; | ; Y_{2}} ; . ; \drv[green]{Y_{2} ; | ; Z_{2}} }}
@@ -585,30 +594,13 @@ A system for intuitionistic logic is given by the binary connectives $\rightarro
 	\caption{Vertical composition}
 	\label{fig:vertical}
 	\end{subfigure}
-	\\[0.4cm]
-	\begin{subfigure}[b]{0.2\textwidth}
-	\centering
-		{\small \drv{Y \rightarrow \drv[yellow]{X ; | ; Z}}}
-	\caption{Implication}
-	\label{fig:implication}
-	\end{subfigure}
-	\hfill
-	\begin{subfigure}[b]{0.3\textwidth}
-		\centering
-		{\small \drv{\top ; -[a] ; X \rightarrow X}} \hspace{0.2cm}
-		{\small \drv{(X \rightarrow Y) \wedge X ; -[\apprule] ; Y}} \\[0.2cm]
-		{\small \drv{X ; -[\sharerule] ; X \wedge \dots \wedge X}} \hspace{0.1cm}
-		{\small \drv{(X \rightarrow Y) \wedge Z ; -[s] ; X \rightarrow (Y \wedge Z)}}
-	\caption{Axiom, Application, Contraction, and Switch}
-	\label{fig:inference}
-	\end{subfigure}
-	\hfill
-	\begin{subfigure}[b]{0.4\textwidth}
-	\centering
-	{\small \drv{X ; -[\lambda] ; Y \rightarrow (X \wedge Y)}} {:}{=} {\small \drv{\drv[yellow]{\top ; -[a] ; Y \rightarrow Y} \wedge X ; -[s] ; Y \rightarrow (X \wedge Y)}}
-	\caption{Abstraction}
-	\label{fig:abstraction}
-	\end{subfigure}
+%	\begin{subfigure}[b]{0.2\textwidth}
+%	\centering
+%		{\small \drv{Y \rightarrow \drv[yellow]{X ; | ; Z}}}
+%	\caption{Implication}
+%	\label{fig:implication}
+%	\end{subfigure}
+%	\hfill
 	\caption{Intuitionistic Proof System in Open Deduction}
 \end{figure}
 
@@ -640,13 +632,13 @@ A term $t$ will be typed by a derivation with restricted types, as shown below, 
 \begin{center}
 Basic Types: $A, B, C \quad {:}{=} \quad a \, \, \, \vert \, \, \, A \rightarrow B$ \hspace{1cm} Context Types: $\Gamma, \Delta, \Omega \quad {:}{=} \quad A \, \, \, \vert \, \, \, \top \, \, \, \vert \, \, \, \Gamma \wedge \Delta$
 \end{center}
-$x :$ {\small \drv{A^{x}}}
+$x :$ \scalebox{0.9}{ \drv{A^{x}}}
 \hfill
-$\app{t}{s} :$ {\small \drv{\drv[yellow]{\Gamma ; |[t] ; A \rightarrow B} \wedge \drv[yellow]{\Delta ; |[s] ; A} ; -[\apprule] ; B}}
+$\app{t}{s} :$ \scalebox{0.9}{ \drv{\drv[yellow]{\Gamma ; |[t] ; A \rightarrow B} \wedge \drv[yellow]{\Delta ; |[s] ; A} ; -[\apprule] ; B}}
 \hfill
-$\abs{x}{t} :$ {\small \drv{\Gamma ; -[\lamrule] ; A \rightarrow \drv[yellow]{\Gamma \wedge A^{x} ; |[t] ; B}}}
+$\abs{x}{t} :$ \scalebox{0.9}{ \drv{\Gamma ; -[\lamrule] ; A \rightarrow \drv[yellow]{\Gamma \wedge A^{x} ; |[t] ; B}}}
 \hfill
-$\share{t}{\vec{x}}{s} :$ {\small \drv{\Gamma \wedge \drv[yellow]{\Delta ; |[s] ; A ; -[\sharerule] ; A \wedge \dots \wedge A} ; . ; \Gamma \wedge (A \wedge \dots \wedge A)^{\vec{x}} ; |[t] ; B}}
+$\share{t}{\vec{x}}{s} :$ \scalebox{0.9}{ \drv{\Gamma \wedge \drv[yellow]{\Delta ; |[s] ; A ; -[\sharerule] ; A \wedge \dots \wedge A} ; . ; \Gamma \wedge (A \wedge \dots \wedge A)^{\vec{x}} ; |[t] ; B}}
 \caption{Typing System for $\SLC$}
 \label{fig:SLCT}
 \end{figure}
@@ -972,18 +964,16 @@ We also work modulo permutation with respect to the variables in the cover of ph
 	$\fake{c}{\vec{x}}{t} \sim \fake{c}{\vec{x_{P}}}{t}$
 \end{center}
 
-\noindent Terms are typed with the typing system for $\SLC$ extended with the \emph{distribution} inference rule.
-$${\small \drv{A \rightarrow (B_{1} \wedge \dots \wedge B_{n}) ; -[d] ; (A \rightarrow B_{1}) \wedge \dots \wedge  (A \rightarrow B_{n})} }$$
-This rule is the result of computationally interpreting the medial rule as done in \cite{gundersen2013atomic}. We obtain this variant of the medial rule due to the restriction for implications and to avoid introducing disjunction to the typing system. The terms of $\FALC$ are then typed as in both Figure \ref{fig:SLCT} and Figure \ref{fig:derivphandist}. Note environments are typed by the derivations of all its closures composed horizontally with the conjunction connective.
+\noindent Terms are typed with the typing system for $\SLC$ extended with the \emph{distribution} inference rule. This rule is the result of computationally interpreting the medial rule as done in \cite{gundersen2013atomic}. We obtain this variant of the medial rule due to the restriction for implications and to avoid introducing disjunction to the typing system. The terms of $\FALC$ are then typed as in both Figure \ref{fig:SLCT} and Figure \ref{fig:derivphandist}. Note environments are typed by the derivations of all its closures composed horizontally with the conjunction connective.
 
 %The terms typed by the derivations in Figure \ref{fig:typebasic} and Figure \ref{fig:derivphandist}. Figure \ref{fig:derivphandist} shows the derivations for the terms $\fake{d}{\vec{x}}{t}$ and $\dist{u}{\fakedist{e_{1}}{\vec{x_{1}}} \dots \fakedist{e_{n}}{\vec{x_{n}}}}{\overline{[\Gamma]}}{c}{c}$. The distributor construct is typed using the medial rule as in \cite{gundersen2013atomic}. Notice that the medial rule in Figure \ref{fig:derivphandist} does not use disjunction compared to the medial rule in the introduction. In the derivation we combine the medial rule with a co-contraction rule to form the \emph{distribution rule} ($d$). Since the formula in the ante-cedent of an implication is always a minimal formula, doing this allows us to avoid introducing disjunction into the typing system.
 %
 %The main difference between our calculus is the bindings. We create a new class of bindings, where phantom-variables are captured by the distributor but variables are captured by the environment of the distributor. This shows in the derivations since the types of the variables ($\Sigma$ and $\Phi$) are not captured by the distribution rule.
 
 \begin{figure}[h]
-$\fake{c}{\vec{x}}{t}:$ {\small \drv{(A \rightarrow \Gamma) \wedge \Delta ; -[\switchrule] ; A^{c} \rightarrow \drv[yellow]{\Gamma^{\vec{x}} \wedge \Delta ; |[t] ; C}}}
+$\fake{c}{\vec{x}}{t}:$ \scalebox{0.9}{ \drv{(A \rightarrow \Gamma) \wedge \Delta ; -[\switchrule] ; A^{c} \rightarrow \drv[yellow]{\Gamma^{\vec{x}} \wedge \Delta ; |[t] ; C}}}
 \hspace{1cm}
-$\dist{u}{\vecdist{e}{x}}{\overline{[\Gamma]}}{c}{\vec{z}}: $ {\small \drv{\drv{\drv[yellow]{(C \rightarrow \Gamma) \wedge \Delta ; -[\switchrule] ; C^{c} \rightarrow
+$\dist{u}{\vecdist{e}{x}}{\overline{[\Gamma]}}{c}{\vec{z}}: $ \scalebox{0.9}{ \drv{\drv{\drv[yellow]{(C \rightarrow \Gamma) \wedge \Delta ; -[\switchrule] ; C^{c} \rightarrow
 	\drv[cyan]{\Gamma^{\color{black} \vec{z}} \wedge \Delta ; |[{\color{black} \overline{[\Gamma]}} ] ; \Sigma_{1} \wedge \dots \wedge \Sigma_{n}} ; -[\distrule] ; (C^{\color{black}e_{1}} \rightarrow \Sigma_{1}^{\vec{\color{black}x_{1}}}) \wedge \dots \wedge  (C^{\color{black}e_{n}} \rightarrow \Sigma_{n}^{\vec{\color{black}x_{n}}})}
 	\wedge \Omega} ; . ; (C \rightarrow \Sigma_{1}) \wedge \dots \wedge (C \rightarrow \Sigma_{n}) \wedge \Omega ; |[u] ; E} }
 \caption{Typing derivations for phantom-abstractions and distributors}
@@ -1108,7 +1098,7 @@ $\sigma [ x \mapsto V ] (z) = \begin{cases} V & z = x \\ \sigma(z) & \text{other
 %We write $\sigma = \set{x_{1} \mapsto M_{1}, \dots, x_{n} \mapsto M_{n}}$ to mean the map where for $x_{i} \in \set{x_{1}, \dots, x_{n}}$, $\sigma(x_{i}) = M_{i}$ and for $y \not\in \set{x_{1}, \dots, x_{n}}$, $\sigma(y) = y$.
 %\end{notation}
 
-When using the map $\sigma$ as part of the translation, the intuition is that for all bound variables $x$ in the term we are translatings, it should be that $\sigma(x) = x$. The map $\gamma : V \rightarrow V$ is defined similarly, and the purpose is to keep track of the binding of phantom-variables.
+When using the map $\sigma$ as part of the translation, the intuition is that for all bound variables $x$ in the term we are translatings, it should be that $\sigma(x) = x$. The purpose of the map $\gamma : V \rightarrow V$ is to keep track of the binding of phantom-variables.
 
 \begin{definition}
 \label{def:readback}
@@ -1182,9 +1172,14 @@ The last operation we introduce is called \emph{exorcism} $\exor{}{c}{\vec{x}}$.
 
 \begin{proposition}
 \label{prop:suboutcomm}
-Given $M \in \Lambda$ such that for all $v \in V$, $\gamma(v) \not\in \fv{M}$  and $\sigma(x) = x$, the translation $\readbackwmap{u}{\sigma}{\gamma}$ commutes with substitution $\sub{}{M}{x}$ in the following way
-
-$$\readbackwmap{u \sub{}{t}{x}}{\sigma}{\gamma} = \readbackwmap{u}{\sigma[x \mapsto \readbackwmap{t}{\sigma}{\gamma}]}{\gamma}$$
+\label{prop:bkcomm}
+\label{prop:exorcomm}
+The translation $\readbackwmap{u}{\sigma}{\gamma}$ commutes with substitutions, book-keepings, and exorcisms in the following way
+\begin{align*}
+	\readbackwmap{u \sub{}{t}{x}}{\sigma}{\gamma} &= \readbackwmap{u}{\sigma[x \mapsto \readbackwmap{t}{\sigma}{\gamma}]}{\gamma} \\[0.2cm]
+	\readbackwmap{u \psub{}{\vec{x}}{c}}{\sigma}{\gamma} &= \readbackwmap{u}{\sigma}{\gamma} \\[0.2cm]
+	\readbackwmap{u \exor{}{c}{x_{1}, \dots, x_{n}}}{\sigma}{\gamma} &= \readbackwmap{u}{\sigma[x_{i} \mapsto c]_{i \in [n]}}{\gamma}
+\end{align*}
 
 %$$\readbackwmap{u}{\sigma'}{\gamma} = \readbackwmap{u}{\sigma}{\gamma} \sub{}{M}{x}$$
 %
@@ -1198,45 +1193,44 @@ $$\readbackwmap{u \sub{}{t}{x}}{\sigma}{\gamma} = \readbackwmap{u}{\sigma[x \map
 %$$\readbackwmap{u \sub{}{t}{x}}{\sigma}{\gamma} = \readbackwmap{u}{\sigma[x \mapsto \readbackwmap{t}{\sigma}{\gamma}]}{\gamma}$$
 %\end{proposition}
 
-\begin{proposition}
-\label{prop:bkcomm}
-Book-keeping commutes with the translation in the following way
-
-if $\fake{c}{y_{1}, \dots, y_{m}} \in \fc{u}$ such that $\set{x_{1}, \dots, x_{n}} \subset \set{y_{1}, \dots, y_{m}}$
-
-and for those $z \in \set{y_{1}, \dots, y_{m}} / \set{x_{1}, \dots, x_{n}}$, $\gamma(c) \not\in \fv{\sigma(z)}$
-
-or if simply $\set{x_{1}, \dots, x_{n}} \cap \fv{u} = \set{}$
-
-$$\readbackwmap{u \psub{}{x_{1}, \dots, x_{n}}{c}}{\sigma}{\gamma} = \readbackwmap{u}{\sigma}{\gamma}$$
-
-\end{proposition}
-
-\begin{proposition}
-\label{prop:exorcomm}
-Exorcisms commute with the translation in the following way
-
-if $\fake{c}{x_{1}, \dots, x_{n}} \in \fc{u}$ or $\set{x_{1}, \dots, x_{n}} \cap \fv{u} = \set{}$
-
-$$\readbackwmap{u \exor{}{c}{x_{1}, \dots, x_{n}}}{\sigma}{\gamma} = \readbackwmap{u}{\sigma[x_{i} \mapsto c]_{i \in [n]}}{\gamma}$$
-\end{proposition}
+%\begin{proposition}
+%\label{prop:bkcomm}
+%Book-keeping commutes with the translation in the following way
+%
+%%if $\fake{c}{y_{1}, \dots, y_{m}} \in \fc{u}$ such that $\set{x_{1}, \dots, x_{n}} \subset \set{y_{1}, \dots, y_{m}}$
+%%
+%%and for those $z \in \set{y_{1}, \dots, y_{m}} / \set{x_{1}, \dots, x_{n}}$, $\gamma(c) \not\in \fv{\sigma(z)}$
+%%
+%%or if simply $\set{x_{1}, \dots, x_{n}} \cap \fv{u} = \set{}$
+%
+%$$\readbackwmap{u \psub{}{x_{1}, \dots, x_{n}}{c}}{\sigma}{\gamma} = \readbackwmap{u}{\sigma}{\gamma}$$
+%
+%\end{proposition}
+%
+%\begin{proposition}
+%\label{prop:exorcomm}
+%Exorcisms commute with the translation in the following way
+%
+%%if $\fake{c}{x_{1}, \dots, x_{n}} \in \fc{u}$ or $\set{x_{1}, \dots, x_{n}} \cap \fv{u} = \set{}$
+%
+%$$\readbackwmap{u \exor{}{c}{x_{1}, \dots, x_{n}}}{\sigma}{\gamma} = \readbackwmap{u}{\sigma[x_{i} \mapsto c]_{i \in [n]}}{\gamma}$$
+%\end{proposition}
 
 Using these operations, we define the rewrite rules that allow for spinal duplication. Firstly we have beta reduction ($\rightsquigarrow_{\beta}$), which strictly requires an abstraction (not a phantom).
 \begin{equation}  \label{red:beta} \tag{$\beta$}
-\app{(\fake{x}{x}{t})}{s} \rightsquigarrow_{\beta} \sub{t}{s}{x}
-\end{equation}
-However, its effect is very different: here $\beta$-reduction is a linear operation, since the bound variable $x$ occurs exactly once in the body $t$. Any duplication of the term t in the atomic lambda-calculus proceeds via the sharing reductions. The proof rewrite step that corrersponds to $\beta$-reduction is shown below.
-\begin{center}
+\app{(\fake{x}{x}{t})}{s} \rightsquigarrow_{\beta} \sub{t}{s}{x} \hspace{1cm} 
 \begin{tabular}{c c c}
-	{\small 
+	\scalebox{0.9}{ 
 		\drv{\drv{\Gamma ; -[\lamrule] ; A \rightarrow \drv[yellow]{A^{x} \wedge \Gamma ; |[t] ; B}} \wedge \drv[green]{\Delta ; |[s] ; A} ; -[\apprule] ; B}
 	}
 	&
 	$\rightsquigarrow_{\beta}$
 	&
-	$\drv{\drv{\drv[green]{\Delta ; |[{s}] ; A} \wedge \Gamma} ; . ; \drv[yellow]{A \wedge \Gamma ; |[t] ; B}}$
+	\scalebox{0.9}{\drv{\drv{\drv[green]{\Delta ; |[{s}] ; A} \wedge \Gamma} ; . ; \drv[yellow]{A \wedge \Gamma ; |[t] ; B}}}
 \end{tabular}
-\end{center}
+\end{equation}
+Here $\beta$-reduction is a linear operation, since the bound variable $x$ occurs exactly once in the body $t$. Any duplication of the term t in the atomic $\lambda$-calculus proceeds via the sharing reductions. 
+
 The first set of sharing reduction rules move closures towards the outside of a term. Most of these rewrite rules only change the typing derivations in the way that subderivations are composed, with the exception of moving a closure out of scope of a distributor.
 \begin{align}
 \app{s[\Gamma]}{t} &\rightsquigarrow_{L} (\app{s}{t})[\Gamma]   \label{red:liftappleft} \tag{$l_{1}$} \\
@@ -1255,17 +1249,17 @@ The proof rewrite rule corresponding with the rewrite rule \ref{red:distshare} c
 
 \begin{center}
 \begin{tabular}{c c c}
-	$\drv{(C \rightarrow \Gamma) \wedge \Delta \wedge \Omega ; -[\switchrule] ; C^{\color{red} c} \rightarrow \drv[yellow]{\drv[green]{\Gamma^{\color{red} \vec{x}} \wedge \Delta \wedge \drv[cyan]{\Omega ; |[\color{red} {[\Gamma]} ] ; A \wedge \dots \wedge A}} ; |[{\color{red} \overline{[\Gamma]}}] ; \Sigma_{1}^{{\color{red} \vec{w_{1}}}} \dots \Sigma_{n}^{{\color{red} \vec{w_{n}}}} } ; -[\distrule] ; (C \rightarrow \Sigma_{1}) \wedge \dots \wedge (C \rightarrow \Sigma_{n})}$
+	\scalebox{0.9}{\drv{(C \rightarrow \Gamma) \wedge \Delta \wedge \Omega ; -[\switchrule] ; C^{\color{red} c} \rightarrow \drv[yellow]{\drv[green]{\Gamma^{\color{red} \vec{x}} \wedge \Delta \wedge \drv[cyan]{\Omega ; |[\color{red} {[\Gamma]} ] ; A \wedge \dots \wedge A}} ; |[{\color{red} \overline{[\Gamma]}}] ; \Sigma_{1}^{{\color{red} \vec{w_{1}}}} \dots \Sigma_{n}^{{\color{red} \vec{w_{n}}}} } ; -[\distrule] ; (C \rightarrow \Sigma_{1}) \wedge \dots \wedge (C \rightarrow \Sigma_{n})}}
 	& $\rightsquigarrow_{L}$ &
-	$\drv{(C \rightarrow \Gamma) \wedge \Delta \wedge \drv[cyan]{\Omega ; |[\color{red} {[\Gamma]}] ; A \wedge \dots \wedge A} ; -[\switchrule] ; C^{\color{red} c} \rightarrow \drv[yellow]{\drv[green]{\Gamma^{\color{red} \vec{x}} \wedge \Delta \wedge A \dots A} ; |[\color{red} { \overline{[\Gamma]}}] ; \Sigma_{1}^{{\color{red} \vec{w_{1}}}} \dots \Sigma_{n}^{{\color{red} \vec{w_{n}}}} } ; -[\distrule] ; (C \rightarrow \Sigma_{1}) \wedge \dots \wedge (C \rightarrow \Sigma_{n})}$
+	\scalebox{0.9}{\drv{(C \rightarrow \Gamma) \wedge \Delta \wedge \drv[cyan]{\Omega ; |[\color{red} {[\Gamma]}] ; A \wedge \dots \wedge A} ; -[\switchrule] ; C^{\color{red} c} \rightarrow \drv[yellow]{\drv[green]{\Gamma^{\color{red} \vec{x}} \wedge \Delta \wedge A \dots A} ; |[\color{red} { \overline{[\Gamma]}}] ; \Sigma_{1}^{{\color{red} \vec{w_{1}}}} \dots \Sigma_{n}^{{\color{red} \vec{w_{n}}}} } ; -[\distrule] ; (C \rightarrow \Sigma_{1}) \wedge \dots \wedge (C \rightarrow \Sigma_{n})}}
 \end{tabular}
 \end{center}
 The second part of the rewrite rule justifies the need for the book-keeping operation. In the rewrite below, let $A$ be the type of a variable $z$ where $z \in \vec{z}$. After lifting, we want to remove the variable from the cover as to ensure correctness since the variables in the cover denote the variables captured by the environment. Book-keeping allows us to remove these variables simultaneously.
 \begin{center}
 \begin{tabular}{c c c}
-	$\drv{(C \rightarrow \Gamma^{\color{red} \vec{x}}) \wedge \Delta \wedge A ; -[\switchrule] ; C^{\color{red} c} \rightarrow \drv[yellow]{\drv[green]{\Gamma \wedge \Delta ; |[{\color{red} \overline{[\Gamma]}}] ; \Sigma_{1} \wedge \dots \wedge \Sigma_{n}} \wedge A^{{\color{red} z}} ; . ; \Sigma_{1} \wedge \dots \wedge \Sigma_{i} \wedge A \wedge \dots \wedge \Sigma_{n}}  ; -[\distrule] ; \dots \wedge (C^{{\color{red} e_{i}}} \rightarrow \Sigma_{i}^{{\color{red} \vec{w}}} \wedge A) \wedge \dots}$
+	\scalebox{0.9}{\drv{(C \rightarrow \Gamma^{\color{red} \vec{x}}) \wedge \Delta \wedge A ; -[\switchrule] ; C^{\color{red} c} \rightarrow \drv[yellow]{\drv[green]{\Gamma \wedge \Delta ; |[{\color{red} \overline{[\Gamma]}}] ; \Sigma_{1} \wedge \dots \wedge \Sigma_{n}} \wedge A^{{\color{red} z}} ; . ; \Sigma_{1} \wedge \dots \wedge \Sigma_{i} \wedge A \wedge \dots \wedge \Sigma_{n}}  ; -[\distrule] ; \dots \wedge (C^{{\color{red} e_{i}}} \rightarrow \Sigma_{i}^{{\color{red} \vec{w}}} \wedge A) \wedge \dots}}
 	& $\rightsquigarrow$ &
-	$\drv{\drv{(C \rightarrow \Gamma^{\color{red} \vec{x}}) \wedge \Delta ; -[\switchrule] ; C^{\color{red} c} \rightarrow \drv[yellow]{\drv[green]{\Gamma \wedge \Delta ; |[{\color{red} \overline{[\Gamma]}}] ; \Sigma_{1} \wedge \dots \wedge \Sigma_{n}} ; . ; \Sigma_{1} \wedge \dots \wedge \Sigma_{i} \wedge \dots \wedge \Sigma_{n}}  ; -[\distrule] ; \dots \wedge (C \rightarrow \Sigma_{i}) \wedge \dots}\wedge A^{\color{red} z} ; . ; \dots \wedge \drv[cyan]{(C^{\color{red} e_{i}} \rightarrow \Sigma_{i}^{{\color{red} \vec{w} }}) \wedge A ; -[\switchrule] ; C \rightarrow \Sigma_{i} \wedge A} \wedge \dots}$
+	\scalebox{0.9}{\drv{\drv{(C \rightarrow \Gamma^{\color{red} \vec{x}}) \wedge \Delta ; -[\switchrule] ; C^{\color{red} c} \rightarrow \drv[yellow]{\drv[green]{\Gamma \wedge \Delta ; |[{\color{red} \overline{[\Gamma]}}] ; \Sigma_{1} \wedge \dots \wedge \Sigma_{n}} ; . ; \Sigma_{1} \wedge \dots \wedge \Sigma_{i} \wedge \dots \wedge \Sigma_{n}}  ; -[\distrule] ; \dots \wedge (C \rightarrow \Sigma_{i}) \wedge \dots}\wedge A^{\color{red} z} ; . ; \dots \wedge \drv[cyan]{(C^{\color{red} e_{i}} \rightarrow \Sigma_{i}^{{\color{red} \vec{w} }}) \wedge A ; -[\switchrule] ; C \rightarrow \Sigma_{i} \wedge A} \wedge \dots}}
 \end{tabular}
 \end{center}
 
@@ -1460,7 +1454,9 @@ The weakening reductions ($\rightarrow_{\weaksymbol}$) proceeds as follows.
 \end{align*}
 \endgroup
 \end{definition}
-\noindent It is easy to see that these rules correspond to special cases of the sharing reduction rules for $\FALC$. Lifting a closure relates ($\weaksymbol_{1}$) and (\ref{red:liftabs}), ($\weaksymbol_{2}$) and  (\ref{red:liftappleft}), ($\weaksymbol_{3}$) and (\ref{red:liftappright}), ($\weaksymbol_{4}$) and (\ref{red:liftshare}), ($\weaksymbol_{5}$) and (\ref{red:absdup}), and duplicating a term relates ($\weaksymbol_{6}$) and (\ref{red:appdup}), and  ($\weaksymbol_{7}$) and (\ref{red:distelim}). It is not so obvious to see what the case ($\weaksymbol_{8}$) corresponds to. If $U$ is a subterm of $T$, then in the corresponding $\FALC$-term this term would be shared and one of the copies would be in a weakening. Thus this reduction relates to the case (\ref{red:mergeshare}), where we remove the weakening. We demonstrate by considering $t \share{}{}{y} \share{}{\vec{x} \cdot y \cdot \vec{z}}{u}  \rightsquigarrow_{C} t \share{}{\vec{x} \cdot \vec{z}}{u}$. On the left hand side, the corresponding weakening-term (obtained by $\compweak{-}$) would have the weakening $\share{}{}{U}$ where $U = \compweak{u}$. This is because $U$ is substituted into $\share{}{}{y}$, but on the right hand side this would be gone. This situation can only occur if there are other copies of $U$ substituted into the term. This corresponds to if only the corresponding (\ref{red:mergeshare}) reduction rule can occur. This resemblace is confirmed by the following Lemmas.
+\noindent It is easy to see that most these rules correspond to special cases of the sharing reduction rules for $\FALC$. It is not so obvious to see what the case ($\weaksymbol_{8}$) corresponds to. If $U$ is a subterm of $T$, then in the corresponding $\FALC$-term this term would be shared and one of the copies would be in a weakening. Thus this reduction relates to the case (\ref{red:mergeshare}), where we remove the weakening. We demonstrate by considering $t \share{}{}{y} \share{}{\vec{x} \cdot y \cdot \vec{z}}{u}  \rightsquigarrow_{C} t \share{}{\vec{x} \cdot \vec{z}}{u}$. On the left hand side, the corresponding weakening-term (obtained by $\compweak{-}$) would have the weakening $\share{}{}{U}$ where $U = \compweak{u}$. This is because $U$ is substituted into $\share{}{}{y}$, but on the right hand side this would be gone. This situation can only occur if there are other copies of $U$ substituted into the term. This corresponds to if only the corresponding (\ref{red:mergeshare}) reduction rule can occur. This resemblace is confirmed by the following Lemmas.
+
+% Lifting a closure relates ($\weaksymbol_{1}$) and (\ref{red:liftabs}), ($\weaksymbol_{2}$) and  (\ref{red:liftappleft}), ($\weaksymbol_{3}$) and (\ref{red:liftappright}), ($\weaksymbol_{4}$) and (\ref{red:liftshare}), ($\weaksymbol_{5}$) and (\ref{red:absdup}), and duplicating a term relates ($\weaksymbol_{6}$) and (\ref{red:appdup}), and  ($\weaksymbol_{7}$) and (\ref{red:distelim}).
 
 \begin{lemma}
 \label{lem:sharepreservebeta}
@@ -1533,12 +1529,7 @@ The sharing weight $\weight{i}{t}$ of a term $t$ is a multiset of integers compu
 
 \begin{lemma}
 \label{theo:decreaseweight}
-If $t \rightsquigarrow_{D} u$ then $\weight{i}{t} > \weight{i}{u}$
-\end{lemma}
-
-\begin{lemma}
-\label{theo:liftingweight}
-If $t \rightsquigarrow_{(L, C)} u$ then $\weight{i}{t} = \weight{i}{u}$
+If $t \rightsquigarrow_{D} u$ then $\weight{i}{t} > \weight{i}{u}$. If $t \rightsquigarrow_{(L, C)} u$ then $\weight{i}{t} = \weight{i}{u}$
 \end{lemma}
 
 The last measure we consider is the number of closures in the term, where is can be easily observed that the rewrite rules \ref{red:mergeshare} and \ref{red:compshare} strictly decrease this measure, and that the $\rightsquigarrow_{L}$ rules do not alter the number of closures. We then use this along with height and weight to define a \emph{sharing measure} on terms.
@@ -1553,7 +1544,7 @@ The \emph{sharing measure} of a $\FALC$-term $t$ is a triple ($\weight{}{t}$, $C
 Sharing reduction $\rightsquigarrow_{(D, L, C)}$ is strongly normalising
 \end{theorem}
 \begin{proof}
-From Lemma \ref{theo:decreaseweight}, Lemma \ref{theo:liftingweight}, and Lemma \ref{theo:liftingheight}, it follows that the sharing measure of a term is strictly decreasing under $\rightsquigarrow_{(D, L, C)}$, proving the statement.
+From Lemma \ref{theo:decreaseweight} and Lemma \ref{theo:liftingheight}, it follows that the sharing measure of a term is strictly decreasing under $\rightsquigarrow_{(D, L, C)}$, proving the statement.
 \end{proof}
 
 \noindent Now that we have proven the sharing reductions are strongly normalising, we can prove that they are confluent for closed terms.
@@ -1569,37 +1560,33 @@ The sharing reduction relation $\rightsquigarrow_{(D, L, C)}$ is confluent
 \section{Preservation of Strong Normalisation}
 \label{chap:posn}
 
-Here we show how $\FALC$ preserves strong normalisation with respect to the $\lambda$-calculus. Recall that by Proposition \ref{prop:equalterms} that for all $N \in \Lambda$, $\composeweak{\compile{N}} = \compweak{N}$, and that Proposition \ref{prop:willemresult} states if a term $N \in \Lambda$ is strongly normalising then so is $\compweak{N}$. Observe that the statement `if term $M$ has an infinite reduction sequence then term $N$ has an infinite reduction sequence' is equivalent to `if term $N$ is strongly normalising then term $M$ is strongly normalising' by contraposition. Therefore, given a strongly normalising term $N \in \Lambda$, we know that its corresponding weakening term is also strongly normalising. Furthermore, since $\composeweak{\compile{N}} = \compweak{N}$, we know that $\composeweak{\compile{N}}$ is also strongly normalising.
+Here we show how $\FALC$ preserves strong normalisation with respect to the $\lambda$-calculus. Recall that by Proposition \ref{prop:equalterms} that for all $N \in \Lambda$, $\composeweak{\compile{N}} = \compweak{N}$, and that Proposition \ref{prop:willemresult} states if a term $N \in \Lambda$ is strongly normalising then so is $\compweak{N}$. Observe that the statement `if term $M$ has an infinite reduction sequence then term $N$ has an infinite reduction sequence' is equivalent to `if term $N$ is strongly normalising then term $M$ is strongly normalising' by contraposition. Therefore, given a strongly normalising term $N \in \Lambda$, we know that its corresponding weakening term is also strongly normalising. Furthermore, since $\composeweak{\compile{N}} = \compweak{N}$, we know that $\composeweak{\compile{N}}$ is also strongly normalising. We will use the following to prove that the spinal atomic $\lambda$-calculus preserves strong normalisation.
 
-\begin{center}
-	\begin{tikzpicture}[auto]
-		\node (a1) at (0, 4) {$\FALC$};
-		\node (w1) at (2, 4) {$\WEAK$};
-		\node (l1) at (4, 4) {$\Lambda$};
-		\node (li) at (4, 2) {$\infinity$}; \node (wi) at (2, 2) {$\infinity$}; \node (ai) at (0, 2) { \color{myGreen} $\infinity$};
-		%%%%%%%%%%%%
-		\draw [->, decorate,decoration={snake,amplitude=.4mm,segment length=2mm,post length=1mm}] (l1) -> (li);
-		 \draw [->, decorate,decoration={snake,amplitude=.4mm,segment length=2mm,post length=1mm}] (w1) -> (wi);
-		 \draw [->, myGreen, decorate,decoration={snake,amplitude=.4mm,segment length=2mm,post length=1mm}] (a1) -> (ai);
-		\draw [myGreen] (-0.3, 2.75) -- (0.3, 3.25); \draw (1.7, 2.75) -- (2.3, 3.25); \draw (3.7, 2.75) -- (4.3, 3.25);
-		\draw  [->, black] (l1) to node [black] {$\compweak{-}$} (w1);
-		\draw [->, black] (a1) to node [black, swap] {$\composeweak{-}$} (w1);
-		\draw [->, black, bend right = 45] (l1) to node [black, swap] {$\compile{-}$} (a1);
-		\node (lol) at (3, 2) {$\stackrel{\hbox{\tiny Prop \ref{prop:willemresult}}}{\hbox{$\Leftarrow$}}$};
-		\node (lol) at (1, 2) {$\stackrel{\hbox{\tiny ??}}{\hbox{ $\Leftarrow$}}$};
-		%\node (ale) at (-0.5, 0) {$\FALC$};
-		%\node (bob) at (2.5, 0) {$\WEAK$};
-		%\node (cat) at (1,-2) {$\Lambda$};
-		%%%%%%%%%%%%%
-		%%\draw [->,red] (ale) to node [black] {$\transweak{-}{I}$}  (bob);
-		%\draw [->,orange] (cat) to node [black, swap] {$\compweak{-}$}  (bob);
-		%\draw [->, yellow] (cat) to node [black] {$\compile{-}$} (ale);
-	\end{tikzpicture}
-\end{center}
-
-\noindent We prove that the spinal atomic $\lambda$-calculus preserves strong normalisation with the following.
-
-
+%\scalebox{0.8}{
+%	\begin{tikzpicture}[auto]
+%		\node (a1) at (0, 4) {$\FALC$};
+%		\node (w1) at (2, 4) {$\WEAK$};
+%		\node (l1) at (4, 4) {$\Lambda$};
+%		\node (li) at (4, 2) {$\infinity$}; \node (wi) at (2, 2) {$\infinity$}; \node (ai) at (0, 2) { \color{myGreen} $\infinity$};
+%		%%%%%%%%%%%%
+%		\draw [->, decorate,decoration={snake,amplitude=.4mm,segment length=2mm,post length=1mm}] (l1) -> (li);
+%		 \draw [->, decorate,decoration={snake,amplitude=.4mm,segment length=2mm,post length=1mm}] (w1) -> (wi);
+%		 \draw [->, myGreen, decorate,decoration={snake,amplitude=.4mm,segment length=2mm,post length=1mm}] (a1) -> (ai);
+%		\draw [myGreen] (-0.3, 2.75) -- (0.3, 3.25); \draw (1.7, 2.75) -- (2.3, 3.25); \draw (3.7, 2.75) -- (4.3, 3.25);
+%		\draw  [->, black] (l1) to node [black] {$\compweak{-}$} (w1);
+%		\draw [->, black] (a1) to node [black, swap] {$\composeweak{-}$} (w1);
+%		\draw [->, black, bend right = 45] (l1) to node [black, swap] {$\compile{-}$} (a1);
+%		\node (lol) at (3, 2) {$\stackrel{\hbox{\tiny Prop \ref{prop:willemresult}}}{\hbox{$\Leftarrow$}}$};
+%		\node (lol) at (1, 2) {$\stackrel{\hbox{\tiny ??}}{\hbox{ $\Leftarrow$}}$};
+%		%\node (ale) at (-0.5, 0) {$\FALC$};
+%		%\node (bob) at (2.5, 0) {$\WEAK$};
+%		%\node (cat) at (1,-2) {$\Lambda$};
+%		%%%%%%%%%%%%%
+%		%%\draw [->,red] (ale) to node [black] {$\transweak{-}{I}$}  (bob);
+%		%\draw [->,orange] (cat) to node [black, swap] {$\compweak{-}$}  (bob);
+%		%\draw [->, yellow] (cat) to node [black] {$\compile{-}$} (ale);
+%	\end{tikzpicture}
+%}
 %by contradiction i.e. if we assume that $\compile{N}$ has an infinite reduction path, then the following Lemma proves that this will lead to a contradiction.
 
 \begin{lemma}
@@ -1631,7 +1618,7 @@ For a given $N \in \Lambda$ that is strongly normalising, we know by Lemma \ref{
 We have studied the computational interpretation of the switch rule and discovered its correspondence with scope in the $\lambda$-calculus. We have studied the interaction between the switch and the medial rule, the two characteristic inference rules of deep inference. We interpret a calculus based on this interaction, which not only has the ability to duplicate terms atomically but can also duplicate solely the spine of an abstraction such that beta reduction can be applied on the duplicates. We show that this resulting calculus has natural properties with respect to the $\lambda$-calculus. 
 
 In the future we would like to have a full Curry-Howard correspondence rather than just an interpretation, i.e.\ where each inference rule in the typing system corresponds with a construct in the term calculus. This would mean introducing an explicit end-of-scope operator (such as done in \cite{berkling1976symmetric, hendriks2003lambda, fernandez2005lambda}) to correspond with the switch rule. %Additionally, we are interested in studying the computational interpretation of the same rules with different connectives.
-Additionally, we aim to translate the result of Blanc, L\'{e}vy, and Maranget \cite{blanc2007sharing} into our calculus. There they provide an algorithm proven by Balabonski in \cite{Balabonski12} to implement optimal reduction for Wadsworth's \emph{weak $\lambda$-calculus} \cite{wadsworth1971semantics} (further studied in \cite{CAGMAN1998239}). By showing their result in our formalism, we would develop a logical framework that follows an optimal reduction strategy.
+Additionally, we aim to translate the result of Blanc, L\'{e}vy, and Maranget \cite{blanc2007sharing} into our calculus. There they implement an optimal reduction strategy for Wadsworth's \emph{weak $\lambda$-calculus} \cite{wadsworth1971semantics} (further studied in \cite{CAGMAN1998239}), that makes use of spine duplication. By showing their result in our formalism, we would develop a logical framework that follows an optimal reduction strategy.
 
 %Lastly, and a long-term goal, would be to develop a complete logical framework for optimal reduction. The algorithms for optimal reduction us graph rewriting techniques, and nodes that specify enclosures and scopes. Furthermore, the implementations do not share terms like in either of the atomic $\lambda$-calculi, but they share contexts i.e.\ terms with holes that can be `filled' with distinct terms. Thus it is clear that they use a notion of sharing more than the one demonstrated here.
 
