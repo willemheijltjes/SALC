@@ -408,14 +408,16 @@ We illustrate these notions below, for the example term $\lambda x.\lambda y.((\
 %		\end{tikzpicture}}
 %	\end{tabular}}
 %\]
-The above notions give rise to four natural duplication regimes. For a shared abstraction to become available as the function in a $\beta$-redex:
-\begin{description}
-\item[Laziness] duplicates its \emph{scope} \cite{Launchbury1993, ariolafelleisen1997};
-\item[Full laziness] duplicates its \emph{skeleton} \cite{wadsworth1971semantics, Balabonski12, gundersen2013atomic};
-\item[Spinal full laziness] duplicates its \emph{spine} \cite{Blanc2005, blanc2007sharing};
-\item[Optimal reduction] duplicates only the abstraction $\lambda x$ and its bound variables $x$ \cite{lamping1989algorithm, van2004lambdascope}.%
+The above notions give rise to four natural duplication regimes. For a shared abstraction to become available as the function in a $\beta$-redex: \emph{Laziness} duplicates its \emph{scope} \cite{Launchbury1993, ariolafelleisen1997}; \emph{Full laziness}duplicates its \emph{skeleton} \cite{wadsworth1971semantics, Balabonski12, gundersen2013atomic}; \emph{Spinal full laziness} duplicates its \emph{spine} \cite{Blanc2005, blanc2007sharing}; \emph{Optimal reduction} duplicates only the abstraction $\lambda x$ and its bound variables $x$ \cite{lamping1989algorithm, van2004lambdascope}.%
 \footnote{Interestingly, Balabonski \cite{Balabonski12} shows that for \emph{weak} reduction (where one does not reduce under an abstraction) full laziness and spinal full laziness are both optimal (in the number of beta-steps required to reach a normal form).}
-\end{description}
+
+%\begin{description}
+%\item[Laziness] duplicates its \emph{scope} \cite{Launchbury1993, ariolafelleisen1997};
+%\item[Full laziness] duplicates its \emph{skeleton} \cite{wadsworth1971semantics, Balabonski12, gundersen2013atomic};
+%\item[Spinal full laziness] duplicates its \emph{spine} \cite{Blanc2005, blanc2007sharing};
+%\item[Optimal reduction] duplicates only the abstraction $\lambda x$ and its bound variables $x$ \cite{lamping1989algorithm, van2004lambdascope}.%
+%\footnote{Interestingly, Balabonski \cite{Balabonski12} shows that for \emph{weak} reduction (where one does not reduce under an abstraction) full laziness and spinal full laziness are both optimal (in the number of beta-steps required to reach a normal form).}
+%\end{description}
 While each of these duplication strategies has been expressed in graphs and labelled calculi, the atomic $\lambda$-calculus is the first term calculus with Curry--Howard corresponding proof system to naturally describe full laziness. Likewise, the spinal atomic $\lambda$-calculus presented here is the first term calculus with Curry--Howard corresponding proof system to naturally describe spinal full laziness.
 
 \paragraph*{Switch and Spine}
@@ -434,7 +436,7 @@ A closely related approach is \emph{director strings}, introduced by Kennaway an
 \[
 \text{\small Director strings:}~~\red\lambda.(\lambda.({\black((\lambda.\var)\var)^\dirR}\var)^{\dirR\black\dirL})^\dirR
 \]
-The primary aims of these approaches is to eliminate $\alpha$-conversion and to streamline substitution. Consequently, while they \emph{identify} the spine, they do not readily isolate it for duplication, as required for spinal full laziness.
+The primary aims of these approaches is to eliminate $\alpha$-conversion and to streamline substitution. Consequently, while they can \emph{identify} the spine, they do not readily isolate it for duplication, as required for spinal full laziness.
 
 The basis of the present work is the observation that the \emph{switch} rule in open deduction functions as a proof-theoretic end-of-scope construction. However, it does so in a \emph{structural} way: it forces a deconstruction of a proof into readily duplicable parts, which together may form the spine of an abstraction. We illustrate this below with two typing derivations for our example, where we let $x$ have type $A$ and $y,z$ type $A\imp B$, shortened to $\BA$. For a formal definition of how these derivations are constructed, see the next section.
 \[
@@ -481,6 +483,8 @@ The basis of the present work is the observation that the \emph{switch} rule in 
 }}}}
 \]
 An abstraction $\lambda x$ corresponds in the proof system to an implication $A\imp$, explicitly scoping over its right-hand side. On the left, with the \emph{abstraction} rule $(\lambda)$, scopes must be balanced, and the proof system may identify the \emph{skeleton}; here, that of $\lambda x$ as the largest blue box. Decomposing the abstraction $(\lambda)$ into \emph{axiom} $(a)$ and \emph{switch} $(s)$, on the right the proof system may express unbalanced scope. It does so by separating the scope of an abstraction into multiple parts; here, that of $\lambda x$ is captured as the two top-level red boxes. Each box is ready to be duplicated; in this way, one may duplicate only the spine of an abstraction.
+
+Our investigation is then focused on the interaction of switch and distribution (later observed in the rewrite rule \ref{red:distshare}). The use of the distribution rule allows us to perform duplication atomically \cite{gundersen2013atomic}, and thus provides a natural strategy for spinal full laziness. In our example on the right, this means duplicating the two top-level red boxes can be done independently from duplicating the yellow box.
 
 In Section \ref{sec:typingacalculus}, we introduce a simple sharing calculus that we expand on in Section \ref{chap:salc}, where we introduce the syntax and semantics of the spinal atomic $\lambda$-calculus, and its typing system. In Section \ref{chap:snosr} we further study the reduction rules that allow for spinal duplication, and prove natural properties of these rules such as termination and confluence. In Section \ref{chap:posn} we extend these results to include beta reduction, and show preservation of strong normalisation with respect to the $\lambda$-calculus. We conclude in Section \ref{chap:conc}.
 
@@ -531,7 +535,7 @@ In Section \ref{sec:typingacalculus}, we introduce a simple sharing calculus tha
 \section{Typing a $\lambda$-calculus in open deduction}
 \label{sec:typingacalculus}
 
-Here we describe a system for intuitionistic logic in open deduction. This system can be extended to work in a more general case, but we choose restrict it to only our case. A \emph{derivation} from a \emph{premise} formula $X$ to a \emph{conclusion} formula $Z$ is constructed inductively as in Figure \ref{fig:derivations}, with from left to right: a propositional atom $a$, where $X = Z = a$; \emph{horizontal composition} with a connective $\rightarrow$, where $X = Y \rightarrow X_{2}$ and $Z = Y \rightarrow Z_{2}$; \emph{horizontal composition} with a connective $\wedge$, where $X = X_{1} \wedge X_{2}$ and $Z = Z_{1} \wedge Z_{2}$; and \emph{rule composition}, where $r$ is an inference rule (Figure \ref{fig:abstraction}) from $Y_{1}$ to $Y_{2}$. The boxes serve as parentheses (since derivations extend in two dimensions) and may be omitted. Derivations are considered up to associativity of rule composition. One may consider formulas as derivations that omit rule composition. We work modulo associativity, symmetry, and unitality of conjunction, justifying the $n$-ary contraction, and may omit $\top$ from the axiom rule. A $0$-ary contraction, with conclusion $\top$, is a \emph{weakening}. Figure \ref{fig:abstraction}: the abstraction rule ($\lambda$) is derived from axiom and switch. \emph{Vertical composition} of a derivation from $X$ to $Y$ and one from $Y$ to $Z$, depicted by a dashed line, is a defined operation, given in Figure \ref{fig:vertical}.
+Here we describe a system for intuitionistic logic in open deduction. This system can be extended to work in a more general case, but we choose restrict it to only our case. A \emph{derivation} from a \emph{premise} formula $X$ to a \emph{conclusion} formula $Z$ is constructed inductively as in Figure \ref{fig:derivations}, with from left to right: a propositional atom $a$, where $X = Z = a$; \emph{horizontal composition} with a connective $\rightarrow$, where $X = Y \rightarrow X_{2}$ and $Z = Y \rightarrow Z_{2}$; \emph{horizontal composition} with a connective $\wedge$, where $X = X_{1} \wedge X_{2}$ and $Z = Z_{1} \wedge Z_{2}$; and \emph{rule composition}, where $r$ is an inference rule (Figure \ref{fig:abstraction}) from $Y_{1}$ to $Y_{2}$. The boxes serve as parentheses (since derivations extend in two dimensions) and may be omitted. Derivations are considered up to associativity of rule composition. One may consider formulas as derivations that omit rule composition. We work modulo associativity, symmetry, and unitality of conjunction, justifying the $n$-ary contraction, and may omit $\top$ from the axiom rule. A $0$-ary contraction, with conclusion $\top$, is a \emph{weakening}. Figure \ref{fig:abstraction}: the abstraction rule ($\lambda$) is derived from axiom and switch. \emph{Vertical composition} of a derivation from $X$ to $Y$ and one from $Y$ to $Z$, depicted by a dashed line, is a defined operation, given in Figure \ref{fig:vertical}, where $* \in \set{\wedge, \rightarrow}$.
 
 %\begin{figure}[h]
 %	\centering
@@ -587,9 +591,9 @@ Here we describe a system for intuitionistic logic in open deduction. This syste
  \scalebox{0.9}{\drv{\drv[yellow]{\drv[magenta]{A ; | ; B} ; -[r] ; \drv[green]{C ; | ; D}} ; . ; \drv[cyan]{D ; | ; E}} $=$ \drv{ \drv[magenta]{A ; | ; B} ; -[r] ; \drv[yellow]{ \drv[green]{C ; | ; D} ; . ; \drv[cyan]{D ; | ; E}}}
 } \hfill
 \scalebox{0.9}{
-\drv{ \drv[yellow]{\drv[magenta]{X_{1} ; | ; Y_{1}} \wedge \drv[orange]{X_{2} ; | ; Y_{2}}} ; . ; \drv[yellow]{\drv[cyan]{Y_{1} ; | ; Z_{1}} \wedge \drv[green]{Y_{2} ; | ; Z_{2}}}}
+\drv{ \drv[yellow]{\drv[magenta]{X_{1} ; | ; Y_{1}} * \drv[orange]{X_{2} ; | ; Y_{2}}} ; . ; \drv[yellow]{\drv[cyan]{Y_{1} ; | ; Z_{1}} * \drv[green]{Y_{2} ; | ; Z_{2}}}}
 =
-\drv{\drv[yellow]{ \drv[magenta]{X_{1} ; | ; Y_{1}} ; . ; \drv[cyan]{Y_{1} ; | ; Z_{1}}} \wedge \drv[yellow]{ \drv[orange]{X_{2} ; | ; Y_{2}} ; . ; \drv[green]{Y_{2} ; | ; Z_{2}} }}
+\drv{\drv[yellow]{ \drv[magenta]{X_{1} ; | ; Y_{1}} ; . ; \drv[cyan]{Y_{1} ; | ; Z_{1}}} * \drv[yellow]{ \drv[orange]{X_{2} ; | ; Y_{2}} ; . ; \drv[green]{Y_{2} ; | ; Z_{2}} }}
 }
 	\caption{Vertical composition}
 	\label{fig:vertical}
