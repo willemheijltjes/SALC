@@ -480,8 +480,10 @@ The above notions give rise to four natural duplication regimes. For a shared te
 \]
 
 \[
-{\small   \begin{tikzpicture}[auto, scale = 0.75]
-		\filldraw[fill = yellow!20, draw = yellow!70, rounded corners] (-0.3, -2.75) rectangle (0.3, -4);
+{\small \centering   
+	\raisebox{0.25cm}{
+	\begin{tikzpicture}[auto, scale = 0.75]
+		\filldraw[fill = orange!20, draw = orange!70, rounded corners] (-0.3, -2.75) rectangle (0.3, -4);
 		%%%%%%%%%%%%%
 		\node (a) at (0, 0) {$\lambda x$};
 		\node (b) at (0, -0.75) {$\lambda y$};
@@ -500,9 +502,11 @@ The above notions give rise to four natural duplication regimes. For a shared te
 		\draw (d) to (e);
 		\draw (e) to (f);
 	\end{tikzpicture}}
+	}
 	\hspace{1cm}
 {\small   \begin{tikzpicture}[auto, scale = 0.75]
-		\filldraw[fill = yellow!20, draw = yellow!70, rounded corners] (-0.3, -2) rectangle (1, -4);
+		\filldraw[fill = yellow!20, draw = yellow!70, rounded corners] (-0.55, -2) rectangle (1.125, -4.25);
+		\filldraw[fill = orange!20, draw = orange!70, rounded corners] (-0.3, -2.75) rectangle (0.3, -4);
 		%%%%%%%%%%%%%
 		\node (a) at (0, 0) {$\lambda x$};
 		\node (b) at (0, -0.75) {$\lambda y$};
@@ -522,18 +526,19 @@ The above notions give rise to four natural duplication regimes. For a shared te
 		\draw (e) to (f);
 	\end{tikzpicture}}
 	\hspace{1cm}
-	\raisebox{2cm}{
+	\raisebox{1.5cm}{
 	\begin{tabular}{l c}
-		{\small Spine} &
-		 \raisebox{0.1cm}{\begin{tikzpicture}[auto]
-			\draw [red, very thick] (0, 0) to (1, 0);
-		\end{tikzpicture}}  \\[0.2cm]
-		{\small Skeleton} & {\begin{tikzpicture}[auto]
+		{\small Skeleton} &
+		 \raisebox{0.5ex}{\begin{tikzpicture}[auto]
 			\draw [blue, very thick] (0, 0) to (1, 0);
-		\end{tikzpicture}} \\[0.2cm]
-		{\small Subterm} &
-		 \raisebox{-0.1cm}{\begin{tikzpicture}[auto]
+		\end{tikzpicture}}  \\[0.2cm]
+		{\small Spine} & \raisebox{0.5ex}{{\begin{tikzpicture}[auto]
+			\draw [red, very thick] (0, 0) to (1, 0);
+		\end{tikzpicture}}} \\[0.2cm]
+		{\small Subterms} &
+		 \raisebox{-1ex}{\begin{tikzpicture}[auto]
 			\filldraw[fill = yellow!20, draw = yellow!70, rounded corners] (0, 0) rectangle (0.5, 0.5);
+			\filldraw[fill = orange!20, draw = orange!70, rounded corners] (0+0.75, 0) rectangle (0.5+0.75, 0.5);
 		\end{tikzpicture}}
 	\end{tabular}}
 \]
