@@ -252,7 +252,7 @@
 \maketitle
 
 \begin{abstract}
-We present the spinal atomic $\lambda$-calculus, a $\lambda$-calculus with explicit sharing and atomic duplication that achieves spinal full laziness: duplicating only the direct path between a binder and bound variables is enough for beta reduction to proceed. We show how this calculus is the result of a Curry-Howard style interpretation of the deep inference proof formalism. We prove this calculus has natural properties with respect to the $\lambda$-calculus: confluence and preservation of strongly normalising terms.
+We present the spinal atomic $\lambda$-calculus, a typed $\lambda$-calculus with explicit sharing and atomic duplication that achieves spinal full laziness: duplicating only the direct path between a binder and bound variables is enough for beta reduction to proceed. We show how this calculus is the result of a Curry-Howard style interpretation of the deep inference proof formalism. We prove this calculus has natural properties with respect to the $\lambda$-calculus: confluence and preservation of strongly normalising terms.
 
 \end{abstract}
 
@@ -531,7 +531,7 @@ In Section \ref{sec:typingacalculus}, we introduce a simple sharing calculus tha
 \section{Typing a $\lambda$-calculus in open deduction}
 \label{sec:typingacalculus}
 
-Here we describe a system for intuitionistic logic in open deduction. This system can be extended to work in a more general case, but we choose restrict it to only our case. A \emph{derivation} from a \emph{premise} formula $X$ to a \emph{conclusion} formula $Z$ is constructed inductively as in Figure \ref{fig:derivations}, with from left to right: a propositional atom $a$, where $X = Z = a$; \emph{horizontal composition} with a connective $\rightarrow$, where $X = Y \rightarrow X_{2}$ and $Z = Y \rightarrow Z_{2}$;\emph{horizontal composition} with a connective $\wedge$, where $X = X_{1} \wedge X_{2}$ and $Z = Z_{1} \wedge Z_{2}$; and \emph{rule composition}, where $r$ is an inference rule (Figure \ref{fig:abstraction}) from $Y_{1}$ to $Y_{2}$. The boxes serve as parentheses (since derivations extend in two dimensions) and may be omitted. Derivations are considered up to associativity of rule composition. One may consider formulas as derivations that omit rule composition. We work modulo associativity, symmetry, and unitality of conjunction, justifying the $n$-ary contraction, and may omit $\top$ from the axiom rule. A $0$-ary contraction, with conclusion $\top$, is a \emph{weakening}. Figure \ref{fig:abstraction}: the abstraction rule ($\lambda$) is derived from axiom and switch. \emph{Vertical composition} of a derivation from $X$ to $Y$ and one from $Y$ to $Z$, depicted by a dashed line, is a defined operation, given in Figure \ref{fig:vertical}.
+Here we describe a system for intuitionistic logic in open deduction. This system can be extended to work in a more general case, but we choose restrict it to only our case. A \emph{derivation} from a \emph{premise} formula $X$ to a \emph{conclusion} formula $Z$ is constructed inductively as in Figure \ref{fig:derivations}, with from left to right: a propositional atom $a$, where $X = Z = a$; \emph{horizontal composition} with a connective $\rightarrow$, where $X = Y \rightarrow X_{2}$ and $Z = Y \rightarrow Z_{2}$; \emph{horizontal composition} with a connective $\wedge$, where $X = X_{1} \wedge X_{2}$ and $Z = Z_{1} \wedge Z_{2}$; and \emph{rule composition}, where $r$ is an inference rule (Figure \ref{fig:abstraction}) from $Y_{1}$ to $Y_{2}$. The boxes serve as parentheses (since derivations extend in two dimensions) and may be omitted. Derivations are considered up to associativity of rule composition. One may consider formulas as derivations that omit rule composition. We work modulo associativity, symmetry, and unitality of conjunction, justifying the $n$-ary contraction, and may omit $\top$ from the axiom rule. A $0$-ary contraction, with conclusion $\top$, is a \emph{weakening}. Figure \ref{fig:abstraction}: the abstraction rule ($\lambda$) is derived from axiom and switch. \emph{Vertical composition} of a derivation from $X$ to $Y$ and one from $Y$ to $Z$, depicted by a dashed line, is a defined operation, given in Figure \ref{fig:vertical}.
 
 %\begin{figure}[h]
 %	\centering
@@ -587,9 +587,9 @@ Here we describe a system for intuitionistic logic in open deduction. This syste
  \scalebox{0.9}{\drv{\drv[yellow]{\drv[magenta]{A ; | ; B} ; -[r] ; \drv[green]{C ; | ; D}} ; . ; \drv[cyan]{D ; | ; E}} $=$ \drv{ \drv[magenta]{A ; | ; B} ; -[r] ; \drv[yellow]{ \drv[green]{C ; | ; D} ; . ; \drv[cyan]{D ; | ; E}}}
 } \hfill
 \scalebox{0.9}{
-\drv{ \drv[yellow]{\drv[magenta]{X_{1} ; | ; Y_{1}} * \drv[orange]{X_{2} ; | ; Y_{2}}} ; . ; \drv[yellow]{\drv[cyan]{Y_{1} ; | ; Z_{1}} * \drv[green]{Y_{2} ; | ; Z_{2}}}}
+\drv{ \drv[yellow]{\drv[magenta]{X_{1} ; | ; Y_{1}} \wedge \drv[orange]{X_{2} ; | ; Y_{2}}} ; . ; \drv[yellow]{\drv[cyan]{Y_{1} ; | ; Z_{1}} \wedge \drv[green]{Y_{2} ; | ; Z_{2}}}}
 =
-\drv{\drv[yellow]{ \drv[magenta]{X_{1} ; | ; Y_{1}} ; . ; \drv[cyan]{Y_{1} ; | ; Z_{1}}} * \drv[yellow]{ \drv[orange]{X_{2} ; | ; Y_{2}} ; . ; \drv[green]{Y_{2} ; | ; Z_{2}} }}
+\drv{\drv[yellow]{ \drv[magenta]{X_{1} ; | ; Y_{1}} ; . ; \drv[cyan]{Y_{1} ; | ; Z_{1}}} \wedge \drv[yellow]{ \drv[orange]{X_{2} ; | ; Y_{2}} ; . ; \drv[green]{Y_{2} ; | ; Z_{2}} }}
 }
 	\caption{Vertical composition}
 	\label{fig:vertical}
@@ -1162,13 +1162,13 @@ $$\readback{\compile{N}'}{I} = N \hspace{1.5cm} \compile{\readback{t}{I}}' = t \
 
 \subsection{Rewrite Rules}
 
-Both the spinal atomic $\lambda$-calculus and the atomic $\lambda$-calculus of \cite{gundersen2013atomic} follow atomic reduction steps, i.e.\ they apply on individual constructors. The biggest difference is that our calculus is capable of duplicating not only the skeleton but also the spine. The rewrite rules in our calculus make use of 3 operations, \emph{substitution}, \emph{book-keeping}, and \emph{exorcism}.
+Both the spinal atomic $\lambda$-calculus and the atomic $\lambda$-calculus of \cite{gundersen2013atomic} follow atomic reduction steps, i.e.\ they apply on individual constructors. The biggest difference is that our calculus is capable of duplicating not only the skeleton but also the spine. The rewrite rules in our calculus make use of 3 operations, \emph{substitution}, \emph{book-keeping}, and \emph{exorcism}. Full definitions can be found in the Appendix, here we describe the intuition.
 
-The operation \emph{substitution} $\sub{t}{s}{x}$ propagates through the term $t$, and replaces the free occurences of the variable $x$ with the term $s$. Moreover, if $x$ occurs in the cover of a phantom-variable $\fakedist{e}{\vec{y} \cdot x}$, then substitution replaces the $x$ in the cover with $\fv{s}$, $\fakedist{e}{\vec{y} \cdot \fv{s}}$.
+The operation \emph{substitution} $\sub{t}{s}{x}$ propagates through the term $t$, and replaces the free occurences of the variable $x$ with the term $s$. Moreover, if $x$ occurs in the cover of a phantom-variable $\fakedist{e}{\vec{y} \cdot x}$, then substitution replaces the $x$ in the cover with $\fv{s}$, $\fakedist{e}{\vec{y} \cdot \fv{s}}$. 
 
-Although substitution performs some book-keeping on phantom-abstractions, we define an explicit notion of book-keeping $\psub{}{\vec{y}}{e}$ that updates the variables stored in a free cover i.e.\ for a term $t$, $\fakedist{e}{\vec{x}} \in \fc{t}$ then $\fakedist{e}{\vec{y}} \in \fc{\psub{t}{\vec{y}}{e}}$.
+Although substitution performs some book-keeping on phantom-abstractions, we define an explicit notion of book-keeping $\psub{}{\vec{y}}{e}$ that updates the variables stored in a free cover i.e.\ for a term $t$, $\fakedist{e}{\vec{x}} \in \fc{t}$ then $\fakedist{e}{\vec{y}} \in \fc{\psub{t}{\vec{y}}{e}}$. 
 
-The last operation we introduce is called \emph{exorcism} $\exor{}{c}{\vec{x}}$. We perform exorcisms on phantom-abstractions to convert them to abstractions. Intuitively, this will be performed on phantom-abstractions with phantom-variables bound to a distributor when said distributor is eliminated. It converts phantom-abstractions to abstractions by introducing a sharing of the phantom-variable that captures the variables in the cover, i.e.\ $\fake{c}{\vec{x}}{t} \exor{}{c}{\vec{x}} = \fake{c}{c}{\share{t}{\vec{x}}{c}}$.
+The last operation we introduce is called \emph{exorcism} $\exor{}{c}{\vec{x}}$. We perform exorcisms on phantom-abstractions to convert them to abstractions. Intuitively, this will be performed on phantom-abstractions with phantom-variables bound to a distributor when said distributor is eliminated. It converts phantom-abstractions to abstractions by introducing a sharing of the phantom-variable that captures the variables in the cover, i.e.\ $\fake{c}{\vec{x}}{t} \exor{}{c}{\vec{x}} = \fake{c}{c}{\share{t}{\vec{x}}{c}}$. 
 
 \begin{proposition}
 \label{prop:suboutcomm}
@@ -1497,6 +1497,8 @@ The other measure we consider is the \emph{weight} of a term. Intuitively this q
 
 \begin{definition}[Variable Weights]
 The function $\weightvar{i}{t}$ returns a function that assigns integer weights to the free variables of $t$. It is defined by the following
+\begingroup
+\allowdisplaybreaks
 \begin{align*}
 	\weightvar{i}{x} &= \set{x \mapsto i} \\
 	\weightvar{i}{\app{s}{t}} &= \weightvar{i}{s} \cupdot \weightvar{i}{t} \\
@@ -1507,12 +1509,15 @@ The function $\weightvar{i}{t}$ returns a function that assigns integer weights 
 	\weightvar{i}{\dist{t}{\fakedist{e_{1}}{\vec{w_{1}}} \dots \fakedist{e_{n}}{\vec{w_{n}}}}{\overline{[\Gamma]}}{c}{c}} &= \weightvar{i}{t\overline{[\Gamma]}} / \set{c, e_{1}, \dots, e_{n}} \\
 	\weightvar{i}{\dist{t}{\fakedist{e_{1}}{\vec{w_{1}}} \dots \fakedist{e_{n}}{\vec{w_{n}}}}{\overline{[\Gamma]}}{c}{\vec{x}}} &= \weightvar{i}{t\overline{[\Gamma]}} / \set{e_{1}, \dots, e_{n}} \cupdot \set{c \mapsto i}
 \end{align*}
+\endgroup
 \end{definition}
 
 \noindent The weight of a term can then be defined via the use of this auxiliary function. The auxiliary function is used when calculating the weight of a sharing, where the sharing weight of the variables bound by the sharing play a significant role in calculating the weight of the shared term. In the case of a weakening, we assign an initial weight of $1$ to indicate that the constructor is not duplicated by appears at least once in the weakening calculus. Again we say $\weight{}{t} = \weight{1}{t}$.
 
 \begin{definition}[Sharing Weight]
 The sharing weight $\weight{i}{t}$ of a term $t$ is a multiset of integers computed by the function defined below
+\begingroup
+\allowdisplaybreaks
 \begin{align*}
 	\weight{i}{x} &= \set{} \\
 	\weight{i}{\app{s}{t}} &= \weight{i}{s} \cupdot \weight{i}{t} \cupdot \set{i}\\
@@ -1523,6 +1528,7 @@ The sharing weight $\weight{i}{t}$ of a term $t$ is a multiset of integers compu
 	\weight{i}{\dist{t}{\fakedist{e_{1}}{\vec{w_{1}}} \dots \fakedist{e_{n}}{\vec{w_{n}}}}{\overline{[\Gamma]}}{c}{c}} &= \weight{i}{t\overline{[\Gamma]}} \cupdot \set{\weightvar{i}{t\overline{[\Gamma]}} (c)} \\ % \cupdot \set{f(e_{1}), \dots, f(e_{n})} \\
 	\weight{i}{\dist{t}{\fakedist{e_{1}}{\vec{w_{1}}} \dots \fakedist{e_{n}}{\vec{w_{n}}}}{\overline{[\Gamma]}}{c}{\vec{x}}} &= \weight{i}{t\overline{[\Gamma]}}
 \end{align*}
+\endgroup
 \end{definition}
 
 \noindent We show that this measure then strictly decreases on the rewrite rules \ref{red:appdup}, \ref{red:absdup}, \ref{red:distelim} and is unaffected by all the other sharing reduction rules.
