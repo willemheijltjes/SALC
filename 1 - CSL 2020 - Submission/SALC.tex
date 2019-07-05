@@ -489,7 +489,7 @@ We work in \emph{open deduction}~\cite{Guglielmi-Gundersen-Parigot-2010}, a form
       ~\mid~ \drv{\drv[yellow]{X;|;Y_1\!} ;-[r];
       			  \drv[yellow]{Y_2\!;|;Z}}
     $}
-    \caption{\small Derivations}
+    \caption{Derivations}
     \label{fig:derivations}
   \end{subfigure}
   \hfill
@@ -510,18 +510,18 @@ We work in \emph{open deduction}~\cite{Guglielmi-Gundersen-Parigot-2010}, a form
 		  }}
 	  \end{array}
 	$}
-	\caption{\small Axiom, Application, Contraction, Switch, Abstraction}
+	\caption{Inference Rules: Axiom ($a$), Application ($@$), Contraction ($\sharerule$), Switch ($s$), Abstraction ($\lambda$)}
 	\label{fig:abstraction}
 	\end{subfigure}
-	\\
+	\\[0.2cm]
 	\begin{subfigure}[b]{\textwidth}
 \scalebox{0.9}{ 
 \drv{\drv[yellow]{X ; | ; Y} ; . ; \drv[yellow]{Y ; | ; Z}} ~{:}{=}~ \drv{X ; . ; \drv[yellow]{X ; | ; Z}} $=$ \drv{\drv[yellow]{X ; | ; Z} ; . ; Z} $=$ \drv{X ; | ; Z}}
 \hfill
- \scalebox{0.9}{\drv{\drv[yellow]{\drv[magenta]{A ; | ; B} ; -[r] ; \drv[green]{C ; | ; D}} ; . ; \drv[cyan]{D ; | ; E}} $=$ \drv{ \drv[magenta]{A ; | ; B} ; -[r] ; \drv[yellow]{ \drv[green]{C ; | ; D} ; . ; \drv[cyan]{D ; | ; E}}}
+ \scalebox{0.9}{\drv{\drv[yellow]{\drv[magenta]{X_{1} ; | ; X_{2}} ; -[r] ; \drv[green]{Y ; | ; Z_{1}}} ; . ; \drv[cyan]{Z_{1} ; | ; Z_{2}}} $=$ \drv{ \drv[magenta]{X_{1} ; | ; X_{2}} ; -[r] ; \drv[yellow]{ \drv[green]{Y ; | ; Z_{1}} ; . ; \drv[cyan]{Z_{1} ; | ; Z_{2}}}}
 } 
 \hfill
- \scalebox{0.9}{\drv{ \drv[magenta]{A ; | ; B} ; . ; \drv[yellow]{ \drv[green]{B ; | ; C} ; -[r] ; \drv[cyan]{D ; | ; E}}} $=$ \drv{\drv[yellow]{\drv[magenta]{A ; | ; B} ; . ; \drv[green]{B ; | ; C}} ; -[r] ; \drv[cyan]{D ; | ; E}}
+ \scalebox{0.9}{\drv{ \drv[magenta]{X_{1} ; | ; X_{2}} ; . ; \drv[yellow]{ \drv[green]{X_{2} ; | ; Y} ; -[r] ; \drv[cyan]{Z_{1} ; | ; Z_{2}}}} $=$ \drv{\drv[yellow]{\drv[magenta]{X_{1} ; | ; X_{2}} ; . ; \drv[green]{X_{2} ; | ; Y}} ; -[r] ; \drv[cyan]{Z_{1} ; | ; Z_{2}}}
 } 
  \hfill
 \scalebox{0.9}{
@@ -895,15 +895,30 @@ $\rightsquigarrow_{D}$
 {\small \drv{\drv{ ; -[a] ; A \rightarrow A} \wedge \drv{ ; -[a] ; A \rightarrow A}}}
 \end{center}
 
-\noindent As an example, observe $\share{u}{z_{1}, z_{2}}{\abs{x}{\app{(\abs{z}{z})}{\abs{y}{\app{(\app{y}{y})}{x}}}}}$ (note $\abs{x}{t} \equiv \fake{x}{x}{t}$). By (\ref{red:absdup}) we obtain $\dist{u'}{\fakedist{e_{1}}{z_{1}}, \fakedist{e_{2}}{z_{2}}}{\share{}{z_{1}, z_{2}}{\app{(\abs{z}{z})}{\abs{y}{\app{(\app{y}{y})}{x}}}}}{x}{x}$ where $u' = u\sub{}{\fake{e_{i}}{z_{i}}{z_{i}}}{z_{i}}_{i \in [2]}$. Then by reductions (\ref{red:appdup}, \ref{red:distshare}), we obtain the distributor $\dist{u''}{\fakedist{e_{1}}{z_{1}}, \fakedist{e_{2}}{z_{2}}}{\share{}{z_{1}, z_{2}}{\abs{y}{\app{(\app{y}{y})}{x}}}}{x}{x}$ where $u'' = u\sub{}{\fake{e_{i}}{z_{i}}{\app{a_{i}}{z_{i}}}}{z_{i}}_{i \in [2]}$. Then by (\ref{red:absdup}, \ref{red:appdup}, \ref{red:distshare}, \ref{red:distshare}) we obtain the distributor $\dist{u'''}{\fakedist{e_{1}}{z_{1}}, \fakedist{e_{2}}{z_{2}}}{\share{}{z_{1}, z_{2}}{x}}{x}{x}$ which can be eliminated by (\ref{red:distelim}). A full example can be found in the Appendix. 
+%\noindent As an example, observe $\share{u}{z_{1}, z_{2}}{\abs{x}{\app{(\abs{z}{z})}{\abs{y}{\app{(\app{y}{y})}{x}}}}}$ (note $\abs{x}{t} \equiv \fake{x}{x}{t}$). By (\ref{red:absdup}) we obtain $\dist{u'}{\fakedist{e_{1}}{z_{1}}, \fakedist{e_{2}}{z_{2}}}{\share{}{z_{1}, z_{2}}{\app{(\abs{z}{z})}{\abs{y}{\app{(\app{y}{y})}{x}}}}}{x}{x}$ where $u' = u\sub{}{\fake{e_{i}}{z_{i}}{z_{i}}}{z_{i}}_{i \in [2]}$. Then by reductions (\ref{red:appdup}, \ref{red:distshare}), we obtain the distributor $\dist{u''}{\fakedist{e_{1}}{z_{1}}, \fakedist{e_{2}}{z_{2}}}{\share{}{z_{1}, z_{2}}{\abs{y}{\app{(\app{y}{y})}{x}}}}{x}{x}$ where $u'' = u\sub{}{\fake{e_{i}}{z_{i}}{\app{a_{i}}{z_{i}}}}{z_{i}}_{i \in [2]}$. Then by (\ref{red:absdup}, \ref{red:appdup}, \ref{red:distshare}, \ref{red:distshare}) we obtain the distributor $\dist{u'''}{\fakedist{e_{1}}{z_{1}}, \fakedist{e_{2}}{z_{2}}}{\share{}{z_{1}, z_{2}}{x}}{x}{x}$ which can be eliminated by (\ref{red:distelim}). A full example can be found in the Appendix. 
 
-Each rewrite rule preserves the conclusion of the derivation, and thus the following proposition is easy to observe.
+\begin{example}
+Let $t = \app{(\abs{z}{z})}{y}$ in $\share{u}{z_{1}, z_{2}}{\abs{x}{\abs{y}{\app{t}{x}}}}$ (note $\abs{x}{t} \equiv \fake{x}{x}{t}$). Then by two (\ref{red:absdup}) steps we obtain 
+\\[0.1cm]
+\indent $u \sub{}{\fake{x_{i}}{z_{i}}{\fake{y_{i}}{z_{i}}{z_{i}}}}{z_{i}}_{i \in [2]}\dist{}{\fakedist{x_{i}}{z_{i}}_{i \in [2]}}{\dist{}{\fakedist{y_{i}}{z_{i}}_{i \in [2]}}{\share{}{z_{1}, z_{2}}{\app{t}{x}}}{y}{y}}{x}{x}$
+\\[0.1cm] 
+%%%%%%
+then we can use the rule (\ref{red:appdup}) to duplicate the application, and use (\ref{red:distshare}) to obtain
+\\[0.1cm] 
+$u \sub{}{\fake{x_{i}}{a_{i}, b_{i}}{\fake{y_{i}}{a_{i}}{\app{a_{i}}{b_{i}}}}}{z_{i}}_{i \in [2]} \dist{}{\fakedist{x_{i}}{a_{i}, b_{i}}_{i \in [2]}}{\share{}{b_{1}, b_{2}}{x} \dist{}{\fakedist{y_{i}}{a_{i}}_{i \in [2]}}{\share{}{a_{1}, a_{2}}{t}}{y}{y}}{x}{x}$
+\\[0.1cm]
+%%%%%
+Then (\ref{red:distshare}) to lift the nested distributor and eliminate the distributor using (\ref{red:distelim})
+\\[0.1cm]
+\indent $u \sub{}{\abs{x_{i}}{\fake{y_{i}}{a_{i}}{\app{a_{i}}{x_{i}}}}}{z_{i}}_{i \in [2]} \dist{}{\fakedist{y_{i}}{a_{i}}_{i \in [2]}}{\share{}{a_{1}, a_{2}}{t}}{y}{y}$
+\end{example}
+A step-by-step example can be found in the Appendix. Each rewrite rule preserves the conclusion of the derivation, and thus the following proposition is easy to observe.
 
 \begin{proposition}
 If $s \rightsquigarrow_{(L, C, D, \beta)} t$ and $s : C$, then $t : C$
 \end{proposition}
 
-\noindent The readback translation collapses the shared terms. The lifting, duplication, and compound rules are used solely for the duplication of terms. Therefore it is expected that the following Lemma be true (proven in Appendix by induction). It is also important for proving confluence of $\FALC$ (Theorem \ref{theo:strongnormal}).
+\noindent The following Lemma shows duplication preserves denotation and is also important for proving confluence of $\FALC$ (Theorem \ref{theo:strongnormal}).
 
 \begin{lemma}
 \label{lem:preservesdenotation}
@@ -929,19 +944,24 @@ The terms are variable, abstraction, application, weakening, and a bullet. In th
 \begin{definition}
 \label{def:transfalcweak}
 	The interpretation $\readweakwmap{-}{-}{-} : \FALC \times (V \rightarrow \WEAK) \times (V \rightarrow V) \rightarrow \WEAK$ with maps $\sigma : V \rightarrow \WEAK$ and $\gamma : V \rightarrow V$ is defined as an extension of the translation in (Definition \ref{def:readback}) with the following additional special cases.
+	\begingroup
+	\allowdisplaybreaks
 	\begin{align*}
 		\readweakwmap{\share{u}{}{t}}{\sigma}{\gamma} &= \share{\readweakwmap{u}{\sigma}{\gamma}}{}{\readweakwmap{t}{\sigma}{\gamma}} \\[0.2cm]
 		\readweakwmap{\dist{u}{}{\overline{[\Gamma]}}{c}{c}}{\sigma}{\gamma} &= \readweakwmap{u \overline{[\Gamma]}}{\sigma[c \mapsto \bullet]}{\gamma} \\[0.2cm]
 		\readweakwmap{\dist{u}{}{\overline{[\Gamma]}}{c}{x_{1}, \dots, x_{n}}}{\sigma}{\gamma} &= \readweakwmap{u \overline{[\Gamma]}}{\sigma'}{\gamma} \\
 		& \text{where } \sigma'(z) = \begin{cases} \sigma(z) \sub{}{\bullet}{\gamma(c)} & z \in \set{x_{1}, \dots, x_{n}} \\ \sigma(z) & \text{otherwise} \end{cases} \\
 	\end{align*}
+	\endgroup
 \end{definition}
 
-\noindent We also have translations of the weakening calculus to and from the lambda calculus. Both of these translations were provided in \cite{Gundersen-Heijltjes-Parigot-2013-LICS}. The interpretation $\readbackweak{-}$ from weakening terms to $\lambda$-terms discards all weakenings. The interpretation $\compweak{-} : \Lambda \rightarrow \WEAK$ is defined below.
+\noindent We also have translations of the weakening calculus to and from the $\lambda$-calculus. Both of these translations were provided in \cite{Gundersen-Heijltjes-Parigot-2013-LICS}. The interpretation $\readbackweak{-}$ from weakening terms to $\lambda$-terms discards all weakenings. The interpretation $\compweak{-} : \Lambda \rightarrow \WEAK$ is defined below.
 
 \begin{definition}
 \label{def:transweak}
 The interpretation $M \in \Lambda$, $\compweak{-} : \Lambda \rightarrow \WEAK$ is defined by
+	\begingroup
+	\allowdisplaybreaks
 \begin{align*}
 	\compweak{x} &= x \\
 	\compweak{\app{M}{N}} &= \app{\compweak{M}}{\compweak{N}} \\
@@ -951,6 +971,7 @@ The interpretation $M \in \Lambda$, $\compweak{-} : \Lambda \rightarrow \WEAK$ i
 		\abs{x}{\compweak{N} \share{}{}{x}} & \text{otherwise}
 	\end{cases}
 \end{align*}
+	\endgroup
 \end{definition}
 \noindent The following equalities can be observed, where $\sigma^{\Lambda}(z) = \readbackweak{\sigma^{\weaksymbol}(z)} $.
 \begin{proposition}
@@ -1010,7 +1031,9 @@ Weakening reduction ($\rightarrow_{\weaksymbol}$) proceeds as follows.
 \end{align*}
 \endgroup
 \end{definition}
-\noindent It is easy to see that most these rules correspond to special cases of the sharing reduction rules for $\FALC$. It is not so obvious to see what the case ($\weaksymbol_{8}$) corresponds to. If $U$ is a subterm of $T$, then in the corresponding $\FALC$-term this term would be shared and one of the copies would be in a weakening. Thus this reduction relates to the case (\ref{red:mergeshare}), where we remove the weakening. We demonstrate by considering $t \share{}{}{y} \share{}{\vec{x} \cdot y \cdot \vec{z}}{u}  \rightsquigarrow_{C} t \share{}{\vec{x} \cdot \vec{z}}{u}$. On the left hand side, the corresponding weakening-term (obtained by $\compweak{-}$) would have the weakening $\share{}{}{U}$ where $U = \compweak{u}$. This is because $U$ is substituted into $\share{}{}{y}$, but on the right hand side this would be gone. This situation can only occur if there are other copies of $U$ substituted into the term. This corresponds to if only the corresponding (\ref{red:mergeshare}) reduction rule can occur. This resemblace is confirmed by the following Lemmas.
+\noindent It is easy to see that these rules correspond to special cases of the sharing reduction rules for $\FALC$. This resemblance is confirmed by the following Lemmas.
+
+%It is not so obvious to see what the case ($\weaksymbol_{8}$) corresponds to. If $U$ is a subterm of $T$, then in the corresponding $\FALC$-term this term would be shared and one of the copies would be in a weakening. Thus this reduction relates to the case (\ref{red:mergeshare}), where we remove the weakening. We demonstrate by considering $t \share{}{}{y} \share{}{\vec{x} \cdot y \cdot \vec{z}}{u}  \rightsquigarrow_{C} t \share{}{\vec{x} \cdot \vec{z}}{u}$. On the left hand side, the corresponding weakening-term (obtained by $\compweak{-}$) would have the weakening $\share{}{}{U}$ where $U = \compweak{u}$. This is because $U$ is substituted into $\share{}{}{y}$, but on the right hand side this would be gone. This situation can only occur if there are other copies of $U$ substituted into the term. This corresponds to if only the corresponding (\ref{red:mergeshare}) reduction rule can occur.
 
 \begin{lemma}
 \label{lem:sharepreservebeta}
@@ -1019,7 +1042,7 @@ Weakening reduction ($\rightarrow_{\weaksymbol}$) proceeds as follows.
 
 \begin{lemma}
 \label{theo:sharepreserve}
-	If $t \rightsquigarrow_{(C, D, L)} u$ and for any $x \in \bv{t} \cup \fp{t}$ and for all $z$, $x \not\in \fv{\sigma(z)}$.  $$\readweakwmap{t}{\sigma}{\gamma} \rightarrow^{*}_{\weaksymbol} \readweakwmap{u}{\sigma}{\gamma}$$
+	If $t \rightsquigarrow_{(C, D, L)} u$ and for any $x \in \bv{t} \cup \fp{t}$ and for all $z$, $\sigma(z) = z$.  $$\readweakwmap{t}{\sigma}{\gamma} \rightarrow^{*}_{\weaksymbol} \readweakwmap{u}{\sigma}{\gamma}$$
 
 \end{lemma}
 
@@ -1146,7 +1169,7 @@ For a given $N \in \Lambda$ that is strongly normalising, we know by Lemma \ref{
 
 We have studied the computational interpretation of the switch rule and discovered its correspondence with scope in the $\lambda$-calculus. We have studied the interaction between the switch and the medial rule, the two characteristic inference rules of deep inference. We built a Curry--Howard interpretation based on this interaction, whose resulting calculus not only has the ability to duplicate terms atomically but can also duplicate solely the spine of an abstraction such that beta reduction can be applied on the duplicates. We show that this calculus has natural properties with respect to the $\lambda$-calculus.
 
-This work fits into a broader effort to give a computational interpretation to intuitionistic deep-inference proof theory. Br\"unnler and McKinley~\cite{Brunnler-McKinley-2008} give a natural reduction mechanism without medial (or switch), and observe that preservation of strong normalization fails. Guenot and Stra\ss burger~\cite{Guenot-Strassburger-2014} investigate a different switch rule, corresponding to the implication-left rule of sequent calculus. He~\cite{He-2018} extends the atomic lambda-calculus to lambda-mu.
+This work, which started as an investigation into the Curry-Howard correspondence of the switch rule~\cite{sherratt2019atomic}, fits into a broader effort to give a computational interpretation to intuitionistic deep-inference proof theory. Br\"unnler and McKinley~\cite{Brunnler-McKinley-2008} give a natural reduction mechanism without medial (or switch), and observe that preservation of strong normalization fails. Guenot and Stra\ss burger~\cite{Guenot-Strassburger-2014} investigate a different switch rule, corresponding to the implication-left rule of sequent calculus. He~\cite{He-2018} extends the atomic $\lambda$-calculus to the lambda-mu-calculus.
 
 Our aim for the future is to develop the intuitionistic open deduction formalism towards optimal reduction~\cite{Levy-1980,Lamping-1990,Asperti-Guerrini-1998}, via the remaining medial and switch rules~\cite{Tiu-2006}.
 
