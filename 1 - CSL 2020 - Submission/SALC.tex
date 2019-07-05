@@ -565,7 +565,7 @@ $[\Gamma] \quad {:}{:}{=} \quad  [\vec{x} \leftarrow t] \quad \vert \quad \dist{
 
 First note that we denote abstractions such that $\abs{x}{t} \equiv \fake{x}{x}{t}$. We introduce a new notion of abstraction called \emph{phantom-abstraction}, which can be intuitively be thought of as a partially duplicated abstraction. An abstraction $\fake{x}{x}{t}$ and a phantom-abstraction $\fake{x}{\vec{y}}{t}$ are two instances of the same construct. We call the variables inside the brackets the \emph{cover} of the abstraction. If the cover is the same as the preceeding variable, then it is an abstraction, otherwise it is a phantom-abstraction and we call the preceeding variable a \emph{phantom-variable}.
 
-The distributor $\dist{u}{\fakedist{e_{1}}{\vec{x_{1}}} \dots \fakedist{e_{n}}{\vec{x_{n}}}}{\overline{[\Gamma]}}{d}{\vec{y}}$ captures the phantom-variables $e_{1}, \dots, e_{n}$ in $u$ and the covers associated with those phantom-variables are captured by the environment $\overline{[\Gamma]}$. We sometimes write the distributor as $\dist{u}{\vecdist{e}{x}}{\overline{[\Gamma]}}{d}{\vec{y}}$ when we are not concerned about the binding of phantom-variables. Terms are then pre-terms with sensible and correct bindings. To define terms, we first define \emph{free} and \emph{bound} variables and phantom variables.
+The distributor $\dist{u}{\fakedist{e_{1}}{\vec{x_{1}}} \dots \fakedist{e_{n}}{\vec{x_{n}}}}{\overline{[\Gamma]}}{d}{\vec{y}}$ captures the phantom-variables $e_{1}, \dots, e_{n}$ in $u$ and the covers associated with those phantom-variables are captured by the environment $\overline{[\Gamma]}$. We sometimes write the distributor as $\dist{u}{\vecdist{e}{x}}{\overline{[\Gamma]}}{d}{\vec{y}}$ when we are not concerned about the binding of phantom-variables. Terms are then pre-terms with sensible and correct bindings. To define terms, we first define \emph{free} and \emph{bound} variables and phantom variables; variables are bound by abstractions (not phantoms) and by sharings, while phantom-variables are bound by distributors. 
 
 \begin{definition}[Free and Bound Variables]
 \label{def:freeboundvar} The free variables $\fv{-}$ and bound variables $\bv{-}$ of a pre-term $t$ are defined as follows
@@ -604,7 +604,7 @@ The free phantom-variables $\fp{-}$ and bound phantom-variables $\bp{-}$ of the 
 \endgroup
 \end{definition}
 
-\noindent Variables are bound by abstractions (not phantoms) and sharings. Phantom-variables are bound by distributors. With these definitions, we can formally define the terms of $\FALC$.
+\noindent With these definitions, we can formally define the terms of $\FALC$.
 
 \begin{definition}[Terms]
 \label{def:falcterms}
