@@ -618,12 +618,12 @@ A \defn{term} $t \in \FALC$ is a pre-term with the following constraints
 	\begin{enumerate}
 		\item For all $1 \leq i \leq n$ and $1 \leq m \leq k_{n}$, $w^{i}_{m} \fv{u}$ and becomes bound by $\overline{[\Gamma]}$ .
 		\item $\set{\fakedist{e_{1}}{w^{1}_{1}, \dots, w^{1}_{k_{1}}}, \dots, \fakedist{e_{n}}{w^{n}_{1}, \dots, w^{n}_{k_{n}}}} \subset \fc{u}$, and $\set{e_{1}, \dots, e_{n}} \subset \fp{u}$, and each $e_{i}$ becomes bound.
-		\item The variable $c$ occurs somewhere in the environments $\overline{[\Gamma]}$.
+		\item The variable $c$ occurs somewhere in the environment $\overline{[\Gamma]}$.
 	\end{enumerate}
 	\item  In a distributor $\dist{u}{\fakedist{e_{1}}{w^{1}_{1}, \dots, w^{1}_{k_{1}}} \dots \fakedist{e_{n}}{w^{n}_{1}, \dots, w^{n}_{k_{n}}}}{\overline{[\Gamma]}}{c}{y_{1}, \dots, y_{m}}$
 	\begin{enumerate}
 		\item Both $5(a)$ and $5(b)$ hold.
-		\item For all $1 \leq i \leq m$, $y_{i}$ occurs in the environments $\overline{[\Gamma]}$.
+		\item For all $1 \leq i \leq m$, $y_{i}$ occurs in the environment $\overline{[\Gamma]}$.
 	\end{enumerate}
 \end{enumerate}
 
@@ -780,7 +780,7 @@ The first set of sharing reduction rules move closures towards the outside of a 
 \fake{d}{\vec{x}}{t[\Gamma]} &\rightsquigarrow_{L} (\fake{d}{\vec{x}}{t})[\Gamma]  \text{ if } \set{\vec{x}} \cap \fv{t} = \set{\vec{x}}  \label{red:liftabs} \tag{$l_{3}$} \\
 \share{u}{\vec{x}}{t[\Gamma]} &\rightsquigarrow_{L} \share{u}{\vec{x}}{t}[\Gamma] \label{red:liftshare} \tag{$l_{4}$}
 \end{align}
-For the case of lifting a closure outside a distributor, we use a notation $\bindvars{[\Gamma]}$ to identify the variables captured by a closure, i.e.$\bindvars{\share{}{\vec{x}}{t}} = \set{\vec{x}}$ and $\bindvars{\dist{}{\fakedist{e_{1}}{\vec{x_{1}}}, \dots, \fakedist{e_{n}}{\vec{x_{x}}}}{\overline{[\Gamma]}}{c}{c}} = \set{\vec{x_{1}}, \dots, \vec{x_{n}}}$. Then let $\set{\vec{z}} = \bindvars{[\Gamma]}$ in the following rewrite rule, that can only occur if $\set{\vec{x}} \cap \fv{[\Gamma]} = \set{}$.
+For the case of lifting a closure outside a distributor, we use a notation $\bindvars{[\Gamma]}$ to identify the variables captured by a closure, i.e.$\bindvars{\share{}{\vec{x}}{t}} = \set{\vec{x}}$ and $\bindvars{\dist{}{\fakedist{e_{1}}{\vec{x_{1}}}, \dots, \fakedist{e_{n}}{\vec{x_{x}}}}{\overline{[\Gamma]}}{c}{c}} = \set{\vec{x_{1}}, \dots, \vec{x_{n}}}$. Then let $\set{\vec{z}} = \bindvars{[\Gamma]}$ in the following rewrite rule where remove $\vec{z}$ from the covers, that can only occur if $\set{\vec{x}} \cap \fv{[\Gamma]} = \set{}$.
 \begin{equation} \label{red:distshare} \tag{$l_{5}$}
 \begin{multlined}
 \dist{u}{\fakedist{e_{1}}{\vec{w_{1}}} \dots \fakedist{e_{n}}{\vec{w_{n}}}}{\overline{[\Gamma]} [\Gamma]}{c}{\vec{x}} \\ \rightsquigarrow_{L} \dist{u {\psub{}{(\vec{w_{i}} / \vec{z})}{e_{i}}}_{i \in [n]}}{\fakedist{e_{1}}{\vec{w_{1}} / \vec{z}} \dots \fakedist{e_{n}}{\vec{w_{n}} / \vec{z}}}{\overline{[\Gamma]}}{c}{\vec{x}}[\Gamma]
