@@ -281,20 +281,20 @@
 \begin{document}
 
 \newcommand\rw{\rightsquigarrow}
-
-\begin{align*}
-	& \trm{[a_1,a_2-\lambda x.\lambda y.((\lambda z.z)y)x]}
-\\&\rw \trm{\{x_1<b_1>.b_1/a_1\}\{x_2<b_2>.b_2/a_2\}[x_1<b_1>,x_2<b_2>\mid x<x>[b_1,b_2-\lambda y.((\lambda z.z)y)x]]}
-\\&\rw \trm{\{x_1<c_1>.y_1<c_1>c_1/a_1\}\{x_2<c_2>.y_2<c_2>.c_2/a_2\}}
-\\&\quad\qquad\trm{[x_1<c_1>,x_2<c_2>\mid x<x>[y_1<c_1>,y_2<c_2> \mid y<y>[c_1,c_2-((\lambda z.z)y)x]]]}
-\\&\rw \trm{\{x_1<d_1,e_1>.y_1<d_1,e_1>d_1e_1/a_1\}\{x_2<d_2,e_2>.y_2<d_2,e_2>.d_2e_2/a_2\}}
-\\&\quad\qquad\trm{[x_1<d_1,e_1>,x_2<d_2,e_2>\mid x<x>[y_1<d_1,e_1>,y_2<d_2,e_2> \mid y<y>[d_1,d_2-(\lambda z.z)y][e_1,e_2-x]]]}
-\\&\rw \trm{\{x_1<d_1,e_1>.y_1<d_1>d_1e_1/a_1\}\{x_2<d_2,e_2>.y_2<d_2>.d_2e_2/a_2\}}
-\\&\quad\qquad\trm{[x_1<d_1,e_1>,x_2<d_2,e_2>\mid x<x>[y_1<d_1>,y_2<d_2> \mid y<y>[d_1,d_2-(\lambda z.z)y]]\,[e_1,e_2-x]]}
-\\&\rw \trm{\{x_1<e_1>.y_1<d_1>d_1e_1/a_1\}\{x_2<e_2>.y_2<d_2>.d_2e_2/a_2\}}
-\\&\quad\qquad\trm{[x_1<e_1>,x_2<e_2>\mid x<x>[e_1,e_2-x]]~[y_1<d_1>,y_2<d_2> \mid y<y>[d_1,d_2-(\lambda z.z)y]]}
-\\&\rw \trm{\{x_1<x_1>.y_1<d_1>d_1x_1/a_1\}\{x_2<x_2>.y_2<d_2>.d_2x_2/a_2\}~[y_1<d_1>,y_2<d_2> \mid y<y>[d_1,d_2-(\lambda z.z)y]]}
-\end{align*}
+%
+%\begin{align*}
+%	& \trm{[a_1,a_2-   {{\color{red} \lambda x .\lambda y.( }} {{ \color{myGreen} (\lambda z.z)y}} {{ \color{red}) x }} ]}
+%\\&\rw_{D} \trm{\{ {{ \color{red}x_1 }}<b_1>.b_1/a_1\}\{ {{ \color{red} x_2 }}<b_2>.b_2/a_2\}[x_1<b_1>,x_2<b_2>\mid x<x>[b_1,b_2- {{\color{red}\lambda y.(}}{{\color{myGreen}(\lambda z.z)y}}{{\color{red})x}}]]}
+%\\&\rw_{D} \trm{\{{{\color{red}x_1}}<c_1>.{{\color{red}y_1}}<c_1>c_1/a_1\}\{{{\color{red}x_2}}<c_2>.{{\color{red}y_2}}<c_2>.c_2/a_2\}}
+%\\&\quad\qquad\trm{[x_1<c_1>,x_2<c_2>\mid x<x>[y_1<c_1>,y_2<c_2> \mid y<y>[c_1,c_2-{{ \color{red}(}}{{\color{myGreen}(\lambda z.z)y}}{{\color{red})x}}]]]}
+%\\&\rw_{D} \trm{\{ {{\color{red}x_1}}<{{\color{myGreen} d_1}},e_1>. {{\color{red} y_1}}<{{\color{myGreen} d_1}},e_1>{{\color{myGreen} d_1}}e_1/a_1\}\{{{\color{red} x_2}}<{{\color{myGreen} d_2}},e_2>.{{\color{red} y_2}}<{{\color{myGreen} d_2}},e_2>.{{\color{myGreen} d_2}}e_2/a_2\}}
+%\\&\quad\qquad\trm{[x_1<{{\color{myGreen} d_1}},e_1>,x_2<{{\color{myGreen} d_2}},e_2>\mid x<x>[y_1<{{\color{myGreen} d_1}},e_1>,y_2<{{\color{myGreen} d_2}},e_2> \mid y<y>[{{\color{myGreen}d_1}},{{\color{myGreen}d_2}}-(\lambda z.z)y][e_1, e_2-{{\color{red} x}}]]]}
+%\\&\rw_{L} \trm{\{{{\color{red}x_1}}<{{\color{myGreen} d_1}},e_1>.{{\color{red}y_1}}<{{\color{myGreen} d_1}}>{{\color{myGreen} d_1}}e_1/a_1\}\{ {{\color{red}x_2}}<{{\color{myGreen} d_2}},e_2>. {{\color{red}y_2}}<{{\color{myGreen} d_2}}>.{{\color{myGreen} d_2}}e_2/a_2\}}
+%\\&\quad\qquad\trm{[x_1<{{\color{myGreen} d_1}},e_1>,x_2<{{\color{myGreen} d_2}},e_2>\mid x<x>[y_1<{{\color{myGreen} d_1}}>,y_2<{{\color{myGreen} d_1}}> \mid y<y>[{{\color{myGreen} d_1}},{{\color{myGreen} d_2}}-(\lambda z.z)y]]\,[e_1,e_2-{{\color{red} x}}]]}
+%\\&\rw_{L} \trm{\{ {{\color{red} x_1}}<e_1>. {{\color{red} y_1}}<{{\color{myGreen} d_1}}>{{\color{myGreen} d_1}}e_1/a_1\}\{{{\color{red}x_2}}<e_2>.{{\color{red}y_2}}<{{\color{myGreen} d_2}}>.{{\color{myGreen} d_2}}e_2/a_2\}}
+%\\&\quad\qquad\trm{[x_1<e_1>,x_2<e_2>\mid x<x>[e_1,e_2-{{\color{red}x}}]]~[y_1<{{\color{myGreen} d_1}}>,y_2<{{\color{myGreen} d_2}}> \mid y<y>[{{\color{myGreen} d_1}},{{\color{myGreen} d_2}}-(\lambda z.z)y]]}
+%\\&\rw_{D} \trm{\{ {{\color{red} \lambda x_1}} . {{\color{red} y_1}}<{{\color{myGreen} d_1}}>{{\color{myGreen} d_1}}{{\color{red} x_1}}/a_1\}\{  {{\color{red} \lambda x_2.}}. {{\color{red} y_2}}<{{\color{myGreen} d_2}}>.{{\color{myGreen} d_2}}{{\color{red} x_2}}/a_2\}~[y_1<{{\color{myGreen} d_1}}>,y_2<{{\color{myGreen} d_2}}> \mid y<y>[{{\color{myGreen} d_1}},{{\color{myGreen} d_2}}-(\lambda z.z)y]]}
+%\end{align*}
 
 \maketitle
 
@@ -759,10 +759,7 @@ The interpretation $\readbackwmap{-}{-}{-} : \FALC \times (V \rightarrow \Lambda
 \endgroup
 
 \end{definition}
-
-
 \noindent The following Proposition justifies working modulo permutation equivalence.
-
 \begin{proposition}
 \label{lem:preservedenotationsim}
 For $s, t \in \FALC$, if $s \sim t$ then $\trans{s} = \trans{t}$
@@ -780,11 +777,7 @@ $$\readback{\compile{N}'}{I} = N \hspace{1.5cm} \compile{\readback{t}{I}}' = t \
 
 Both the spinal atomic $\lambda$-calculus and the atomic $\lambda$-calculus of \cite{Gundersen-Heijltjes-Parigot-2013-LICS} follow atomic reduction steps, i.e.\ they apply on individual constructors. The biggest difference is that our calculus is capable of duplicating not only the skeleton but also the spine. The rewrite rules in our calculus make use of 3 operations, \emph{substitution}, \emph{book-keeping}, and \emph{exorcism}. Full definitions can be found in the Appendix, here we describe the intuition.
 
-The operation \emph{substitution} $\sub{t}{s}{x}$ propagates through the term $t$, and replaces the free occurences of the variable $x$ with the term $s$. Moreover, if $x$ occurs in the cover of a phantom-variable $\fakedist{e}{\vec{y} \cdot x}$, then substitution replaces the $x$ in the cover with $\fv{s}$, $\fakedist{e}{\vec{y} \cdot \fv{s}}$. 
-
-Although substitution performs some book-keeping on phantom-abstractions, we define an explicit notion of book-keeping $\psub{}{\vec{y}}{e}$ that updates the variables stored in a free cover i.e.\ for a term $t$, $\fakedist{e}{\vec{x}} \in \fc{t}$ then $\fakedist{e}{\vec{y}} \in \fc{\psub{t}{\vec{y}}{e}}$. 
-
-The last operation we introduce is called \emph{exorcism} $\exor{}{c}{\vec{x}}$. We perform exorcisms on phantom-abstractions to convert them to abstractions. Intuitively, this will be performed on phantom-abstractions with phantom-variables bound to a distributor when said distributor is eliminated. It converts phantom-abstractions to abstractions by introducing a sharing of the phantom-variable that captures the variables in the cover, i.e.\ $\fake{c}{\vec{x}}{t} \exor{}{c}{\vec{x}} = \fake{c}{c}{\share{t}{\vec{x}}{c}}$. 
+The operation \emph{substitution} $\sub{t}{s}{x}$ propagates through the term $t$, and replaces the free occurences of the variable $x$ with the term $s$. Moreover, if $x$ occurs in the cover of a phantom-variable $\fakedist{e}{\vec{y} \cdot x}$, then substitution replaces the $x$ in the cover with $\fv{s}$, $\fakedist{e}{\vec{y} \cdot \fv{s}}$. Although substitution performs some book-keeping on phantom-abstractions, we define an explicit notion of book-keeping $\psub{}{\vec{y}}{e}$ that updates the variables stored in a free cover i.e.\ for a term $t$, $\fakedist{e}{\vec{x}} \in \fc{t}$ then $\fakedist{e}{\vec{y}} \in \fc{\psub{t}{\vec{y}}{e}}$. The last operation we introduce is called \emph{exorcism} $\exor{}{c}{\vec{x}}$. We perform exorcisms on phantom-abstractions to convert them to abstractions. Intuitively, this will be performed on phantom-abstractions with phantom-variables bound to a distributor when said distributor is eliminated. It converts phantom-abstractions to abstractions by introducing a sharing of the phantom-variable that captures the variables in the cover, i.e.\ $\fake{c}{\vec{x}}{t} \exor{}{c}{\vec{x}} = \fake{c}{c}{\share{t}{\vec{x}}{c}}$. 
 
 \begin{proposition}
 \label{prop:suboutcomm}
@@ -897,22 +890,35 @@ $\rightsquigarrow_{D}$
 
 %\noindent As an example, observe $\share{u}{z_{1}, z_{2}}{\abs{x}{\app{(\abs{z}{z})}{\abs{y}{\app{(\app{y}{y})}{x}}}}}$ (note $\abs{x}{t} \equiv \fake{x}{x}{t}$). By (\ref{red:absdup}) we obtain $\dist{u'}{\fakedist{e_{1}}{z_{1}}, \fakedist{e_{2}}{z_{2}}}{\share{}{z_{1}, z_{2}}{\app{(\abs{z}{z})}{\abs{y}{\app{(\app{y}{y})}{x}}}}}{x}{x}$ where $u' = u\sub{}{\fake{e_{i}}{z_{i}}{z_{i}}}{z_{i}}_{i \in [2]}$. Then by reductions (\ref{red:appdup}, \ref{red:distshare}), we obtain the distributor $\dist{u''}{\fakedist{e_{1}}{z_{1}}, \fakedist{e_{2}}{z_{2}}}{\share{}{z_{1}, z_{2}}{\abs{y}{\app{(\app{y}{y})}{x}}}}{x}{x}$ where $u'' = u\sub{}{\fake{e_{i}}{z_{i}}{\app{a_{i}}{z_{i}}}}{z_{i}}_{i \in [2]}$. Then by (\ref{red:absdup}, \ref{red:appdup}, \ref{red:distshare}, \ref{red:distshare}) we obtain the distributor $\dist{u'''}{\fakedist{e_{1}}{z_{1}}, \fakedist{e_{2}}{z_{2}}}{\share{}{z_{1}, z_{2}}{x}}{x}{x}$ which can be eliminated by (\ref{red:distelim}). A full example can be found in the Appendix. 
 
-\begin{example}
-Let $t = \app{(\abs{z}{z})}{y}$ in $\share{u}{z_{1}, z_{2}}{\abs{x}{\abs{y}{\app{t}{x}}}}$ (note $\abs{x}{t} \equiv \fake{x}{x}{t}$). Then by two (\ref{red:absdup}) steps we obtain 
-\\[0.1cm]
-\indent $u \sub{}{\fake{x_{i}}{z_{i}}{\fake{y_{i}}{z_{i}}{z_{i}}}}{z_{i}}_{i \in [2]}\dist{}{\fakedist{x_{i}}{z_{i}}_{i \in [2]}}{\dist{}{\fakedist{y_{i}}{z_{i}}_{i \in [2]}}{\share{}{z_{1}, z_{2}}{\app{t}{x}}}{y}{y}}{x}{x}$
-\\[0.1cm] 
+\begin{example} In the following, we apply the rules (\ref{red:absdup}, \ref{red:absdup}, \ref{red:appdup}, \ref{red:distshare}, \ref{red:distshare}, \ref{red:distelim}). We make the spine red to show that it is duplicated. The subterm not part of the spine is in green. 
+\begin{align*}
+	& \trm{[a_1,a_2-   {{\color{red} \lambda x .\lambda y.( }} {{ \color{myGreen} (\lambda z.z)y}} {{ \color{red}) x }} ]}
+\\&\rw_{D} \trm{\{ {{ \color{red}x_1 }}<b_1>.b_1/a_1\}\{ {{ \color{red} x_2 }}<b_2>.b_2/a_2\}[x_1<b_1>,x_2<b_2>\mid x<x>[b_1,b_2- {{\color{red}\lambda y.(}}{{\color{myGreen}(\lambda z.z)y}}{{\color{red})x}}]]}
+\\&\rw_{D} \trm{\{{{\color{red}x_1}}<c_1>.{{\color{red}y_1}}<c_1>c_1/a_1\}\{{{\color{red}x_2}}<c_2>.{{\color{red}y_2}}<c_2>.c_2/a_2\}}
+\\&\quad\qquad\trm{[x_1<c_1>,x_2<c_2>\mid x<x>[y_1<c_1>,y_2<c_2> \mid y<y>[c_1,c_2-{{ \color{red}(}}{{\color{myGreen}(\lambda z.z)y}}{{\color{red})x}}]]]}
+\\&\rw_{D} \trm{\{ {{\color{red}x_1}}<{{\color{myGreen} d_1}},e_1>. {{\color{red} y_1}}<{{\color{myGreen} d_1}},e_1>{{\color{myGreen} d_1}}e_1/a_1\}\{{{\color{red} x_2}}<{{\color{myGreen} d_2}},e_2>.{{\color{red} y_2}}<{{\color{myGreen} d_2}},e_2>.{{\color{myGreen} d_2}}e_2/a_2\}}
+\\&\quad\qquad\trm{[x_1<{{\color{myGreen} d_1}},e_1>,x_2<{{\color{myGreen} d_2}},e_2>\mid x<x>[y_1<{{\color{myGreen} d_1}},e_1>,y_2<{{\color{myGreen} d_2}},e_2> \mid y<y>[{{\color{myGreen}d_1}},{{\color{myGreen}d_2}}-(\lambda z.z)y][e_1, e_2-{{\color{red} x}}]]]}
+\\&\rw_{L} \trm{\{{{\color{red}x_1}}<{{\color{myGreen} d_1}},e_1>.{{\color{red}y_1}}<{{\color{myGreen} d_1}}>{{\color{myGreen} d_1}}e_1/a_1\}\{ {{\color{red}x_2}}<{{\color{myGreen} d_2}},e_2>. {{\color{red}y_2}}<{{\color{myGreen} d_2}}>.{{\color{myGreen} d_2}}e_2/a_2\}}
+\\&\quad\qquad\trm{[x_1<{{\color{myGreen} d_1}},e_1>,x_2<{{\color{myGreen} d_2}},e_2>\mid x<x>[y_1<{{\color{myGreen} d_1}}>,y_2<{{\color{myGreen} d_1}}> \mid y<y>[{{\color{myGreen} d_1}},{{\color{myGreen} d_2}}-(\lambda z.z)y]]\,[e_1,e_2-{{\color{red} x}}]]}
+\\&\rw_{L} \trm{\{ {{\color{red} x_1}}<e_1>. {{\color{red} y_1}}<{{\color{myGreen} d_1}}>{{\color{myGreen} d_1}}e_1/a_1\}\{{{\color{red}x_2}}<e_2>.{{\color{red}y_2}}<{{\color{myGreen} d_2}}>.{{\color{myGreen} d_2}}e_2/a_2\}}
+\\&\quad\qquad\trm{[x_1<e_1>,x_2<e_2>\mid x<x>[e_1,e_2-{{\color{red}x}}]]~[y_1<{{\color{myGreen} d_1}}>,y_2<{{\color{myGreen} d_2}}> \mid y<y>[{{\color{myGreen} d_1}},{{\color{myGreen} d_2}}-(\lambda z.z)y]]}
+\\&\rw_{D} \trm{\{ {{\color{red} \lambda x_1}} . {{\color{red} y_1}}<{{\color{myGreen} d_1}}>{{\color{myGreen} d_1}}{{\color{red} x_1}}/a_1\}\{  {{\color{red} \lambda x_2}}. {{\color{red} y_2}}<{{\color{myGreen} d_2}}>.{{\color{myGreen} d_2}}{{\color{red} x_2}}/a_2\}~[y_1<{{\color{myGreen} d_1}}>,y_2<{{\color{myGreen} d_2}}> \mid y<y>[{{\color{myGreen} d_1}},{{\color{myGreen} d_2}}-(\lambda z.z)y]]}
+\end{align*}
+%Let $t = \app{(\abs{z}{z})}{y}$ in $\share{u}{z_{1}, z_{2}}{\abs{x}{\abs{y}{\app{t}{x}}}}$ (note $\abs{x}{t} \equiv \fake{x}{x}{t}$). Then by two (\ref{red:absdup}) steps we obtain 
+%\\[0.1cm]
+%\indent $u \sub{}{\fake{x_{i}}{z_{i}}{\fake{y_{i}}{z_{i}}{z_{i}}}}{z_{i}}_{i \in [2]}\dist{}{\fakedist{x_{i}}{z_{i}}_{i \in [2]}}{\dist{}{\fakedist{y_{i}}{z_{i}}_{i \in [2]}}{\share{}{z_{1}, z_{2}}{\app{t}{x}}}{y}{y}}{x}{x}$
+%\\[0.1cm] 
+%%%%%%%
+%then we can use the rule (\ref{red:appdup}) to duplicate the application, and use (\ref{red:distshare}) to obtain
+%\\[0.1cm] 
+%$u \sub{}{\fake{x_{i}}{a_{i}, b_{i}}{\fake{y_{i}}{a_{i}}{\app{a_{i}}{b_{i}}}}}{z_{i}}_{i \in [2]} \dist{}{\fakedist{x_{i}}{a_{i}, b_{i}}_{i \in [2]}}{\share{}{b_{1}, b_{2}}{x} \dist{}{\fakedist{y_{i}}{a_{i}}_{i \in [2]}}{\share{}{a_{1}, a_{2}}{t}}{y}{y}}{x}{x}$
+%\\[0.1cm]
 %%%%%%
-then we can use the rule (\ref{red:appdup}) to duplicate the application, and use (\ref{red:distshare}) to obtain
-\\[0.1cm] 
-$u \sub{}{\fake{x_{i}}{a_{i}, b_{i}}{\fake{y_{i}}{a_{i}}{\app{a_{i}}{b_{i}}}}}{z_{i}}_{i \in [2]} \dist{}{\fakedist{x_{i}}{a_{i}, b_{i}}_{i \in [2]}}{\share{}{b_{1}, b_{2}}{x} \dist{}{\fakedist{y_{i}}{a_{i}}_{i \in [2]}}{\share{}{a_{1}, a_{2}}{t}}{y}{y}}{x}{x}$
-\\[0.1cm]
-%%%%%
-Then (\ref{red:distshare}) to lift the nested distributor and eliminate the distributor using (\ref{red:distelim})
-\\[0.1cm]
-\indent $u \sub{}{\abs{x_{i}}{\fake{y_{i}}{a_{i}}{\app{a_{i}}{x_{i}}}}}{z_{i}}_{i \in [2]} \dist{}{\fakedist{y_{i}}{a_{i}}_{i \in [2]}}{\share{}{a_{1}, a_{2}}{t}}{y}{y}$
+%Then (\ref{red:distshare}) to lift the nested distributor and eliminate the distributor using (\ref{red:distelim})
+%\\[0.1cm]
+%\indent $u \sub{}{\abs{x_{i}}{\fake{y_{i}}{a_{i}}{\app{a_{i}}{x_{i}}}}}{z_{i}}_{i \in [2]} \dist{}{\fakedist{y_{i}}{a_{i}}_{i \in [2]}}{\share{}{a_{1}, a_{2}}{t}}{y}{y}$
 \end{example}
-A step-by-step example can be found in the Appendix. Each rewrite rule preserves the conclusion of the derivation, and thus the following proposition is easy to observe.
+Each rewrite rule preserves the conclusion of the derivation, and thus the following proposition is easy to observe.
 
 \begin{proposition}
 If $s \rightsquigarrow_{(L, C, D, \beta)} t$ and $s : C$, then $t : C$
@@ -1070,7 +1076,7 @@ The sharing height $\height{i}{t}$ of a term $t$ is given by
 If $t \rightsquigarrow_{L} u$ then $\height{i}{t} > \height{i}{u}$
 \end{lemma}
 
-The other measure we consider is the \emph{weight} of a term. Intuitively this quantifies the remaining duplications, which are performed with $\rightsquigarrow_{D}$ reductions. Calculating the weight of a term requires an auxiliary function from variables to integers. This function is defined by assigning integer weights to the variables of a term. This auxiliary function is defined on terms $\weightvar{i}{-}$, where $i$ is an integer. To measure variables independently of binders is vital. It allows to measure distributors, which duplicate $\lambda$'s but not the bound variable. Also, only bound variables for abstractions are measured since variables bound by sharings are substituted in the interpretation.
+The other measure we consider is the \emph{weight} of a term. Intuitively this quantifies the remaining duplications, which are performed with $\rightsquigarrow_{D}$ reductions. Calculating the weight of a term requires an auxiliary function that assigns integer weights to the variables of a term. This auxiliary function is defined on terms $\weightvar{i}{-}$, where $i$ is an integer. To measure variables independently of binders is vital. It allows to measure distributors, which duplicate $\lambda$'s but not the bound variable. Also, only bound variables for abstractions are measured since variables bound by sharings are substituted in the interpretation.
 
 \begin{definition}[Variable Weights]
 The function $\weightvar{i}{t}$ returns a function that assigns integer weights to the free variables of $t$. It is defined by the following
@@ -1115,11 +1121,11 @@ The sharing weight $\weight{i}{t}$ of a term $t$ is a multiset of integers compu
 If $t \rightsquigarrow_{D} u$ then $\weight{i}{t} > \weight{i}{u}$. If $t \rightsquigarrow_{(L, C)} u$ then $\weight{i}{t} = \weight{i}{u}$
 \end{lemma}
 
-The last measure we consider is the number of closures in the term, where is can be easily observed that the rewrite rules \ref{red:mergeshare} and \ref{red:compshare} strictly decrease this measure, and that the $\rightsquigarrow_{L}$ rules do not alter the number of closures. We then use this along with height and weight to define a \emph{sharing measure} on terms.
+The last measure we consider is the number of closures in the term, $C$, where is can be easily observed that the rewrite rules \ref{red:mergeshare} and \ref{red:compshare} strictly decrease this measure, and that the $\rightsquigarrow_{L}$ rules do not alter the number of closures. We then use this along with height and weight to define a \emph{sharing measure} on terms.
 
 \begin{definition}
 \label{def:sharingmeasure}
-The \defn{sharing measure} of a $\FALC$-term $t$ is a triple ($\weight{}{t}$, $C$, $\height{}{t}$) where $C$ is the number of closures in $t$. We can compare two different sharing measures by considering the lexicographical preferences according to weight $>$ number of closures $>$ height.
+The \defn{sharing measure} of a $\FALC$-term $t$ is a triple ($\weight{}{t}$, $C$, $\height{}{t}$). We compare sharing measures by using the lexicographical preferences according to $\mathcal{W}$ $>$ $C$ $>$ $\mathcal{H}$.
 \end{definition}
 
 \begin{theorem}
@@ -1167,7 +1173,9 @@ For a given $N \in \Lambda$ that is strongly normalising, we know by Lemma \ref{
 
 %We have studied the computational interpretation of the switch rule and discovered its correspondence with scope in the $\lambda$-calculus. We have studied the interaction between the switch and the medial rule, the two characteristic inference rules of deep inference. We interpret a calculus based on this interaction, which not only has the ability to duplicate terms atomically but can also duplicate solely the spine of an abstraction such that beta reduction can be applied on the duplicates. We show that this resulting calculus has natural properties with respect to the $\lambda$-calculus. 
 
-We have studied the computational interpretation of the switch rule and discovered its correspondence with scope in the $\lambda$-calculus. We have studied the interaction between the switch and the medial rule, the two characteristic inference rules of deep inference. We built a Curry--Howard interpretation based on this interaction, whose resulting calculus not only has the ability to duplicate terms atomically but can also duplicate solely the spine of an abstraction such that beta reduction can be applied on the duplicates. We show that this calculus has natural properties with respect to the $\lambda$-calculus.
+%We have studied the computational interpretation of the switch rule and discovered its correspondence with scope in the $\lambda$-calculus. 
+
+We have studied the interaction between the switch and the medial rule, the two characteristic inference rules of deep inference. We built a Curry--Howard interpretation based on this interaction, whose resulting calculus not only has the ability to duplicate terms atomically but can also duplicate solely the spine of an abstraction such that beta reduction can be applied on the duplicates. We show that this calculus has natural properties with respect to the $\lambda$-calculus.
 
 This work, which started as an investigation into the Curry-Howard correspondence of the switch rule~\cite{sherratt2019atomic}, fits into a broader effort to give a computational interpretation to intuitionistic deep-inference proof theory. Br\"unnler and McKinley~\cite{Brunnler-McKinley-2008} give a natural reduction mechanism without medial (or switch), and observe that preservation of strong normalization fails. Guenot and Stra\ss burger~\cite{Guenot-Strassburger-2014} investigate a different switch rule, corresponding to the implication-left rule of sequent calculus. He~\cite{He-2018} extends the atomic $\lambda$-calculus to the lambda-mu-calculus.
 
