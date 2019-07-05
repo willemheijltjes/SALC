@@ -191,6 +191,34 @@
 \newcommand\dirSTOP{{\scriptscriptstyle\bot}}
 \newcommand\var{{\scriptstyle\square}}
 
+\makeatletter
+
+\newcommand\trm[1]{%
+  \vphantom(%
+  \let\term@loop=\term@next%
+  \let\term@end=\relax%
+  \term@loop#1:%
+}
+\newcommand\term@next[1]{%
+  \ifx#1:\let\term@loop\term@end\else%
+  \ifx#1_\let\term@loop\term@sub\else%
+  \ifx#1^\let\term@loop\term@sup\else%
+  \ifx#1!\let\term@loop\term@vec\else%
+  \ifx#1-\kern1pt{\leftarrow}\else%
+  \ifx#10\nil\else%
+  \ifx#1+\tight\plus\else%
+  \ifx#1<\langle\else%
+  \ifx#1>\rangle\else%
+  #1%
+  \fi\fi\fi\fi\fi\fi\fi\fi\fi%
+  \term@loop%
+}
+\newcommand\term@sub[1]{_{#1}\let\term@loop\term@next\term@loop}
+\newcommand\term@sup[1]{^{#1}\let\term@loop\term@next\term@loop}
+\newcommand\term@vec[1]{\vec{\kern.5pt#1\kern.5pt}\let\term@loop\term@next\term@loop}
+
+\makeatother
+
 % ================================================== FRONTMATTER
 
 \bibliographystyle{plainurl}
@@ -251,6 +279,22 @@
 % ================================================== PAPER
 
 \begin{document}
+
+\newcommand\rw{\rightsquigarrow}
+
+\begin{align*}
+	& \trm{[a_1,a_2-\lambda x.\lambda y.((\lambda z.z)y)x]}
+\\&\rw \trm{\{x_1<b_1>.b_1/a_1\}\{x_2<b_2>.b_2/a_2\}[x_1<b_1>,x_2<b_2>\mid x<x>[b_1,b_2-\lambda y.((\lambda z.z)y)x]]}
+\\&\rw \trm{\{x_1<c_1>.y_1<c_1>c_1/a_1\}\{x_2<c_2>.y_2<c_2>.c_2/a_2\}}
+\\&\quad\qquad\trm{[x_1<c_1>,x_2<c_2>\mid x<x>[y_1<c_1>,y_2<c_2> \mid y<y>[c_1,c_2-((\lambda z.z)y)x]]]}
+\\&\rw \trm{\{x_1<d_1,e_1>.y_1<d_1,e_1>d_1e_1/a_1\}\{x_2<d_2,e_2>.y_2<d_2,e_2>.d_2e_2/a_2\}}
+\\&\quad\qquad\trm{[x_1<d_1,e_1>,x_2<d_2,e_2>\mid x<x>[y_1<d_1,e_1>,y_2<d_2,e_2> \mid y<y>[d_1,d_2-(\lambda z.z)y][e_1,e_2-x]]]}
+\\&\rw \trm{\{x_1<d_1,e_1>.y_1<d_1>d_1e_1/a_1\}\{x_2<d_2,e_2>.y_2<d_2>.d_2e_2/a_2\}}
+\\&\quad\qquad\trm{[x_1<d_1,e_1>,x_2<d_2,e_2>\mid x<x>[y_1<d_1>,y_2<d_2> \mid y<y>[d_1,d_2-(\lambda z.z)y]]\,[e_1,e_2-x]]}
+\\&\rw \trm{\{x_1<e_1>.y_1<d_1>d_1e_1/a_1\}\{x_2<e_2>.y_2<d_2>.d_2e_2/a_2\}}
+\\&\quad\qquad\trm{[x_1<e_1>,x_2<e_2>\mid x<x>[e_1,e_2-x]]~[y_1<d_1>,y_2<d_2> \mid y<y>[d_1,d_2-(\lambda z.z)y]]}
+\\&\rw \trm{\{x_1<x_1>.y_1<d_1>d_1x_1/a_1\}\{x_2<x_2>.y_2<d_2>.d_2x_2/a_2\}~[y_1<d_1>,y_2<d_2> \mid y<y>[d_1,d_2-(\lambda z.z)y]]}
+\end{align*}
 
 \maketitle
 
@@ -419,7 +463,7 @@ The basis of the present work is the observation that the \emph{switch} rule in 
    \BA\imp\drv[red]{\BA\con A;-[@];B}
 }}}}
 \]
-An abstraction $\lambda x$ corresponds in the proof system to an implication $A\imp$, explicitly scoping over its right-hand side. On the left, with the \emph{abstraction} rule $(\lambda)$, scopes must be balanced, and the proof system may identify the \emph{skeleton}; here, that of $\lambda x$ as the largest blue box. Decomposing the abstraction $(\lambda)$ into \emph{axiom} $(a)$ and \emph{switch} $(s)$, on the right the proof system may express unbalanced scope. It does so by separating the scope of an abstraction into multiple parts; here, that of $\lambda x$ is captured as the two top-level red boxes. Each box is ready to be duplicated; in this way, one may duplicate only the spine of an abstraction.
+An abstraction $\lambda x$ corresponds in the proof system to an implication $A\imp$, explicitly scoping over its right-hand side. On the left, with the \emph{abstraction} rule $(\lambda)$, scopes must be balanced, and the proof system may identify the \emph{skeleton}; here, that of $\lambda x$ as the largest blue box. Decomposing the abstraction $(\lambda)$ into \emph{axiom} $(a)$ and \emph{switch} $(s)$, on the right the proof system may express unbalanced scope. It does so by separating the scope of an abstraction into multiple parts; here, that of $\lambda x$ is captured as the two top-level red boxes. Each box is ready to be duplicated; in this way, one may duplicate the spine of an abstraction only.
 
 Our investigation is then focused on the interaction of switch and distribution (later observed in the rewrite rule \ref{red:distshare}). The use of the distribution rule allows us to perform duplication atomically, and thus provides a natural strategy for spinal full laziness. In our example on the right, this means duplicating the two top-level red boxes can be done independently from duplicating the yellow box.
 
