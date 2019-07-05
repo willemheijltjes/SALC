@@ -851,15 +851,30 @@ $\rightsquigarrow_{D}$
 {\small \drv{\drv{ ; -[a] ; A \rightarrow A} \wedge \drv{ ; -[a] ; A \rightarrow A}}}
 \end{center}
 
-\noindent As an example, observe $\share{u}{z_{1}, z_{2}}{\abs{x}{\app{(\abs{z}{z})}{\abs{y}{\app{(\app{y}{y})}{x}}}}}$ (note $\abs{x}{t} \equiv \fake{x}{x}{t}$). By (\ref{red:absdup}) we obtain $\dist{u'}{\fakedist{e_{1}}{z_{1}}, \fakedist{e_{2}}{z_{2}}}{\share{}{z_{1}, z_{2}}{\app{(\abs{z}{z})}{\abs{y}{\app{(\app{y}{y})}{x}}}}}{x}{x}$ where $u' = u\sub{}{\fake{e_{i}}{z_{i}}{z_{i}}}{z_{i}}_{i \in [2]}$. Then by reductions (\ref{red:appdup}, \ref{red:distshare}), we obtain the distributor $\dist{u''}{\fakedist{e_{1}}{z_{1}}, \fakedist{e_{2}}{z_{2}}}{\share{}{z_{1}, z_{2}}{\abs{y}{\app{(\app{y}{y})}{x}}}}{x}{x}$ where $u'' = u\sub{}{\fake{e_{i}}{z_{i}}{\app{a_{i}}{z_{i}}}}{z_{i}}_{i \in [2]}$. Then by (\ref{red:absdup}, \ref{red:appdup}, \ref{red:distshare}, \ref{red:distshare}) we obtain the distributor $\dist{u'''}{\fakedist{e_{1}}{z_{1}}, \fakedist{e_{2}}{z_{2}}}{\share{}{z_{1}, z_{2}}{x}}{x}{x}$ which can be eliminated by (\ref{red:distelim}). A full example can be found in the Appendix. 
+%\noindent As an example, observe $\share{u}{z_{1}, z_{2}}{\abs{x}{\app{(\abs{z}{z})}{\abs{y}{\app{(\app{y}{y})}{x}}}}}$ (note $\abs{x}{t} \equiv \fake{x}{x}{t}$). By (\ref{red:absdup}) we obtain $\dist{u'}{\fakedist{e_{1}}{z_{1}}, \fakedist{e_{2}}{z_{2}}}{\share{}{z_{1}, z_{2}}{\app{(\abs{z}{z})}{\abs{y}{\app{(\app{y}{y})}{x}}}}}{x}{x}$ where $u' = u\sub{}{\fake{e_{i}}{z_{i}}{z_{i}}}{z_{i}}_{i \in [2]}$. Then by reductions (\ref{red:appdup}, \ref{red:distshare}), we obtain the distributor $\dist{u''}{\fakedist{e_{1}}{z_{1}}, \fakedist{e_{2}}{z_{2}}}{\share{}{z_{1}, z_{2}}{\abs{y}{\app{(\app{y}{y})}{x}}}}{x}{x}$ where $u'' = u\sub{}{\fake{e_{i}}{z_{i}}{\app{a_{i}}{z_{i}}}}{z_{i}}_{i \in [2]}$. Then by (\ref{red:absdup}, \ref{red:appdup}, \ref{red:distshare}, \ref{red:distshare}) we obtain the distributor $\dist{u'''}{\fakedist{e_{1}}{z_{1}}, \fakedist{e_{2}}{z_{2}}}{\share{}{z_{1}, z_{2}}{x}}{x}{x}$ which can be eliminated by (\ref{red:distelim}). A full example can be found in the Appendix. 
 
-Each rewrite rule preserves the conclusion of the derivation, and thus the following proposition is easy to observe.
+\begin{example}
+Let $t = \app{\abs{z}{z}}{y}$ in $\share{u}{z_{1}, z_{2}}{\abs{x}{\abs{y}{\app{t}{x}}}}$ (note $\abs{x}{t} \equiv \fake{x}{x}{t}$). Then by two (\ref{red:absdup}) steps we obtain 
+\\[0.1cm]
+\indent $u \sub{}{\fake{x_{i}}{z_{i}}{\fake{y_{i}}{z_{i}}{z_{i}}}}{z_{i}}_{i \in [2]}\dist{}{\fakedist{x_{i}}{z_{i}}_{i \in [2]}}{\dist{}{\fakedist{y_{i}}{z_{i}}_{i \in [2]}}{\share{}{z_{1}, z_{2}}{\app{t}{x}}}{y}{y}}{x}{x}$
+\\[0.1cm] 
+%%%%%%
+then we can use the rule (\ref{red:appdup}) to duplicate the application, and use (\ref{red:distshare}) to obtain
+\\[0.1cm] 
+$u \sub{}{\fake{x_{i}}{a_{i}, b_{i}}{\fake{y_{i}}{a_{i}}{\app{a_{i}}{b_{i}}}}}{z_{i}}_{i \in [2]} \dist{}{\fakedist{x_{i}}{a_{i}, b_{i}}_{i \in [2]}}{\share{}{b_{1}, b_{2}}{x} \dist{}{\fakedist{y_{i}}{a_{i}}_{i \in [2]}}{\share{}{a_{1}, a_{2}}{t}}{y}{y}}{x}{x}$
+\\[0.1cm]
+%%%%%
+Then (\ref{red:distshare}) to lift the nested distributor and eliminate the distributor using (\ref{red:distelim})
+\\[0.1cm]
+\indent $u \sub{}{\abs{x_{i}}{\fake{y_{i}}{a_{i}}{\app{a_{i}}{x_{i}}}}}{z_{i}}_{i \in [2]} \dist{}{\fakedist{y_{i}}{a_{i}}_{i \in [2]}}{\share{}{a_{1}, a_{2}}{t}}{y}{y}$
+\end{example}
+A step-by-step example can be found in the Appendix. Each rewrite rule preserves the conclusion of the derivation, and thus the following proposition is easy to observe.
 
 \begin{proposition}
 If $s \rightsquigarrow_{(L, C, D, \beta)} t$ and $s : C$, then $t : C$
 \end{proposition}
 
-\noindent The readback translation collapses the shared terms. The lifting, duplication, and compound rules are used solely for the duplication of terms. Therefore it is expected that the following Lemma be true (proven in Appendix by induction). It is also important for proving confluence of $\FALC$ (Theorem \ref{theo:strongnormal}).
+\noindent The following Lemma shows duplication preserves denotation and is also important for proving confluence of $\FALC$ (Theorem \ref{theo:strongnormal}).
 
 \begin{lemma}
 \label{lem:preservesdenotation}
@@ -885,12 +900,15 @@ The terms are variable, abstraction, application, weakening, and a bullet. In th
 \begin{definition}
 \label{def:transfalcweak}
 	The interpretation $\readweakwmap{-}{-}{-} : \FALC \times (V \rightarrow \WEAK) \times (V \rightarrow V) \rightarrow \WEAK$ with maps $\sigma : V \rightarrow \WEAK$ and $\gamma : V \rightarrow V$ is defined as an extension of the translation in (Definition \ref{def:readback}) with the following additional special cases.
+	\begingroup
+	\allowdisplaybreaks
 	\begin{align*}
 		\readweakwmap{\share{u}{}{t}}{\sigma}{\gamma} &= \share{\readweakwmap{u}{\sigma}{\gamma}}{}{\readweakwmap{t}{\sigma}{\gamma}} \\[0.2cm]
 		\readweakwmap{\dist{u}{}{\overline{[\Gamma]}}{c}{c}}{\sigma}{\gamma} &= \readweakwmap{u \overline{[\Gamma]}}{\sigma[c \mapsto \bullet]}{\gamma} \\[0.2cm]
 		\readweakwmap{\dist{u}{}{\overline{[\Gamma]}}{c}{x_{1}, \dots, x_{n}}}{\sigma}{\gamma} &= \readweakwmap{u \overline{[\Gamma]}}{\sigma'}{\gamma} \\
 		& \text{where } \sigma'(z) = \begin{cases} \sigma(z) \sub{}{\bullet}{\gamma(c)} & z \in \set{x_{1}, \dots, x_{n}} \\ \sigma(z) & \text{otherwise} \end{cases} \\
 	\end{align*}
+	\endgroup
 \end{definition}
 
 \noindent We also have translations of the weakening calculus to and from the $\lambda$-calculus. Both of these translations were provided in \cite{Gundersen-Heijltjes-Parigot-2013-LICS}. The interpretation $\readbackweak{-}$ from weakening terms to $\lambda$-terms discards all weakenings. The interpretation $\compweak{-} : \Lambda \rightarrow \WEAK$ is defined below.
@@ -898,6 +916,8 @@ The terms are variable, abstraction, application, weakening, and a bullet. In th
 \begin{definition}
 \label{def:transweak}
 The interpretation $M \in \Lambda$, $\compweak{-} : \Lambda \rightarrow \WEAK$ is defined by
+	\begingroup
+	\allowdisplaybreaks
 \begin{align*}
 	\compweak{x} &= x \\
 	\compweak{\app{M}{N}} &= \app{\compweak{M}}{\compweak{N}} \\
@@ -907,6 +927,7 @@ The interpretation $M \in \Lambda$, $\compweak{-} : \Lambda \rightarrow \WEAK$ i
 		\abs{x}{\compweak{N} \share{}{}{x}} & \text{otherwise}
 	\end{cases}
 \end{align*}
+	\endgroup
 \end{definition}
 \noindent The following equalities can be observed, where $\sigma^{\Lambda}(z) = \readbackweak{\sigma^{\weaksymbol}(z)} $.
 \begin{proposition}
