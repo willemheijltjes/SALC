@@ -890,7 +890,7 @@ $\rightsquigarrow_{D}$
 
 %\noindent As an example, observe $\share{u}{z_{1}, z_{2}}{\abs{x}{\app{(\abs{z}{z})}{\abs{y}{\app{(\app{y}{y})}{x}}}}}$ (note $\abs{x}{t} \equiv \fake{x}{x}{t}$). By (\ref{red:absdup}) we obtain $\dist{u'}{\fakedist{e_{1}}{z_{1}}, \fakedist{e_{2}}{z_{2}}}{\share{}{z_{1}, z_{2}}{\app{(\abs{z}{z})}{\abs{y}{\app{(\app{y}{y})}{x}}}}}{x}{x}$ where $u' = u\sub{}{\fake{e_{i}}{z_{i}}{z_{i}}}{z_{i}}_{i \in [2]}$. Then by reductions (\ref{red:appdup}, \ref{red:distshare}), we obtain the distributor $\dist{u''}{\fakedist{e_{1}}{z_{1}}, \fakedist{e_{2}}{z_{2}}}{\share{}{z_{1}, z_{2}}{\abs{y}{\app{(\app{y}{y})}{x}}}}{x}{x}$ where $u'' = u\sub{}{\fake{e_{i}}{z_{i}}{\app{a_{i}}{z_{i}}}}{z_{i}}_{i \in [2]}$. Then by (\ref{red:absdup}, \ref{red:appdup}, \ref{red:distshare}, \ref{red:distshare}) we obtain the distributor $\dist{u'''}{\fakedist{e_{1}}{z_{1}}, \fakedist{e_{2}}{z_{2}}}{\share{}{z_{1}, z_{2}}{x}}{x}{x}$ which can be eliminated by (\ref{red:distelim}). A full example can be found in the Appendix. 
 
-\begin{example} In the following, we apply the rules (\ref{red:absdup}, \ref{red:absdup}, \ref{red:appdup}, \ref{red:distshare}, \ref{red:distshare}, \ref{red:distelim}). We make the spine red to show that it is duplicated. The subterm not part of the spine is in green. 
+\begin{example} In the following, we apply the rules (\ref{red:absdup}, \ref{red:absdup}, \ref{red:appdup}, \ref{red:distshare}, \ref{red:distshare}, \ref{red:distelim}). We make the spine red to show that it is duplicated. The subterm not part of the spine is in green. The covers of the created phantom-variables are updated everytime we perform (\ref{red:distshare}). After the second time we perform this lifting, we remove ${\color{myGreen} d_{i}}$ from the cover of ${\color{red}x_{i}}$, indicating the term ${\color{myGreen} d_{i}}$ represents does not contain ${\color{red}x}$ as a bound variable and therefore should not contain ${\color{red}x_{i}}$. We are able to eliminate the $\fakedist{x}{x}$ distributor without duplicating the subterm ${\color{myGreen} \app{(\abs{z}{z})}{y} }$.
 \begin{align*}
 	& \trm{[a_1,a_2-   {{\color{red} \lambda x .\lambda y.( }} {{ \color{myGreen} (\lambda z.z)y}} {{ \color{red}) x }} ]}
 \\&\rw_{D} \trm{\{ {{ \color{red}x_1 }}<b_1>.b_1/a_1\}\{ {{ \color{red} x_2 }}<b_2>.b_2/a_2\}[x_1<b_1>,x_2<b_2>\mid x<x>[b_1,b_2- {{\color{red}\lambda y.(}}{{\color{myGreen}(\lambda z.z)y}}{{\color{red})x}}]]}
@@ -934,7 +934,7 @@ If $s \rightsquigarrow_{(L, C, D, \beta)} t$ and $s : C$, then $t : C$
 \section{Strong Normalisation of Sharing Reductions}
 \label{chap:snosr}
 
-In order to show our calculus is strongly normalising, we first show that the sharing reduction rules are strongly normalising. To do this, we make use of an intermediate calculus called the \emph{weakening calculus}. Following the approach of \cite{Gundersen-Heijltjes-Parigot-2013-LICS}, we indite a measure on terms based on its connection with the weakening calculus. We show that this measure strictly decreases as sharing reduction progresses. Additionally, similar ideas and results can be found elsewhere: with \emph{memory} in \cite{Klop-1980}, the \emph{$\lambda$-$I$ calculus} in \cite{Barendregt-1984}, the \emph{$\lambda$-void calculus} \cite{Accattoli-Kesner-2012}, and the weakening $\lambda\mu$-calculus \cite{He-2018}.
+In order to show our calculus is strongly normalising, we first show that the sharing reduction rules are strongly normalising. To do this, we make use of an intermediate calculus called the \emph{weakening calculus}.We indite a measure on terms based on its connection with the weakening calculus. We show that this measure strictly decreases as sharing reduction progresses. Additionally, similar ideas and results can be found elsewhere: with \emph{memory} in \cite{Klop-1980}, the \emph{$\lambda$-$I$ calculus} in \cite{Barendregt-1984}, the \emph{$\lambda$-void calculus} \cite{Accattoli-Kesner-2012}, and the weakening $\lambda\mu$-calculus \cite{He-2018}.
 
 
 \begin{definition}
@@ -966,18 +966,16 @@ The terms are variable, abstraction, application, weakening, and a bullet. In th
 \begin{definition}
 \label{def:transweak}
 The interpretation $M \in \Lambda$, $\compweak{-} : \Lambda \rightarrow \WEAK$ is defined by
-	\begingroup
-	\allowdisplaybreaks
-\begin{align*}
-	\compweak{x} &= x \\
-	\compweak{\app{M}{N}} &= \app{\compweak{M}}{\compweak{N}} \\
-	\compweak{\abs{x}{N}} &=
+
+	$\compweak{x} = x$ \hspace{0.5cm}
+	$\compweak{\app{M}{N}} = \app{\compweak{M}}{\compweak{N}}$ 
+	\hspace{0.5cm}
+	$\compweak{\abs{x}{N}} =
 	\begin{cases}
 		\abs{x}{\compweak{N}} & \text{if } x \in \fv{N} \\
 		\abs{x}{\compweak{N} \share{}{}{x}} & \text{otherwise}
-	\end{cases}
-\end{align*}
-	\endgroup
+	\end{cases}$
+
 \end{definition}
 \noindent The following equalities can be observed, where $\sigma^{\Lambda}(z) = \readbackweak{\sigma^{\weaksymbol}(z)} $.
 \begin{proposition}
@@ -1175,7 +1173,7 @@ For a given $N \in \Lambda$ that is strongly normalising, we know by Lemma \ref{
 
 %We have studied the computational interpretation of the switch rule and discovered its correspondence with scope in the $\lambda$-calculus. 
 
-We have studied the interaction between the switch and the medial rule, the two characteristic inference rules of deep inference. We built a Curry--Howard interpretation based on this interaction, whose resulting calculus not only has the ability to duplicate terms atomically but can also duplicate solely the spine of an abstraction such that beta reduction can be applied on the duplicates. We show that this calculus has natural properties with respect to the $\lambda$-calculus.
+We have studied the interaction between the switch and the medial rule, the two characteristic inference rules of deep inference. We built a Curry--Howard interpretation based on this interaction, whose resulting calculus not only has the ability to duplicate terms atomically but can also duplicate solely the spine of an abstraction such that beta reduction can proceed on the duplicates. We show that this calculus has natural properties with respect to the $\lambda$-calculus.
 
 This work, which started as an investigation into the Curry-Howard correspondence of the switch rule~\cite{sherratt2019atomic}, fits into a broader effort to give a computational interpretation to intuitionistic deep-inference proof theory. Br\"unnler and McKinley~\cite{Brunnler-McKinley-2008} give a natural reduction mechanism without medial (or switch), and observe that preservation of strong normalization fails. Guenot and Stra\ss burger~\cite{Guenot-Strassburger-2014} investigate a different switch rule, corresponding to the implication-left rule of sequent calculus. He~\cite{He-2018} extends the atomic $\lambda$-calculus to the lambda-mu-calculus.
 
