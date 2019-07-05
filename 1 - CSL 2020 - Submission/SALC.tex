@@ -854,7 +854,7 @@ $\rightsquigarrow_{D}$
 %\noindent As an example, observe $\share{u}{z_{1}, z_{2}}{\abs{x}{\app{(\abs{z}{z})}{\abs{y}{\app{(\app{y}{y})}{x}}}}}$ (note $\abs{x}{t} \equiv \fake{x}{x}{t}$). By (\ref{red:absdup}) we obtain $\dist{u'}{\fakedist{e_{1}}{z_{1}}, \fakedist{e_{2}}{z_{2}}}{\share{}{z_{1}, z_{2}}{\app{(\abs{z}{z})}{\abs{y}{\app{(\app{y}{y})}{x}}}}}{x}{x}$ where $u' = u\sub{}{\fake{e_{i}}{z_{i}}{z_{i}}}{z_{i}}_{i \in [2]}$. Then by reductions (\ref{red:appdup}, \ref{red:distshare}), we obtain the distributor $\dist{u''}{\fakedist{e_{1}}{z_{1}}, \fakedist{e_{2}}{z_{2}}}{\share{}{z_{1}, z_{2}}{\abs{y}{\app{(\app{y}{y})}{x}}}}{x}{x}$ where $u'' = u\sub{}{\fake{e_{i}}{z_{i}}{\app{a_{i}}{z_{i}}}}{z_{i}}_{i \in [2]}$. Then by (\ref{red:absdup}, \ref{red:appdup}, \ref{red:distshare}, \ref{red:distshare}) we obtain the distributor $\dist{u'''}{\fakedist{e_{1}}{z_{1}}, \fakedist{e_{2}}{z_{2}}}{\share{}{z_{1}, z_{2}}{x}}{x}{x}$ which can be eliminated by (\ref{red:distelim}). A full example can be found in the Appendix. 
 
 \begin{example}
-Let $t = \app{\abs{z}{z}}{y}$ in $\share{u}{z_{1}, z_{2}}{\abs{x}{\abs{y}{\app{t}{x}}}}$ (note $\abs{x}{t} \equiv \fake{x}{x}{t}$). Then by two (\ref{red:absdup}) steps we obtain 
+Let $t = \app{(\abs{z}{z})}{y}$ in $\share{u}{z_{1}, z_{2}}{\abs{x}{\abs{y}{\app{t}{x}}}}$ (note $\abs{x}{t} \equiv \fake{x}{x}{t}$). Then by two (\ref{red:absdup}) steps we obtain 
 \\[0.1cm]
 \indent $u \sub{}{\fake{x_{i}}{z_{i}}{\fake{y_{i}}{z_{i}}{z_{i}}}}{z_{i}}_{i \in [2]}\dist{}{\fakedist{x_{i}}{z_{i}}_{i \in [2]}}{\dist{}{\fakedist{y_{i}}{z_{i}}_{i \in [2]}}{\share{}{z_{1}, z_{2}}{\app{t}{x}}}{y}{y}}{x}{x}$
 \\[0.1cm] 
@@ -987,7 +987,9 @@ Weakening reduction ($\rightarrow_{\weaksymbol}$) proceeds as follows.
 \end{align*}
 \endgroup
 \end{definition}
-\noindent It is easy to see that most these rules correspond to special cases of the sharing reduction rules for $\FALC$. It is not so obvious to see what the case ($\weaksymbol_{8}$) corresponds to. If $U$ is a subterm of $T$, then in the corresponding $\FALC$-term this term would be shared and one of the copies would be in a weakening. Thus this reduction relates to the case (\ref{red:mergeshare}), where we remove the weakening. We demonstrate by considering $t \share{}{}{y} \share{}{\vec{x} \cdot y \cdot \vec{z}}{u}  \rightsquigarrow_{C} t \share{}{\vec{x} \cdot \vec{z}}{u}$. On the left hand side, the corresponding weakening-term (obtained by $\compweak{-}$) would have the weakening $\share{}{}{U}$ where $U = \compweak{u}$. This is because $U$ is substituted into $\share{}{}{y}$, but on the right hand side this would be gone. This situation can only occur if there are other copies of $U$ substituted into the term. This corresponds to if only the corresponding (\ref{red:mergeshare}) reduction rule can occur. This resemblace is confirmed by the following Lemmas.
+\noindent It is easy to see that these rules correspond to special cases of the sharing reduction rules for $\FALC$. This resemblance is confirmed by the following Lemmas.
+
+%It is not so obvious to see what the case ($\weaksymbol_{8}$) corresponds to. If $U$ is a subterm of $T$, then in the corresponding $\FALC$-term this term would be shared and one of the copies would be in a weakening. Thus this reduction relates to the case (\ref{red:mergeshare}), where we remove the weakening. We demonstrate by considering $t \share{}{}{y} \share{}{\vec{x} \cdot y \cdot \vec{z}}{u}  \rightsquigarrow_{C} t \share{}{\vec{x} \cdot \vec{z}}{u}$. On the left hand side, the corresponding weakening-term (obtained by $\compweak{-}$) would have the weakening $\share{}{}{U}$ where $U = \compweak{u}$. This is because $U$ is substituted into $\share{}{}{y}$, but on the right hand side this would be gone. This situation can only occur if there are other copies of $U$ substituted into the term. This corresponds to if only the corresponding (\ref{red:mergeshare}) reduction rule can occur.
 
 \begin{lemma}
 \label{lem:sharepreservebeta}
@@ -996,7 +998,7 @@ Weakening reduction ($\rightarrow_{\weaksymbol}$) proceeds as follows.
 
 \begin{lemma}
 \label{theo:sharepreserve}
-	If $t \rightsquigarrow_{(C, D, L)} u$ and for any $x \in \bv{t} \cup \fp{t}$ and for all $z$, $x \not\in \fv{\sigma(z)}$.  $$\readweakwmap{t}{\sigma}{\gamma} \rightarrow^{*}_{\weaksymbol} \readweakwmap{u}{\sigma}{\gamma}$$
+	If $t \rightsquigarrow_{(C, D, L)} u$ and for any $x \in \bv{t} \cup \fp{t}$ and for all $z$, $\sigma(z) = z$.  $$\readweakwmap{t}{\sigma}{\gamma} \rightarrow^{*}_{\weaksymbol} \readweakwmap{u}{\sigma}{\gamma}$$
 
 \end{lemma}
 
