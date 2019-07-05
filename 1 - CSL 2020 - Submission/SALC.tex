@@ -445,7 +445,7 @@ We work in \emph{open deduction}~\cite{Guglielmi-Gundersen-Parigot-2010}, a form
       ~\mid~ \drv{\drv[yellow]{X;|;Y_1\!} ;-[r];
       			  \drv[yellow]{Y_2\!;|;Z}}
     $}
-    \caption{\small Derivations}
+    \caption{Derivations}
     \label{fig:derivations}
   \end{subfigure}
   \hfill
@@ -466,18 +466,18 @@ We work in \emph{open deduction}~\cite{Guglielmi-Gundersen-Parigot-2010}, a form
 		  }}
 	  \end{array}
 	$}
-	\caption{\small Axiom, Application, Contraction, Switch, Abstraction}
+	\caption{Inference Rules: Axiom ($a$), Application ($@$), Contraction ($\sharerule$), Switch ($s$), Abstraction ($\lambda$)}
 	\label{fig:abstraction}
 	\end{subfigure}
-	\\
+	\\[0.2cm]
 	\begin{subfigure}[b]{\textwidth}
 \scalebox{0.9}{ 
 \drv{\drv[yellow]{X ; | ; Y} ; . ; \drv[yellow]{Y ; | ; Z}} ~{:}{=}~ \drv{X ; . ; \drv[yellow]{X ; | ; Z}} $=$ \drv{\drv[yellow]{X ; | ; Z} ; . ; Z} $=$ \drv{X ; | ; Z}}
 \hfill
- \scalebox{0.9}{\drv{\drv[yellow]{\drv[magenta]{A ; | ; B} ; -[r] ; \drv[green]{C ; | ; D}} ; . ; \drv[cyan]{D ; | ; E}} $=$ \drv{ \drv[magenta]{A ; | ; B} ; -[r] ; \drv[yellow]{ \drv[green]{C ; | ; D} ; . ; \drv[cyan]{D ; | ; E}}}
+ \scalebox{0.9}{\drv{\drv[yellow]{\drv[magenta]{X_{1} ; | ; X_{2}} ; -[r] ; \drv[green]{Y ; | ; Z_{1}}} ; . ; \drv[cyan]{Z_{1} ; | ; Z_{2}}} $=$ \drv{ \drv[magenta]{X_{1} ; | ; X_{2}} ; -[r] ; \drv[yellow]{ \drv[green]{Y ; | ; Z_{1}} ; . ; \drv[cyan]{Z_{1} ; | ; Z_{2}}}}
 } 
 \hfill
- \scalebox{0.9}{\drv{ \drv[magenta]{A ; | ; B} ; . ; \drv[yellow]{ \drv[green]{B ; | ; C} ; -[r] ; \drv[cyan]{D ; | ; E}}} $=$ \drv{\drv[yellow]{\drv[magenta]{A ; | ; B} ; . ; \drv[green]{B ; | ; C}} ; -[r] ; \drv[cyan]{D ; | ; E}}
+ \scalebox{0.9}{\drv{ \drv[magenta]{X_{1} ; | ; X_{2}} ; . ; \drv[yellow]{ \drv[green]{X_{2} ; | ; Y} ; -[r] ; \drv[cyan]{Z_{1} ; | ; Z_{2}}}} $=$ \drv{\drv[yellow]{\drv[magenta]{X_{1} ; | ; X_{2}} ; . ; \drv[green]{X_{2} ; | ; Y}} ; -[r] ; \drv[cyan]{Z_{1} ; | ; Z_{2}}}
 } 
  \hfill
 \scalebox{0.9}{
@@ -893,7 +893,7 @@ The terms are variable, abstraction, application, weakening, and a bullet. In th
 	\end{align*}
 \end{definition}
 
-\noindent We also have translations of the weakening calculus to and from the lambda calculus. Both of these translations were provided in \cite{Gundersen-Heijltjes-Parigot-2013-LICS}. The interpretation $\readbackweak{-}$ from weakening terms to $\lambda$-terms discards all weakenings. The interpretation $\compweak{-} : \Lambda \rightarrow \WEAK$ is defined below.
+\noindent We also have translations of the weakening calculus to and from the $\lambda$-calculus. Both of these translations were provided in \cite{Gundersen-Heijltjes-Parigot-2013-LICS}. The interpretation $\readbackweak{-}$ from weakening terms to $\lambda$-terms discards all weakenings. The interpretation $\compweak{-} : \Lambda \rightarrow \WEAK$ is defined below.
 
 \begin{definition}
 \label{def:transweak}
@@ -1102,7 +1102,7 @@ For a given $N \in \Lambda$ that is strongly normalising, we know by Lemma \ref{
 
 We have studied the computational interpretation of the switch rule and discovered its correspondence with scope in the $\lambda$-calculus. We have studied the interaction between the switch and the medial rule, the two characteristic inference rules of deep inference. We built a Curry--Howard interpretation based on this interaction, whose resulting calculus not only has the ability to duplicate terms atomically but can also duplicate solely the spine of an abstraction such that beta reduction can be applied on the duplicates. We show that this calculus has natural properties with respect to the $\lambda$-calculus.
 
-This work fits into a broader effort to give a computational interpretation to intuitionistic deep-inference proof theory. Br\"unnler and McKinley~\cite{Brunnler-McKinley-2008} give a natural reduction mechanism without medial (or switch), and observe that preservation of strong normalization fails. Guenot and Stra\ss burger~\cite{Guenot-Strassburger-2014} investigate a different switch rule, corresponding to the implication-left rule of sequent calculus. He~\cite{He-2018} extends the atomic lambda-calculus to lambda-mu.
+This work, which started as an investigation into the Curry-Howard correspondence of the switch rule~\cite{sherratt2019atomic}, fits into a broader effort to give a computational interpretation to intuitionistic deep-inference proof theory. Br\"unnler and McKinley~\cite{Brunnler-McKinley-2008} give a natural reduction mechanism without medial (or switch), and observe that preservation of strong normalization fails. Guenot and Stra\ss burger~\cite{Guenot-Strassburger-2014} investigate a different switch rule, corresponding to the implication-left rule of sequent calculus. He~\cite{He-2018} extends the atomic $\lambda$-calculus to the lambda-mu-calculus.
 
 Our aim for the future is to develop the intuitionistic open deduction formalism towards optimal reduction~\cite{Levy-1980,Lamping-1990,Asperti-Guerrini-1998}, via the remaining medial and switch rules~\cite{Tiu-2006}.
 
