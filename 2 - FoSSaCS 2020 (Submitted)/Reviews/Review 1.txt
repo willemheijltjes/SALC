@@ -1,0 +1,38 @@
+----------------------- REVIEW 1 ---------------------
+SUBMISSION: 25
+TITLE: Spinal Atomic Lambda-Calculus
+AUTHORS: David Sherratt, Willem Heijltjes, Michel Parigot and Tom Gundersen
+
+----------- Overall evaluation -----------
+SCORE: 2 (accept)
+----- TEXT:
+When it comes to normalizing lambda terms, one always has to chose a strategy. Different functional programming languages use different strategies. OCaml is strict and uses "call by value", i.e., an argument is evaluated before it is passed on. Consequently a lot of work is duplicated. The other extreme is "optimal reduction", which never duplicates a redex, but which is also impractical for implementations. However, there is a rich spectrum between those two extremes. The best known example might be the "lazyness" of Haskell which uses "call-by-need", i.e., an argument is only evaluated when it is needed. But when a duplication happens, it is still the case that the whole subterm is duplicated. The next example is the atomic lambda-calculus, which is "fully lazy", as it only duplicates the
+skeleton of a term, when a duplication happens.
+
+This paper goes one step further. Instead of duplicating the skeleton, only the spine is duplicated, where the spine is the path from the abstraction to the bound variable in the term tree (when the lambda-term is written as a graph). The main problem with this approach is that it is no longer obvious how to write the graphs, that are obtained during the reduction, as terms.
+
+Therefore one of the main contributions of the paper is a term
+calculus that does the job: the "spinal lambda-calulus", using
+spinal full lazyness. The surprising part is that this calculus is in a Curry-Howard-correspondence to a deep inference proof system.
+
+Then the paper shows the standard results of type preservation,
+confluence and preservation of strong normalization.
+
+Overall I think that the paper presents an impressive achievement and should be accepted for presentation at FoSSaCS 2020.
+
+Minor comments:
+---------------
+
+It would be easier if there was only one counter for definition,
+theorems, lemmas, etc.
+
+p.7, Def.4: is c a variable or a constant?
+
+p.8: you should also include the definition for free and bound cover
+
+p.11, Prop.2: The statement is unclear. what are (1) and (2)?
+
+p.13: typo on the top B/B^B should be A/A^A
+
+p.16: qed boxes are missing
+

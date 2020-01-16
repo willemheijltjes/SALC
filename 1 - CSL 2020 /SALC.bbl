@@ -1,0 +1,131 @@
+\begin{thebibliography}{10}
+
+\bibitem{Abadi-Cardelli-Curien-Levy-1991}
+Mart{\'\i}n Abadi, Luca Cardelli, Pierre-Louis Curien, and Jean-Jacques
+  L{\'e}vy.
+\newblock Explicit substitutions.
+\newblock {\em Journal of Functional Programming}, 1(4):375--416, 1991.
+
+\bibitem{Accattoli-Kesner-2012}
+Beniamino Accattoli and Delia Kesner.
+\newblock Preservation of strong normalisation modulo permutations for the
+  structural lambda-calculus.
+\newblock {\em Logical Methods in Computer Science}, 8(1), 2012.
+
+\bibitem{Asperti-Guerrini-1998}
+Andrea Asperti and Stefano Guerrini.
+\newblock {\em The Optimal Implementation of Functional Programming Languages}.
+\newblock Cambridge University Press, 1998.
+
+\bibitem{Balabonski-2012}
+Thibaut Balabonski.
+\newblock A unified approach to fully lazy sharing.
+\newblock {\em ACM SIGPLAN Notices}, 47(1):469--480, 2012.
+
+\bibitem{Barendregt-1984}
+Hendrik~Pieter Barendregt.
+\newblock {\em The Lambda Calculus -- Its Syntax and Semantics}, volume 103 of
+  {\em Studies in Logic and the Foundations of Mathematics}.
+\newblock North-Holland, 1984.
+
+\bibitem{Berkling-Fehr-1982}
+Klaus~J. Berkling and Elfriede Fehr.
+\newblock A consistent extension of the lambda-calculus as a base for
+  functional programming languages.
+\newblock {\em Information and Control}, 55:89--101, 1982.
+
+\bibitem{Brunnler-McKinley-2008}
+Kai Br{\"u}nnler and Richard McKinley.
+\newblock An algorithmic interpretation of a deep inference system.
+\newblock In {\em International Conference on Logic for Programming Artificial
+  Intelligence and Reasoning (LPAR)}, pages 482--496, 2008.
+
+\bibitem{Brunnler-Tiu-2001}
+Kai Br{\"u}nnler and Alwen Tiu.
+\newblock A local system for classical logic.
+\newblock In {\em 8th International Conference on Logic for Programming
+  Artificial Intelligence and Reasoning (LPAR)}, volume 2250 of {\em LNCS},
+  pages 347--361, 2001.
+
+\bibitem{Cockett-Seely-1997}
+Robin Cockett and Robert Seely.
+\newblock Weakly distributive categories.
+\newblock {\em Journal of Pure and Applied Algebra}, 114(2):133--173, 1997.
+
+\bibitem{Fernandez-Mackie-Sinot-2005}
+Maribel Fern{\'a}ndez, Ian Mackie, and Fran{\c c}ois-R{\'e}gis Sinot.
+\newblock Lambda-calculus with director strings.
+\newblock {\em Applicable Algebra in Engineering, Communication and Computing},
+  15(6):393--437, 2005.
+
+\bibitem{Guenot-Strassburger-2014}
+Nicolas Guenot and Lutz Stra{\ss}burger.
+\newblock Symmetric normalisation for intuitionistic logic.
+\newblock In {\em Joint Meeting of the Twenty-Third EACSL Annual Conference on
+  Computer Science Logic (CSL) and the Twenty-Ninth Annual ACM/IEEE Symposium
+  on Logic in Computer Science (LICS)}, 2014.
+
+\bibitem{Guglielmi-Gundersen-Parigot-2010}
+Alessio Guglielmi, Tom Gundersen, and Michel Parigot.
+\newblock A proof calculus which reduces syntactic bureaucracy.
+\newblock In {\em 21st International Conference on Rewriting Techniques and
+  Applications (RTA)}, pages 135--150, 2010.
+
+\bibitem{Gundersen-Heijltjes-Parigot-2013-LICS}
+Tom Gundersen, Willem Heijltjes, and Michel Parigot.
+\newblock Atomic lambda-calculus: a typed lambda-calculus with explicit
+  sharing.
+\newblock In {\em 28th Annual ACM/IEEE Symposium on Logic in Computer Science
+  (LICS)}, pages 311--320, 2013.
+
+\bibitem{He-2018}
+Fanny He.
+\newblock {\em The Atomic Lambda-Mu Calculus}.
+\newblock PhD thesis, University of Bath, 2018.
+
+\bibitem{Hendriks-VanOostrom-2003}
+Dimitri Hendriks and Vincent van Oostrom.
+\newblock Adbmal.
+\newblock In {\em 19th International Conference on Automated Deduction (CADE)},
+  volume 2741 of {\em LNCS}, pages 136--150, 2003.
+
+\bibitem{Kennaway-Sleep-1988}
+Richard Kennaway and Ronan Sleep.
+\newblock Director strings as combinators.
+\newblock {\em ACM Transactions on Programming Languages and Systems}, 1988.
+
+\bibitem{Klop-1980}
+Jan~Willem Klop.
+\newblock {\em Combinatory Reduction Systems}.
+\newblock PhD thesis, Utrecht University, 1980.
+
+\bibitem{Lamping-1990}
+John Lamping.
+\newblock An algorithm for optimal lambda calculus reduction.
+\newblock In {\em Proceedings of the 17th ACM SIGPLAN-SIGACT symposium on
+  Principles of programming languages}, pages 16--30, 1990.
+
+\bibitem{Launchbury-1993}
+John Launchbury.
+\newblock A natural semantics for lazy evaluation.
+\newblock In {\em 20th ACM SIGPLAN-SIGACT symposium on Principles of
+  programming languages (POPL)}, pages 144--154, 1993.
+
+\bibitem{Levy-1980}
+Jean-Jacques L{\'e}vy.
+\newblock Optimal reductions in the lambda-calculus.
+\newblock In {\em To H.B.\ Curry: Essays in Combinatory Logic, Lambda Calculus
+  and Formalism}. Academic Press, 1980.
+
+\bibitem{Tiu-2006}
+Alwen Tiu.
+\newblock A local system for intuitionistic logic.
+\newblock In {\em International Conference on Logic for Programming Artificial
+  Intelligence and Reasoning (LPAR)}, pages 242--256, 2006.
+
+\bibitem{Wadsworth-1971}
+Christopher~Peter Wadsworth.
+\newblock {\em Semantics and Pragmatics of the Lambda-Calculus}.
+\newblock PhD thesis, University of Oxford, 1971.
+
+\end{thebibliography}

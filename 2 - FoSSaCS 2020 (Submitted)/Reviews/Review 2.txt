@@ -1,0 +1,62 @@
+----------------------- REVIEW 2 ---------------------
+SUBMISSION: 25
+TITLE: Spinal Atomic Lambda-Calculus
+AUTHORS: David Sherratt, Willem Heijltjes, Michel Parigot and Tom Gundersen
+
+----------- Overall evaluation -----------
+SCORE: 2 (accept)
+----- TEXT:
+[Disclaimer: I already reviewed a previous version of this paper some time ago. In this new version the authors meticulously took into account most of my comments and I thank them for this. Below is an updated review.]
+
+The paper presents a typed lambda-calculus with explicit mechanisms for small-step duplication of terms. The calculus provides a Curry-Howard interpretation of a deep-inference system, and is proven to be well-behaved with respect to plain lambda-calculus.
+
+The paper provides a nice contribution, which is fully in the scope of the conference. Most of the space in the paper is devoted to defining a calculus with primitives for fine-grained sharing of term fragments. The task is hard. While a simple notion of sharing concerns only full subterms and can be naturally implemented through explicit-substitution-like mechanisms, the fine-grained sharing studied in this paper captures the sharing of smaller fragments, which requires representing graphs with sharing *and* unsharing. This involves subtle mechanisms related to variable capture in the unshared subterms. A term formalism with this level of fine-grained sharing is new, as well as its relation to logic.
+
+As expected in this setting, the provided solution is highly technical and hard to fit in such a conference format, and the paper is not an easy read. The authors however managed to provide a fine presentation of their solution and results. The introduction makes a good job in preparing the reader, the definitions in the body of the paper are precise and sound, and come with an appropriate amount of examples and illustrations.
+
+Lemmas and theorems are only stated in the paper, but full proofs are provided in an appendix.
+
+I think the paper should be accepted for presentation at FOSSACS.
+
+
+Specific comments:
+
+p4. the examples of spine and skeleton
+Since the subterm that is not part of the skeleton/the spine is not the same, maybe take different variable names (say ‘a’/’b’) for a better flow of reading.
+
+p6. definition of preterms
+d and e are not the most common variable names, the fact that they denote variables could be made explicit (since they appear in a new syntactic construct, the reader may wonder whether d<y> is precisely the same as x<y> or not)
+
+p7. free variables
+Still disturbing to have systematic different behaviours for x<x> and c<x>.
+I suppose you get some benefit somewhere from having a uniform syntax but I am not sure where.
+
+p.8 free covers
+I am not completely sure of the definition of free covers. Does c<x> being in the free covers requires c being a free phantom and x a sequence of free variables? Or might x be bound? What about alpha-conversion in this case?
+
+p8. definition of terms, 5.(a)
+lacks a [\in] after [w_m^i], and [something?] between [and] and [are]
+
+p8. definition of terms, 6.(b)
+[occurs in] could be completed in [occurs freely in]
+
+p9. definition 7
+I would expect the quantification on M to be inside the definition
+For instance: The interpretation of a closed lambda-term M is \[ … \]
+where x… and (| - |) : /\ -> /\ is …
+
+By the way, why (| - |)’  and not simply (| - |)? Is it a difference between one for closed terms and one for open terms? In the rest of the paper only (| - |) is used.
+
+p11. definition of captured variables
+there is a x_x instead of x_n
+
+p11. rule for moving a closure out of a distributor
+Using \bar{\Gamma} and \Gamma in the same equation is misleading
+
+p13. example 2
+The example would be cleaner with real syntactic categories. How about taking for example t[a_1, a_2 <- … ] with t some unspecified term? Since the term would be virtual the implicit substitutions would stay in the example exactly as they currently do (even if, strictly speaking, the example would rely on some unstated lemma about a commutation between reduction rules and substitution)
+
+p16. definition 15
+Not enough space between \bullet and (*) for the structure of the definition to be readable
+
+

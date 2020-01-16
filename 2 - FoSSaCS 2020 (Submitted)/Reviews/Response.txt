@@ -1,0 +1,26 @@
+We thank the referees for their diligence, and for their helpful remarks and interesting questions. We will respond to a selection from Review 2 and Review 3.
+
+--- Review 2 ---
+
+*** p.8 free covers
+I am not completely sure of the definition of free covers. Does c<x> being in the free covers requires c being a free phantom and x a sequence of free variables? Or might x be bound? What about alpha-conversion in this case?
+
+The first is the case: a cover c<x> is free if both c and all variables in x are free. The cover c<x> is bound by a distributor [ c<x> | [\Gamma] ] where [\Gamma] binds x; hence, c and x are bound simultaneously, or not at all. When bound, both c and x may be alpha-converted independently. We will add a formal definition of free covers to clarify this.
+
+--- Review 3 ---
+
+*** p.3 "The observation that the switch rule ...". Who made this observation? 
+
+We are making it, in this paper; we will change the emphasis to make this clear.
+
+*** Is there a precise relation between the sharing in the current paper and abstract machines for lazy evaluation a la Haskell? The comment in the paragraph "These notions give rise to four natural duplication regimes...." is too short and only refers to the big-step natural semantics. 
+
+We don't think there is a deeper relation, though we'd have to look more closely to be sure. The point of a lazy abstract machine is to (efficiently) implement _when_ duplication takes place, while full laziness and optimal reduction are about _what_ is duplicated. See also the comments below.
+
+*** Perhaps it is a coincidence but most of the abstract machines for Haskell talk about "spine".
+
+This is indeed an unfortunate coincidence of terminology: the "spine" of a lambda term, as relevant to abstract machines, is not the same concept as the "spine" of an abstraction, as relevant here. The former is the path from the root to the leftmost variable; the latter is the tree formed by the paths from a given abstraction to its bound variables. We will add a footnote to point this out. 
+
+*** Also it would appear that an abstract machine in the style of Garcia et al. (Lazy evaluation and delimited control) deal with similar issues. [... What] would be connections between current work and control operators?
+
+At present, we have only a limited picture. Fanny He, in her dissertation [The Atomic Lambda-Mu Calculus, University of Bath, 2018] extends the atomic lambda-calculus with mu-abstraction, which is similarly duplicated atomically. This suggests that the two concepts are orthogonal - which is also what the proof theory would indicate. Nevertheless, there may well be operational similarities waiting to be discovered.

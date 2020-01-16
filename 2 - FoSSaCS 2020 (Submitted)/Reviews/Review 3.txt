@@ -1,0 +1,21 @@
+----------------------- REVIEW 3 ---------------------
+SUBMISSION: 25
+TITLE: Spinal Atomic Lambda-Calculus
+AUTHORS: David Sherratt, Willem Heijltjes, Michel Parigot and Tom Gundersen
+
+----------- Overall evaluation -----------
+SCORE: 2 (accept)
+----- TEXT:
+The paper presents a typed lambda calculus with a special kind of sharing along the spine of lambda abstractions. The calculus is a logic counterpart of a deep inference proof system. All the relevant meta-theoretic properties of the calculus are stated and proved. 
+
+I found this to be a solid well-written paper. I only a couple of small comments and a question:
+
+* I was actually confused about the the paragraphs above "Switch and Spine" in the introduction. It would have been quite useful to give examples of each of the duplication regimes. Also the correspondence of Fig. 1 to the text was not immediately evident. I thought something along the style of Fig. 4 would have been more helpful at this point. 
+
+* p.3 "The observation that the switch rule ...". Who made this observation? 
+
+* Is there a precise relation between the sharing in the current paper and abstract machines for lazy evaluation a la Haskell? The comment in the paragraph "These notions give rise to four natural duplication regimes...." is too short and only refers to the big-step natural semantics. Perhaps it is a coincidence but most of the abstract machines for Haskell talk about "spine". Also it would appear that an abstract machine in the style of Garcia et al. (Lazy evaluation and delimited control) deal with similar issues. 
+
+* Another way to ask the previous questions, would be connections between current work and control operators
+
+
