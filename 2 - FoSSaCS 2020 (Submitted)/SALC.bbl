@@ -1,0 +1,122 @@
+\begin{thebibliography}{10}
+\providecommand{\url}[1]{\texttt{#1}}
+\providecommand{\urlprefix}{URL }
+\providecommand{\doi}[1]{https://doi.org/#1}
+
+\bibitem{Abadi-Cardelli-Curien-Levy-1991}
+Abadi, M., Cardelli, L., Curien, P.L., L{\'e}vy, J.J.: Explicit substitutions.
+  Journal of Functional Programming  \textbf{1}(4),  375--416 (1991)
+
+\bibitem{Accattoli-Kesner-2012}
+Accattoli, B., Kesner, D.: Preservation of strong normalisation modulo
+  permutations for the structural lambda-calculus. Logical Methods in Computer
+  Science  \textbf{8}(1) (2012)
+
+\bibitem{Asperti-Guerrini-1998}
+Asperti, A., Guerrini, S.: The Optimal Implementation of Functional Programming
+  Languages. Cambridge University Press (1998)
+
+\bibitem{Balabonski-2012}
+Balabonski, T.: A unified approach to fully lazy sharing. ACM SIGPLAN Notices
+  \textbf{47}(1),  469--480 (2012)
+
+\bibitem{balabonski13}
+Balabonski, T.: {Weak Optimality, and the Meaning of Sharing}. In:
+  {International Conference on Functional Programming (ICFP)}. pp. 263--274.
+  Boston, United States (Sep 2013). \doi{10.1145/2500365.2500606},
+  \url{https://hal.archives-ouvertes.fr/hal-00907056}
+
+\bibitem{Barendregt-1984}
+Barendregt, H.P.: The Lambda Calculus -- Its Syntax and Semantics, Studies in
+  Logic and the Foundations of Mathematics, vol.~103. North-Holland (1984)
+
+\bibitem{Berkling-Fehr-1982}
+Berkling, K.J., Fehr, E.: A consistent extension of the lambda-calculus as a
+  base for functional programming languages. Information and Control
+  \textbf{55},  89--101 (1982)
+
+\bibitem{blanc2005sharing}
+Blanc, T., L{\'e}vy, J.J., Maranget, L.: Sharing in the weak lambda-calculus.
+  Processes, Terms and Cycles: Steps on the Road to Infinity: Essays Dedicated
+  to Jan Willem Klop on the Occasion of His 60th Birthday  \textbf{3838}, ~70
+  (2005)
+
+\bibitem{Brunnler-McKinley-2008}
+Br{\"u}nnler, K., McKinley, R.: An algorithmic interpretation of a deep
+  inference system. In: International Conference on Logic for Programming
+  Artificial Intelligence and Reasoning (LPAR). pp. 482--496 (2008)
+
+\bibitem{Brunnler-Tiu-2001}
+Br{\"u}nnler, K., Tiu, A.: A local system for classical logic. In: 8th
+  International Conference on Logic for Programming Artificial Intelligence and
+  Reasoning (LPAR). LNCS, vol.~2250, pp. 347--361 (2001)
+
+\bibitem{Cockett-Seely-1997}
+Cockett, R., Seely, R.: Weakly distributive categories. Journal of Pure and
+  Applied Algebra  \textbf{114}(2),  133--173 (1997)
+
+\bibitem{Fernandez-Mackie-Sinot-2005}
+Fern{\'a}ndez, M., Mackie, I., Sinot, F.R.: Lambda-calculus with director
+  strings. Applicable Algebra in Engineering, Communication and Computing
+  \textbf{15}(6),  393--437 (2005)
+
+\bibitem{Guenot-Strassburger-2014}
+Guenot, N., Stra{\ss}burger, L.: Symmetric normalisation for intuitionistic
+  logic. In: Joint Meeting of the Twenty-Third EACSL Annual Conference on
+  Computer Science Logic (CSL) and the Twenty-Ninth Annual ACM/IEEE Symposium
+  on Logic in Computer Science (LICS) (2014)
+
+\bibitem{Guglielmi-Gundersen-Parigot-2010}
+Guglielmi, A., Gundersen, T., Parigot, M.: A proof calculus which reduces
+  syntactic bureaucracy. In: 21st International Conference on Rewriting
+  Techniques and Applications (RTA). pp. 135--150 (2010)
+
+\bibitem{Gundersen-Heijltjes-Parigot-2013-LICS}
+Gundersen, T., Heijltjes, W., Parigot, M.: Atomic lambda-calculus: a typed
+  lambda-calculus with explicit sharing. In: 28th Annual ACM/IEEE Symposium on
+  Logic in Computer Science (LICS). pp. 311--320 (2013)
+
+\bibitem{He-2018}
+He, F.: The Atomic Lambda-Mu Calculus. Ph.D. thesis, University of Bath (2018)
+
+\bibitem{Hendriks-VanOostrom-2003}
+Hendriks, D., van Oostrom, V.: Adbmal. In: 19th International Conference on
+  Automated Deduction (CADE). LNCS, vol.~2741, pp. 136--150 (2003)
+
+\bibitem{Kennaway-Sleep-1988}
+Kennaway, R., Sleep, R.: Director strings as combinators. ACM Transactions on
+  Programming Languages and Systems  (1988)
+
+\bibitem{Klop-1980}
+Klop, J.W.: Combinatory Reduction Systems. Ph.D. thesis, Utrecht University
+  (1980)
+
+\bibitem{Lamping-1990}
+Lamping, J.: An algorithm for optimal lambda calculus reduction. In:
+  Proceedings of the 17th ACM SIGPLAN-SIGACT symposium on Principles of
+  programming languages. pp. 16--30 (1990)
+
+\bibitem{Launchbury-1993}
+Launchbury, J.: A natural semantics for lazy evaluation. In: 20th ACM
+  SIGPLAN-SIGACT symposium on Principles of programming languages (POPL). pp.
+  144--154 (1993)
+
+\bibitem{Levy-1980}
+L{\'e}vy, J.J.: Optimal reductions in the lambda-calculus. In: To H.B.\ Curry:
+  Essays in Combinatory Logic, Lambda Calculus and Formalism. Academic Press
+  (1980)
+
+\bibitem{sherratt2019atomic}
+Sherratt, D.R.: A lambda-calculus that achieves full laziness with spine
+  duplication. Ph.D. thesis, University of Bath (2019)
+
+\bibitem{Tiu-2006}
+Tiu, A.: A local system for intuitionistic logic. In: International Conference
+  on Logic for Programming Artificial Intelligence and Reasoning (LPAR). pp.
+  242--256 (2006)
+
+\bibitem{Wadsworth-1971}
+Wadsworth, C.P.: Semantics and Pragmatics of the Lambda-Calculus. Ph.D. thesis,
+  University of Oxford (1971)
+
+\end{thebibliography}
